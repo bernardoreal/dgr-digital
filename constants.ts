@@ -1,3 +1,4 @@
+
 import { DGRChapter, DGRVariation } from './types';
 import { Package, Plane, AlertTriangle, Box, ShieldCheck, FileText, Globe, Layers, Search, Check, Zap, Truck, Anchor, Info, BookOpen, FlaskConical, ListFilter, Ban, Radiation, Library, Scale, FileQuestion, Building2, Tag } from 'lucide-react';
 
@@ -726,7 +727,43 @@ export const DGR_CHAPTERS: DGRChapter[] = [
     sections: [
         { id: "5.0", title: "Disposições Gerais", blocks: [{ type: "paragraph", content: "Embalagens devem ser de boa qualidade e compatíveis com o conteúdo. Devem resistir a vibrações e mudanças de pressão." }] },
         {
+            id: "5.1",
+            title: "Procedimentos de Embalagem",
+            blocks: [
+                { type: "paragraph", content: "Além das instruções específicas, procedimentos gerais devem ser seguidos para garantir a segurança." },
+                {
+                    type: "definition-list",
+                    content: [
+                        { term: "Ullage (Outage)", definition: "Espaço vazio deixado em uma embalagem para permitir a expansão térmica do líquido. Geralmente, a embalagem não deve estar mais de 98% cheia." },
+                        { term: "Materiais Absorventes", definition: "Necessário para embalagens combinadas com líquidos para absorver todo o conteúdo em caso de vazamento." }
+                    ]
+                }
+            ]
+        },
+        {
             id: "5.2",
+            title: "Instruções de Embalagem - Classe 1",
+            blocks: [
+                { type: "paragraph", content: "O transporte de explosivos é severamente restrito. A maioria dos explosivos é proibida em aeronaves de passageiros e muitos requerem aprovação da autoridade competente. A Divisão 1.4S é a mais comumente permitida." },
+                {
+                    type: "packing-instruction",
+                    content: {
+                        id: "130",
+                        title: "Artigos, Explosivos, Divisão 1.4S",
+                        transportMode: "Passenger and Cargo",
+                        content: [
+                            { type: "paragraph", content: "Esta instrução aplica-se a artigos da Divisão 1.4S, como UN 0012 (Cartuchos)." },
+                            { type: "note", content: { title: "Embalagem Externa", text: "Deve ser uma embalagem de especificação UN (ex: caixas 4G, 4C1, 4D, 4F)." } },
+                            { type: "list", content: { ordered: false, items: ["As embalagens internas devem ser projetadas e construídas para prevenir qualquer movimento dentro da embalagem externa.", "Os artigos devem ser embalados de forma a prevenir a ignição acidental."] } },
+                            { type: "table", content: { caption: "Limites de Peso Bruto", headers: ["Tipo", "Pax", "CAO"], rows: [["Caixa de Fibra (4G)", "25 kg", "100 kg"], ["Caixa de Madeira (4C1)", "25 kg", "100 kg"]] } },
+                            { type: "warning", content: { text: "Outras divisões de explosivos (1.1, 1.2, 1.3, 1.4F, 1.4G, 1.5, 1.6) são proibidas em aeronaves de passageiros." } }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            id: "5.3",
             title: "Instruções de Embalagem - Classe 2",
             blocks: [
                 {
@@ -758,7 +795,7 @@ export const DGR_CHAPTERS: DGRChapter[] = [
             ]
         },
         {
-            id: "5.3",
+            id: "5.4",
             title: "Instruções de Embalagem - Classe 3",
             blocks: [
                 {
@@ -803,7 +840,7 @@ export const DGR_CHAPTERS: DGRChapter[] = [
             ]
         },
         {
-            id: "5.4",
+            id: "5.5",
             title: "Instruções de Embalagem - Classe 4",
             blocks: [
                 {
@@ -821,7 +858,7 @@ export const DGR_CHAPTERS: DGRChapter[] = [
             ]
         },
         {
-            id: "5.5",
+            id: "5.6",
             title: "Instruções de Embalagem - Classe 5",
             blocks: [
                 {
@@ -840,7 +877,7 @@ export const DGR_CHAPTERS: DGRChapter[] = [
             ]
         },
         {
-            id: "5.6",
+            id: "5.7",
             title: "Instruções de Embalagem - Classe 6",
             blocks: [
                 {
@@ -872,6 +909,14 @@ export const DGR_CHAPTERS: DGRChapter[] = [
         },
         {
             id: "5.8",
+            title: "Instruções de Embalagem - Classe 7",
+            blocks: [
+                { type: "paragraph", content: "Os requisitos de embalagem para Material Radioativo (Classe 7) são complexos e detalhados extensivamente na Seção 10." },
+                { type: "note", content: { title: "Referência Cruzada", text: "Consulte o Capítulo 10 para todas as instruções de embalagem da Classe 7." } }
+            ]
+        },
+        {
+            id: "5.9",
             title: "Instruções de Embalagem - Classe 8",
             blocks: [
                 {
@@ -952,7 +997,7 @@ export const DGR_CHAPTERS: DGRChapter[] = [
             ]
         },
         {
-            id: "5.9",
+            id: "5.10",
             title: "Instruções de Embalagem - Classe 9",
             blocks: [
                 {
@@ -1027,6 +1072,26 @@ export const DGR_CHAPTERS: DGRChapter[] = [
                             { type: "paragraph", content: "Aplica-se a UN 3090. PROIBIDO em aeronaves de passageiros." },
                             { type: "table", content: { caption: "Seções", headers: ["Seção", "Lítio", "Limite/Pkg"], rows: [["IA", "> 2g", "35 kg"], ["IB", "<= 2g", "2.5 kg"]] } },
                             { type: "warning", content: { text: "Seção II foi removida para transporte aéreo (apenas IA e IB permitidas)." } }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            id: "5.11",
+            title: "Instruções de Embalagem - Miscelâneas",
+            blocks: [
+                { type: "paragraph", content: "Esta seção cobre instruções de embalagem para itens que não se enquadram nas classes principais, como ID 8000." },
+                {
+                    type: "packing-instruction",
+                    content: {
+                        id: "963",
+                        title: "Consumer Commodity (ID 8000)",
+                        transportMode: "Passenger and Cargo",
+                        content: [
+                            { type: "paragraph", content: "Aplica-se a bens de consumo, que são materiais embalados e distribuídos para venda no varejo para uso pessoal ou doméstico." },
+                            { type: "note", content: { title: "Limite", text: "O peso bruto máximo por volume é de 30 kg." } },
+                            { type: "warning", content: { text: "Os pacotes não devem conter mercadorias perigosas proibidas em aeronaves de passageiros." } }
                         ]
                     }
                 }
@@ -1272,6 +1337,22 @@ export const DGR_CHAPTERS: DGRChapter[] = [
               ]
           },
           { id: "9.6", title: "NOTOC", blocks: [{ type: "paragraph", content: "O piloto em comando deve ser notificado por escrito (NOTOC) sobre a localização e tipo de mercadorias perigosas a bordo." }] },
+          {
+            id: "9.7",
+            title: "Fornecimento de Informações",
+            blocks: [
+                { type: "paragraph", content: "Os operadores devem fornecer informações claras sobre mercadorias perigosas em vários pontos de contato com passageiros e expedidores." },
+                {
+                    type: "definition-list",
+                    content: [
+                        { term: "Informação aos Passageiros", definition: "Avisos sobre artigos proibidos na bagagem devem estar visíveis nos balcões de check-in, áreas de venda de bilhetes e no website da companhia aérea." },
+                        { term: "Avisos Públicos", definition: "Cartazes e sinalizações devem ser exibidos de forma proeminente em áreas de aceitação de carga e check-in de passageiros." },
+                        { term: "Relato de Ocorrências", definition: "O operador deve informar o piloto-em-comando sobre as mercadorias perigosas a bordo. O piloto, por sua vez, deve informar os serviços de tráfego aéreo em caso de emergência em voo envolvendo essas mercadorias." }
+                    ]
+                },
+                { type: "note", content: { title: "Referência", text: "Os procedimentos detalhados para o relato de acidentes e incidentes estão descritos na Seção 1.7." } }
+            ]
+          },
           { id: "9.8", title: "Training", blocks: [{ type: "paragraph", content: "Ver Capítulo 1.5 para requisitos de treinamento." }] }
       ]
   },

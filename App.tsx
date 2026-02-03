@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Plane, Search, ShieldCheck, ArrowRight, Sparkles, Bot, AlertTriangle, X, Settings, CheckCircle, Smartphone, Monitor } from 'lucide-react';
 import { DGR_CHAPTERS, APP_VERSION } from './constants';
@@ -276,7 +277,7 @@ const App: React.FC = () => {
 
           {/* Cards Grid Section - Overlapping Hero */}
           <main className="relative z-30 container mx-auto px-6 -mt-10 md:-mt-20 pb-20">
-            <div className={`grid grid-cols-1 ${!isMobileView ? 'md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' : ''} gap-6`}>
+            <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8`}>
               {filteredChapters.map((chapter, index) => (
                 <div key={chapter.id} className="animate-fade-in-up" style={{ animationDelay: `${0.1 * (index + 1)}s` }}>
                   <ChapterCard 
