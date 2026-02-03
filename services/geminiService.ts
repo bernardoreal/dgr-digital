@@ -11,9 +11,9 @@ export interface AIResponse {
   sources: GroundingSource[];
 }
 
-//const getClient = () => { if (!process.env.API_KEY) return null;
-//    return new GoogleGenAI({ apiKey: process.env.API_KEY });
-//};
+const getClient = () => { if (!process.env.API_KEY) return null;
+    return new GoogleGenAI({ apiKey: process.env.API_KEY });
+};
 
 export const queryGemini = async (userQuery: string): Promise<AIResponse> => {
   const ai = getClient();
