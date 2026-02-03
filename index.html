@@ -3,10 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Referência IATA DGR</title>
+    <title>Referência IATA DGR | LATAM Cargo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script>
+      // Bridge para variáveis de ambiente no Cloudflare Pages
+      window.process = {
+        env: {
+          API_KEY: "" // Será preenchido pelo ambiente ou via substituição no build
+        }
+      };
+      
       tailwind.config = {
         theme: {
           extend: {
@@ -15,11 +22,11 @@
             },
             colors: {
               latam: {
-                indigo: '#1E1B4B', // Deep Indigo
+                indigo: '#1E1B4B',
                 indigoLight: '#312E81',
-                coral: '#E11D48', // Coral/Red accent
+                coral: '#E11D48',
                 coralHover: '#BE123C',
-                bg: '#F8FAFC', // Slightly cooler gray
+                bg: '#F8FAFC',
                 card: '#FFFFFF',
                 text: '#0F172A',
                 textMuted: '#64748B'
@@ -48,7 +55,6 @@
         background-color: #F8FAFC;
         color: #0F172A;
       }
-      /* Custom scrollbar for reference feel */
       ::-webkit-scrollbar {
         width: 8px;
       }
@@ -62,7 +68,6 @@
       ::-webkit-scrollbar-thumb:hover {
         background: #64748b;
       }
-      
       .parallax-bg {
         background-attachment: fixed;
         background-position: center;
