@@ -1,4 +1,5 @@
 
+
 import { DGRChapter, DGRVariation } from './types';
 import { Package, Plane, AlertTriangle, Box, ShieldCheck, FileText, Globe, Layers, Search, Check, Zap, Truck, Anchor, Info, BookOpen, FlaskConical, ListFilter, Ban, Radiation, Library, Scale, FileQuestion, Building2, Tag } from 'lucide-react';
 
@@ -535,6 +536,18 @@ export const DGR_CHAPTERS: DGRChapter[] = [
         { id: "4.1.1", title: "Seleção do PSN", blocks:[{type: "paragraph", content: "O nome em negrito na Tabela 4.2, seguido por qualquer texto não em itálico, constitui o PSN."}]},
         { id: "4.1.2", title: "Entradas Genéricas e N.O.S.", blocks:[{type: "paragraph", content: "Entradas 'não especificadas de outra forma' (n.o.s.) devem ser suplementadas com o(s) nome(s) técnico(s) do(s) componente(s) perigoso(s)."}]},
         { id: "4.2", title: "Lista de Mercadorias Perigosas (Blue Pages)", blocks: [{ type: "paragraph", content: "A Tabela 4.2, conhecida como 'Páginas Azuis', é a principal referência para todas as mercadorias perigosas listadas. Ela fornece informações sobre classificação, embalagem, limites e disposições especiais." }, { type: "database", content: { id: "blue-pages", title: "Tabela 4.2 - Lista Azul", type: "blue-pages", columns: [{ key: "un", label: "UN", width: "w-16", filterable: true }, { key: "name", label: "Nome Apropriado", width: "w-64", filterable: true }, { key: "class", label: "Cls", width: "w-12" }, { key: "sub", label: "Sub", width: "w-12" }, { key: "pg", label: "PG", width: "w-12" }, { key: "eq", label: "EQ", width: "w-12" }, { key: "lq_pi", label: "Y-PI", width: "w-16" }, { key: "pax_pi", label: "Pax PI", width: "w-16" }, { key: "cao_pi", label: "CAO PI", width: "w-16" }, { key: "sp", label: "SP", width: "w-24" }], data: BLUE_PAGES_DATA } }] },
+        { 
+            id: "4.3", 
+            title: "Nomes Genéricos e N.O.S. (Não Especificados de Outra Forma)",
+            blocks: [
+                { type: "paragraph", content: "Quando uma substância ou mistura não é listada especificamente por nome na Tabela 4.2, uma entrada 'genérica' ou 'não especificada de outra forma' (N.O.S.) deve ser usada. Para garantir a identificação adequada do risco, essas entradas devem ser complementadas com o nome técnico dos componentes perigosos." },
+                { type: "note", content: {
+                    title: "Exemplo de Aplicação",
+                    text: "Uma mistura de álcool isopropílico e tolueno seria declarada como: UN 1993, Líquido Inflamável, n.o.s. (tolueno, álcool isopropílico), 3, GE II."
+                }},
+                { type: "paragraph", content: "Geralmente, no máximo dois componentes que mais contribuem para o risco da mistura devem ser mostrados entre parênteses. Esta informação é crucial para a resposta a emergências." }
+            ]
+        },
         { id: "4.4", title: "Disposições Especiais", blocks: [{ type: "paragraph", content: "Códigos 'A' (A1, A2, etc.) listados na Coluna M da Tabela 4.2 modificam os requisitos para itens específicos." }, { type: "database", content: { id: "sp-db", title: "Tabela 4.4 - Disposições Especiais", type: "variations", columns: [ { key: "code", label: "Cód" }, { key: "text", label: "Descrição" } ], data: SPECIAL_PROVISIONS_DATA } }] }
     ]
   },
@@ -545,14 +558,22 @@ export const DGR_CHAPTERS: DGRChapter[] = [
     color: "border-yellow-500",
     icon: Package,
     sections: [
-        { id: "5.0", title: "Disposições Gerais", blocks: [] },
+        { id: "5.0", title: "Disposições Gerais", blocks: [
+            {type: "paragraph", content: "O expedidor é responsável por garantir que a embalagem selecionada esteja em conformidade com a Instrução de Embalagem aplicável, que os limites de quantidade não sejam excedidos e que todos os requisitos gerais de embalagem sejam atendidos."}
+        ]},
         { id: "5.0.1", title: "Responsabilidades do Expedidor", blocks:[{ type: "paragraph", content: "O expedidor é responsável por garantir que a embalagem selecionada esteja em conformidade com a Instrução de Embalagem aplicável e que os limites de quantidade não sejam excedidos."}]},
         { id: "5.0.2", title: "Requisitos Gerais de Embalagem", blocks:[{ type: "paragraph", content: "Todas as embalagens usadas para mercadorias perigosas devem atender aos seguintes requisitos fundamentais:"}, {type: "list", content: {ordered: false, items: ["As embalagens devem ser de boa qualidade e construídas de forma a prevenir vazamentos sob condições normais de transporte, incluindo mudanças de temperatura, umidade, pressão e vibração.", "As embalagens devem ser compatíveis com o conteúdo. As partes da embalagem que entram em contato direto com mercadorias perigosas não devem ser afetadas ou enfraquecidas significativamente por essa substância.", "Deve ser utilizado material absorvente e de acolchoamento adequado para líquidos em embalagens combinadas.", "As embalagens devem estar devidamente fechadas de acordo com as instruções do fabricante."]}}]},
         { id: "5.0.3", title: "Overpacks", blocks:[{ type: "paragraph", content: "Um invólucro usado por um expedidor para conter um ou mais volumes. Deve ser marcado com 'OVERPACK' e todas as marcações e etiquetas dos volumes internos devem ser reproduzidas no exterior."}]},
         { id: "5.0.4", title: "Embalagens de Resgate (Salvage)", blocks:[{ type: "paragraph", content: "Embalagens especiais usadas para transportar volumes de mercadorias perigosas que foram danificados, defeituosos ou que vazaram."}]},
+        { id: "5.1", title: "Instruções de Embalagem - Classe 1", blocks: [{ type: "paragraph", content: "Contém as Instruções de Embalagem de 101 a 144." }, {type: "packing-instruction", content: {id: "130", title: "Explosivos - Divisão 1.4S", transportMode: "Passenger and Cargo", content: [{type: "paragraph", content: "Esta instrução se aplica a artigos da Divisão 1.4, Grupo de Compatibilidade S."}, {type: "table", content: {headers: ["Embalagem Interna", "Quantidade Líquida Máxima"], rows: [["Não especificado", "Não aplicável"]]}}, {type: "note", content: {title: "Embalagem Externa", text: "As embalagens internas devem ser acondicionadas em embalagens externas resistentes, como caixas de aço (4A), caixas de madeira (4C1) ou caixas de papelão (4G)."}}, {type: "paragraph", content: "A massa bruta máxima por volume é de 25 kg em aeronaves de passageiros e 100 kg em aeronaves de carga."}]}} ] },
+        { id: "5.2", title: "Instruções de Embalagem - Classe 2", blocks: [{ type: "paragraph", content: "Contém as Instruções de Embalagem de 200 a 222." }, {type: "packing-instruction", content: {id: "200", title: "Gases Comprimidos", transportMode: "Passenger and Cargo", content: [{type: "paragraph", content: "Esta instrução se aplica a gases comprimidos das Divisões 2.1 e 2.2."}, {type: "paragraph", content: "Cilindros devem ser construídos e testados de acordo com as especificações reconhecidas pelas autoridades competentes. A pressão no cilindro não deve exceder a pressão de trabalho de serviço do cilindro."}, {type: "warning", content: {text: "As válvulas devem ser protegidas contra danos que possam causar liberação acidental do conteúdo, seja por sua natureza e design, seja pelo uso de tampas protetoras."}}, {type: "paragraph", content: "A quantidade máxima por embalagem em aeronaves de passageiros é de 75 kg e em aeronaves de carga é de 150 kg."}]}} ] },
         { id: "5.3", title: "Instruções de Embalagem - Classe 3", blocks: [{ type: "paragraph", content: "Contém as Instruções de Embalagem de 340 a 378." }, {type: "packing-instruction", content: {id: "353", title: "Líquidos Inflamáveis, GE II", transportMode: "Passenger and Cargo", content: [{type: "paragraph", content: "Esta instrução se aplica a líquidos inflamáveis do Grupo de Embalagem II em embalagens combinadas em aeronaves de passageiros."}, {type: "table", content: {headers: ["Embalagem Interna", "Quantidade Líquida Máxima"], rows: [["Vidro, Plástico, Metal", "1 L"]]}}, {type: "note", content: {title: "Embalagem Externa", text: "As embalagens internas devem ser acondicionadas em embalagens externas resistentes, como caixas de papelão (4G) ou tambores de aço (1A2)."}}, {type: "paragraph", content: "A quantidade líquida total por volume não deve exceder 5 L."}]}} ] },
+        { id: "5.4", title: "Instruções de Embalagem - Classe 4", blocks: [{ type: "paragraph", content: "Contém as Instruções de Embalagem de 440 a 499." }, {type: "packing-instruction", content: {id: "445", title: "Sólidos Inflamáveis, GE II", transportMode: "Passenger and Cargo", content: [{type: "paragraph", content: "Esta instrução se aplica a sólidos inflamáveis (Divisão 4.1) do Grupo de Embalagem II em embalagens combinadas."}, {type: "table", content: {headers: ["Embalagem Interna", "Quantidade Máxima"], rows: [["Vidro", "1 kg"], ["Plástico", "5 kg"], ["Metal", "5 kg"]]}}, {type: "note", content: {title: "Embalagem Externa", text: "Caixas de papelão (4G), tambores de plástico (1H2) ou Jerricans de aço (3A1)."}}, {type: "paragraph", content: "A massa bruta máxima por volume não deve exceder 15 kg."}]}} ] },
+        { id: "5.5", title: "Instruções de Embalagem - Classe 5", blocks: [{ type: "paragraph", content: "Contém as Instruções de Embalagem de 520 a 578." }, {type: "packing-instruction", content: {id: "550", title: "Líquidos Oxidantes, GE II", transportMode: "Passenger and Cargo", content: [{type: "paragraph", content: "Esta instrução se aplica a líquidos oxidantes (Divisão 5.1) do Grupo de Embalagem II em embalagens combinadas."}, {type: "table", content: {headers: ["Embalagem Interna", "Quantidade Líquida Máxima"], rows: [["Vidro", "1 L"], ["Plástico", "2.5 L"], ["Metal", "5 L"]]}}, {type: "warning", content: {text: "Materiais de embalagem internos devem ser compatíveis e não reagir com o conteúdo. Materiais de amortecimento devem ser incombustíveis."}}, {type: "paragraph", content: "A quantidade líquida máxima por volume não deve exceder 5 L."}]}} ] },
         { id: "5.6", title: "Instruções de Embalagem - Classe 6", blocks: [{ type: "paragraph", content: "Contém as Instruções de Embalagem de 620 a 682." }, {type: "packing-instruction", content: {id: "650", title: "Substância Biológica, Categoria B (UN 3373)", transportMode: "Passenger and Cargo", content: [{type: "paragraph", content: "Esta instrução se aplica a substâncias biológicas da Categoria B (UN 3373)."}, {type: "paragraph", content: "A embalagem deve consistir em três componentes:"}, {type: "list", content: {ordered: true, items: ["Um recipiente primário estanque.", "Uma embalagem secundária estanque.", "Uma embalagem externa rígida com material absorvente adequado posicionado entre o recipiente primário e a embalagem secundária."]}}, {type: "note", content: {title: "Limites", text: "O recipiente primário não deve exceder 1 L (líquido) ou a massa da embalagem externa (sólido). A quantidade total por volume não deve exceder 4 L ou 4 kg."}}, {type: "warning", content: {text: "A marca 'Biological Substance, Category B' deve ser exibida na embalagem externa."}}]}} ] },
-        { id: "5.8", title: "Instruções de Embalagem - Classe 9", blocks: [{ type: "paragraph", content: "Contém as Instruções de Embalagem de 950 a 970." }, {type: "packing-instruction", content: {id: "965", title: "Baterias de Íon Lítio (UN 3480)", transportMode: "Cargo Aircraft Only", content: [{type: "paragraph", content: "Esta instrução se aplica a baterias de íon lítio (UN 3480) sem equipamento. O transporte em aeronaves de passageiros é proibido."}, {type: "note", content: {title: "Estado de Carga (SoC)", text: "As baterias devem ser enviadas com um estado de carga (SoC) não superior a 30% de sua capacidade nominal."}}, {type: "warning", content: {text: "Seção IA: Exige embalagem de especificação UN (PG II) e DGD completa. Seção IB: Não exige embalagem UN, mas tem limites de peso e requer DGD. Seção II: Embalagens mais simples, sem DGD, para baterias pequenas."}}, {type: "paragraph", content: "Todas as baterias devem ser protegidas contra curto-circuito e danos acidentais. Volumes devem portar a Etiqueta de Risco Classe 9 e a Marca de Bateria de Lítio."}]}}] },
+        { id: "5.7", title: "Instruções de Embalagem - Classe 7", blocks: [{ type: "paragraph", content: "Os requisitos de embalagem para Material Radioativo (Classe 7) são complexos e estão detalhados no Capítulo 10. As instruções de embalagem específicas dependem da categoria do material, atividade, forma e se é físsil." }, { type: "note", content: { title: "Referência Cruzada", text: "Consulte o Capítulo 10 para todos os requisitos de embalagem da Classe 7." } }] },
+        { id: "5.8", title: "Instruções de Embalagem - Classe 8", blocks: [{ type: "paragraph", content: "Contém as Instruções de Embalagem de 850 a 872." }, {type: "packing-instruction", content: {id: "851", title: "Líquidos Corrosivos, GE II", transportMode: "Passenger and Cargo", content: [{type: "paragraph", content: "Esta instrução se aplica a líquidos corrosivos (Classe 8) do Grupo de Embalagem II em embalagens combinadas."}, {type: "table", content: {headers: ["Embalagem Interna", "Quantidade Líquida Máxima"], rows: [["Vidro", "0.5 L"], ["Plástico", "1 L"], ["Metal", "1 L"]]}}, {type: "note", content: {title: "Embalagens Intermediárias", text: "Embalagens internas de vidro devem ser acondicionadas em embalagens intermediárias compatíveis e rígidas."}}, {type: "paragraph", content: "A quantidade líquida máxima por volume não deve exceder 1 L."}]}} ] },
+        { id: "5.9", title: "Instruções de Embalagem - Classe 9", blocks: [{ type: "paragraph", content: "Contém as Instruções de Embalagem de 950 a 970." }, {type: "packing-instruction", content: {id: "965", title: "Baterias de Íon Lítio (UN 3480)", transportMode: "Cargo Aircraft Only", content: [{type: "paragraph", content: "Esta instrução se aplica a baterias de íon lítio (UN 3480) sem equipamento. O transporte em aeronaves de passageiros é proibido."}, {type: "note", content: {title: "Estado de Carga (SoC)", text: "As baterias devem ser enviadas com um estado de carga (SoC) não superior a 30% de sua capacidade nominal."}}, {type: "warning", content: {text: "Seção IA: Exige embalagem de especificação UN (PG II) e DGD completa. Seção IB: Não exige embalagem UN, mas tem limites de peso e requer DGD. Seção II: Embalagens mais simples, sem DGD, para baterias pequenas."}}, {type: "paragraph", content: "Todas as baterias devem ser protegidas contra curto-circuito e danos acidentais. Volumes devem portar a Etiqueta de Risco Classe 9 e a Marca de Bateria de Lítio."}]}}] },
     ]
   },
   {
@@ -665,6 +686,26 @@ export const DGR_CHAPTERS: DGRChapter[] = [
               type: 'matrix',
               footnotes: ["'true' (ou X na DGR): Segregação necessária.", "'false' (ou célula em branco na DGR): Segregação não necessária."]
           }}] },
+          {
+              id: "9.4",
+              title: "Carregamento (Loading)",
+              blocks: [
+                  { type: "paragraph", content: "O carregamento de mercadorias perigosas deve ser supervisionado por pessoal qualificado. Antes do carregamento, cada volume deve ser inspecionado externamente para garantir que não haja vazamentos ou danos. Volumes danificados não devem ser carregados." },
+                  { type: "list", content: {
+                      ordered: false,
+                      items: [
+                          "Os volumes devem ser carregados, estivados e amarrados de forma a prevenir movimento e danos durante o voo.",
+                          "A orientação dos volumes (indicada pelas setas de orientação) deve ser mantida durante todo o transporte.",
+                          "Volumes com a etiqueta 'Cargo Aircraft Only' (CAO) são proibidos em aeronaves de passageiros e devem ser carregados em aeronaves cargueiras, preferencialmente em locais acessíveis à tripulação.",
+                          "Mercadorias perigosas não devem ser carregadas em um ULD (Unit Load Device) contendo alimentos, rações ou outros produtos comestíveis."
+                      ]
+                  }},
+                  { type: "warning", content: {
+                      title: "Manuseio de CAO",
+                      text: "Volumes com a etiqueta 'Cargo Aircraft Only' não devem ser carregados na cabine de passageiros ou no convés inferior de uma aeronave de passageiros. Devem ser carregados de tal forma que a tripulação possa ver, manusear e, se necessário, separar os pacotes."
+                  }}
+              ]
+          },
           { id: "9.5", title: "Informação ao Piloto em Comando (NOTOC)", blocks: [{ type: "paragraph", content: "Antes da partida, o operador deve fornecer ao piloto em comando (PIC) informações precisas e legíveis sobre as mercadorias perigosas a bordo. Este documento é o NOTOC." }, {type: 'list', content: {ordered: true, items: [
               "Número do Conhecimento Aéreo (AWB)",
               "Número UN e Nome Apropriado para Embarque",
@@ -675,6 +716,34 @@ export const DGR_CHAPTERS: DGRChapter[] = [
               "Para Classe 7: Índice de Transporte (TI), Categoria e Dimensões",
               "Confirmação de que nenhum pacote danificado foi carregado."
           ]}}] },
+          { 
+              id: "9.6", 
+              title: "Fornecimento de Informações",
+              blocks: [
+                  { type: "paragraph", content: "Informações cruciais sobre mercadorias perigosas devem ser comunicadas a várias partes para garantir a segurança em todas as fases do transporte." }
+              ]
+          },
+          { 
+              id: "9.6.1", 
+              title: "Informação aos Passageiros", 
+              blocks: [
+                  { type: "paragraph", content: "Os operadores aéreos devem garantir que avisos sejam exibidos de forma clara e proeminente nos aeroportos (em áreas de check-in, venda de passagens, portões de embarque) e em seus websites. Esses avisos informam aos passageiros sobre os tipos de mercadorias perigosas que são estritamente proibidas em sua bagagem de mão e despachada." }
+              ]
+          },
+          { 
+              id: "9.6.2", 
+              title: "Informação a Funcionários", 
+              blocks: [
+                  { type: "paragraph", content: "Manuais operacionais e instruções de emergência devem estar prontamente disponíveis para todos os funcionários envolvidos no manuseio de carga. O NOTOC (Notification to Pilot-in-Command) é a principal fonte de informação para a tripulação de voo e para o pessoal de terra responsável pelo carregamento." }
+              ]
+          },
+          { 
+              id: "9.6.3", 
+              title: "Informação em Emergência em Voo", 
+              blocks: [
+                  { type: "paragraph", content: "No evento de uma emergência em voo, o piloto-em-comando deve, assim que a situação permitir, informar a unidade de controle de tráfego aéreo (ATC) apropriada sobre as mercadorias perigosas a bordo. A informação deve ser clara e concisa, incluindo, se possível, o Nome Apropriado para Embarque, Classe, Número UN, quantidade e localização na aeronave." }
+              ]
+          },
           { id: "9.7", title: "Retenção de Documentos", blocks: [{ type: "paragraph", content: "O operador deve reter uma cópia da DGD, do checklist de aceitação e do NOTOC por um período mínimo de três meses após o voo." }] }
       ]
   },
@@ -686,10 +755,18 @@ export const DGR_CHAPTERS: DGRChapter[] = [
       icon: Radiation,
       sections: [
           { id: "10.0", title: "Aplicabilidade", blocks:[{ type: "paragraph", content: "Este capítulo estabelece os requisitos para o transporte aéreo seguro de material radioativo (Classe 7), que são baseados nos regulamentos da Agência Internacional de Energia Atômica (AIEA)." }] },
+          { id: "10.1", title: "Escopo e Disposições Gerais", blocks: [{ type: "paragraph", content: "Este capítulo é baseado nos regulamentos da Agência Internacional de Energia Atômica (AIEA), especificamente o Regulamento para o Transporte Seguro de Materiais Radioativos (TS-R-1). Detalha todos os requisitos para o transporte seguro de materiais da Classe 7 por via aérea, cobrindo classificação, embalagem, marcação, etiquetagem, documentação e manuseio." }] },
+          { id: "10.2", title: "Limitações Gerais", blocks: [{ type: "paragraph", content: "O transporte de material radioativo pelo correio aéreo internacional é estritamente proibido. Certos radionuclídeos de alto risco podem ser proibidos, a menos que contidos em um dispositivo que atenda a padrões de segurança específicos e aprovados pela autoridade competente." }] },
           { id: "10.3", title: "Determinação do Nível de Atividade", blocks:[{ type: "paragraph", content: "A classificação e os limites de um material radioativo são determinados por sua atividade (medida em Becquerels, Bq) e pelos valores A1 e A2." }, {type: 'definition-list', content: [
               {term: 'Valor A1', definition: 'Limite de atividade para material radioativo de "forma especial". Material de forma especial é encapsulado de forma a não se dispersar em caso de acidente.'},
               {term: 'Valor A2', definition: 'Limite de atividade para material radioativo de "forma normal" (não especial), como líquidos ou pós, que podem se dispersar.'}
           ]}] },
+// FIX: Flattened nested sections 10.4 and 10.6 to fix type error.
+          { id: "10.4", title: "Classificação de Materiais e Pacotes", blocks: [] },
+          { id: "10.4.1", title: "Designação de Números UN", blocks: [{ type: "paragraph", content: "A classificação começa com a atribuição do número UN correto da Tabela 10.4.A, que varia com base no tipo de material, atividade e se é físsil." }] },
+          { id: "10.4.2", title: "Material de Baixa Atividade Específica (LSA)", blocks: [{ type: "paragraph", content: "Material radioativo que por sua natureza tem uma atividade específica limitada. É dividido em LSA-I, LSA-II e LSA-III com base na sua composição e atividade." }] },
+          { id: "10.4.3", title: "Objeto Contaminado na Superfície (SCO)", blocks: [{ type: "paragraph", content: "Um objeto sólido que não é em si radioativo, mas tem material radioativo distribuído em suas superfícies. Dividido em SCO-I e SCO-II." }] },
+          { id: "10.4.4", title: "Material Físsil", blocks: [{ type: "paragraph", content: "Materiais como urânio-233, urânio-235, plutônio-239, que são capazes de sustentar uma reação nuclear em cadeia. Requerem controle estrito para garantir a segurança contra criticidade (uma reação nuclear acidental)." }] },
           { id: "10.5", title: "Requisitos de Embalagem e Limites", blocks:[{ type: "paragraph", content: "A embalagem de material radioativo é categorizada com base nos níveis de radiação externos, controlados pelo Índice de Transporte (TI) e pelo nível de radiação na superfície." }] },
           { id: "10.5.1", title: "Índice de Transporte (TI)", blocks:[{ type: "paragraph", content: "O TI é um número único atribuído a um volume para controlar a exposição à radiação. Ele é determinado medindo a dose máxima de radiação em mSv/h a 1 metro da superfície do volume e multiplicando por 100." }, {type: 'warning', content: {text: "O TI é o principal fator para determinar os requisitos de segregação de pessoas e de outras cargas sensíveis."}} ] },
           { id: "10.5.2", title: "Categorias de Volumes", blocks:[{ type: "paragraph", content: "Os volumes são classificados em três categorias, cada uma com sua própria etiqueta de risco:" }, {type: 'table', content: {
@@ -701,6 +778,15 @@ export const DGR_CHAPTERS: DGRChapter[] = [
               ],
               caption: 'Categorias de Volumes Radioativos'
           }}] },
+          { id: "10.6", title: "Requisitos de Fabricação e Teste para Pacotes", blocks: [] },
+          { id: "10.6.1", title: "Tipos de Pacotes", blocks: [{ type: "paragraph", content: "Existem vários tipos de pacotes, projetados para diferentes níveis de risco:" }, { type: 'definition-list', content: [
+              { term: 'Pacote Exceptuado', definition: 'Para quantidades muito pequenas de material radioativo com risco mínimo.' },
+              { term: 'Pacote Industrial (IP)', definition: 'Para materiais LSA e SCO, com três níveis (IP-1, IP-2, IP-3).' },
+              { term: 'Pacote Tipo A', definition: 'Projetado para resistir a condições normais de transporte (quedas, chuva, empilhamento) sem liberar o conteúdo.' },
+              { term: 'Pacote Tipo B', definition: 'Projetado para resistir a condições severas de acidente (impacto, fogo, imersão) sem liberar o conteúdo. Usado para materiais de alta atividade.' },
+              { term: 'Pacote Tipo C', definition: 'Similar ao Tipo B, mas com testes de performance ainda mais rigorosos, projetado especificamente para transporte aéreo de materiais de alta atividade.' }
+          ]}] },
+          { id: "10.6.2", title: "Testes de Performance", blocks: [{ type: "paragraph", content: "Pacotes, especialmente os do Tipo A e B, devem passar por uma série rigorosa de testes, incluindo testes de queda de várias alturas, testes de penetração, spray de água e compressão para simular as tensões do transporte normal e de acidentes." }] },
           { id: "10.7", title: "Marcação e Etiquetagem", blocks:[{ type: "paragraph", content: "Além das marcações padrão (UN, PSN), os volumes radioativos devem ser etiquetados com a etiqueta de categoria apropriada (I-BRANCA, II-AMARELA ou III-AMARELA). A etiqueta deve incluir o nome do radionuclídeo, a atividade e o Índice de Transporte (para categorias II e III)." }] },
           { id: "10.8", title: "Documentação (DGD)", blocks:[{ type: "paragraph", content: "A DGD para Classe 7 requer informações adicionais, incluindo: nome ou símbolo de cada radionuclídeo, descrição da forma física e química, atividade máxima em Bq, categoria do volume, e Índice de Transporte (TI)." }] },
           { id: "10.9", title: "Manuseio e Segregação", blocks:[{ type: "paragraph", content: "Volumes radioativos devem ser segregados de pessoas e de filme fotográfico não revelado. A distância de segregação é determinada pela soma dos Índices de Transporte (TI) de todos os volumes carregados. Existem limites máximos para a soma de TIs por compartimento de aeronave e por aeronave." }] }
