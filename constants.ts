@@ -558,21 +558,28 @@ export const DGR_CHAPTERS: DGRChapter[] = [
   {
       id: 6,
       title: "Especificações de Embalagem",
-      description: "Requisitos de fabricação e testes de performance para embalagens UN.",
+      description: "Requisitos de fabricação, teste de performance e marcação para embalagens de especificação UN.",
       color: "border-gray-700",
       icon: Box,
       sections: [
-          { id: "6.0", title: "Aplicabilidade e Requisitos Gerais", blocks: [{ type: "paragraph", content: "Este capítulo define os requisitos de construção e teste para embalagens de especificação UN, exceto para Classe 2, 6.2 e 7." }] },
-          { id: "6.1", title: "Códigos para Tipos de Embalagem", blocks: [{ type: "list", content: { ordered: false, items: ["1A1: Tambor de Aço com tampa não removível", "4G: Caixa de Papelão", "3H1: Jerrican de Plástico com tampa não removível"] } }] },
-          { id: "6.2", title: "Marcação de Embalagens", blocks: [{ type: "paragraph", content: "Detalha o significado da marca UN (ex: 4G/Y145/S/23/USA/M1234), que indica o tipo, nível de performance, ano de fabricação, etc." }] },
-          { id: "6.3", title: "Requisitos para Embalagens", blocks: [{ type: "paragraph", content: "Especificações detalhadas para cada tipo de embalagem (tambores, caixas, jerricans, etc.)." }] },
-          { id: "6.3.1", title: "Requisitos para Tambores", blocks: [{ type: "paragraph", content: "Detalhes sobre materiais, construção e fechamento de tambores de aço, alumínio, etc." }] },
-          { id: "6.3.2", title: "Requisitos para Caixas", blocks: [{ type: "paragraph", content: "Detalhes sobre materiais e construção de caixas de papelão, madeira, plástico, etc." }] },
-          { id: "6.4", title: "Requisitos de Teste para Embalagens", blocks: [{ type: "paragraph", content: "As embalagens devem passar por testes rigorosos para obter a certificação UN." }] },
-          { id: "6.4.1", title: "Teste de Queda", blocks:[{ type: "paragraph", content: "Simula quedas durante o manuseio. A altura da queda varia com o Grupo de Embalagem (1.8m para PG I)." }] }, 
-          { id: "6.4.2", title: "Teste de Estanqueidade", blocks:[{ type: "paragraph", content: "Aplicável a embalagens para líquidos, para garantir que não haja vazamentos." }] }, 
-          { id: "6.4.3", title: "Teste de Pressão Hidráulica Interna", blocks:[{ type: "paragraph", content: "Testa a capacidade da embalagem de resistir à pressão interna." }] }, 
-          { id: "6.4.4", title: "Teste de Empilhamento", blocks:[{ type: "paragraph", content: "Testa a resistência da embalagem ao peso de outras embalagens empilhadas sobre ela." }] }
+          { id: "6.0", title: "Aplicabilidade e Requisitos Gerais", blocks: [{ type: "paragraph", content: "Este capítulo detalha os requisitos para a fabricação e teste de embalagens de especificação da ONU. Estas embalagens são identificadas por uma marcação específica (ex: '4G/Y145/S/23...'). As especificações não se aplicam a cilindros de gás, embalagens para material radioativo ou para substâncias infectantes, que possuem requisitos próprios." }] },
+          { id: "6.1", title: "Códigos para Tipos de Embalagem", blocks: [{ type: "paragraph", content: "Os códigos que formam a primeira parte da marcação UN identificam o tipo de embalagem, o material de construção e, em alguns casos, a categoria dentro do tipo." }, { type: 'table', content: { headers: ["Código", "Significado"], rows: [["1", "Tambor (Drum)"], ["3", "Jerrican (Bombona)"], ["4", "Caixa (Box)"], ["A", "Aço (Steel)"], ["B", "Alumínio (Aluminium)"], ["G", "Papelão (Fibreboard)"], ["H", "Plástico (Plastic)"], ["1A1", "Tambor de aço com tampa não removível"], ["4G", "Caixa de papelão"]] } }] },
+          { id: "6.2", title: "Marcação de Embalagens de Especificação UN", blocks: [{ type: "paragraph", content: "Cada embalagem testada e certificada deve exibir uma marca durável e legível. A marca indica que a embalagem corresponde a um design-tipo testado com sucesso. Exemplo:" }, { type: 'paragraph', content: "u\n/n 4G/Y145/S/23/USA/M1234" }, {type: 'definition-list', content: [
+              {term: 'u\n/n', definition: 'Símbolo das Nações Unidas para embalagens.'},
+              {term: '4G', definition: 'Código do tipo de embalagem (neste caso, Caixa de Papelão).'},
+              {term: 'Y', definition: 'Nível de performance. Y indica que a embalagem foi testada para Grupo de Embalagem II e III.'},
+              {term: '145', definition: 'Para embalagens de sólidos, indica a massa bruta máxima permitida em kg.'},
+              {term: 'S', definition: 'Indica que a embalagem é para Sólidos ou para embalagens internas.'},
+              {term: '23', definition: 'Os dois últimos dígitos do ano de fabricação.'},
+              {term: 'USA', definition: 'O código do país que autorizou a marcação.'},
+              {term: 'M1234', definition: 'Código de identificação da agência de testes ou do fabricante.'}
+          ]}] },
+          { id: "6.3", title: "Requisitos para Embalagens", blocks: [{ type: "paragraph", content: "As embalagens devem ser fabricadas sob um programa de garantia de qualidade. Os materiais devem ser compatíveis com o conteúdo, e os fechos devem ser projetados para resistir às condições de transporte sem vazar. Para caixas de papelão (4G), é crucial que sejam protegidas da umidade, pois a água pode comprometer sua integridade estrutural." }] },
+          { id: "6.4", title: "Requisitos de Teste de Performance", blocks: [{ type: "paragraph", content: "Protótipos de cada design de embalagem devem passar por testes rigorosos antes de serem autorizados. Os testes são projetados para simular as tensões do transporte." }] },
+          { id: "6.4.1", title: "Teste de Queda (Drop Test)", blocks:[{ type: "paragraph", content: "As embalagens são enchidas e derrubadas em várias orientações para testar sua resistência ao impacto. A altura da queda depende do Grupo de Embalagem:" }, {type: 'table', content: { headers: ["Grupo de Embalagem", "Altura de Queda"], rows: [["I (Alto Risco)", "1.2 m"], ["II (Médio Risco)", "1.2 m"], ["III (Baixo Risco)", "1.2 m"]]}}, {type: 'note', content: {title: "Nota para Transporte Aéreo", text: "Note que, para transporte aéreo, a altura de queda para os Grupos de Embalagem II e III é harmonizada em 1.2 m para a maioria das substâncias, refletindo condições de manuseio mais severas, ao contrário de outros modais que podem usar 0.8 m."}}] }, 
+          { id: "6.4.2", title: "Teste de Empilhamento (Stacking Test)", blocks:[{ type: "paragraph", content: "A embalagem deve suportar o peso de uma pilha de embalagens idênticas até uma altura de 3 metros por 24 horas, sem vazar ou deformar a ponto de reduzir sua eficácia." }] },
+          { id: "6.4.3", title: "Teste de Pressão Hidráulica (Hydrostatic Pressure)", blocks:[{ type: "paragraph", content: "Embalagens para líquidos devem ser capazes de suportar uma pressão interna mínima (geralmente 95 kPa para transporte aéreo) sem vazar. Este teste simula as diferenças de pressão em altitude." }] },
+          { id: "6.4.4", title: "Teste de Estanqueidade (Leakproofness Test)", blocks:[{ type: "paragraph", content: "Todas as embalagens para líquidos devem ser testadas com uma baixa pressão de ar para garantir que não haja vazamentos nos fechos ou no corpo da embalagem."}] }
       ]
   },
   {
@@ -600,62 +607,103 @@ export const DGR_CHAPTERS: DGRChapter[] = [
   {
       id: 8,
       title: "Documentação",
-      description: "Shipper's Declaration (DGD) e Air Waybill (AWB).",
+      description: "Preenchimento correto da Shipper's Declaration (DGD) e do Air Waybill (AWB).",
       color: "border-green-600",
       icon: FileText,
       sections: [
-          { id: "8.0", title: "Requisitos Gerais", blocks: [{ type: "paragraph", content: "Uma Shipper's Declaration for Dangerous Goods (DGD) é necessária para a maioria dos embarques de mercadorias perigosas." }] },
-          { id: "8.1", title: "Shipper's Declaration (DGD)", blocks: [{ type: "paragraph", content: "Documento legal assinado pelo expedidor declarando conformidade. Deve ter bordas hachuradas vermelhas." }] },
-          { id: "8.1.1", title: "Preenchimento", blocks:[{ type: "paragraph", content: "A DGD deve ser preenchida de forma precisa e completa, sem rasuras não autorizadas. As informações devem ser apresentadas na seguinte ordem: UN Number, Proper Shipping Name, Class or Division, e Packing Group." }] },
-          { id: "8.1.2", title: "Número de Cópias", blocks:[{ type: "paragraph", content: "No mínimo, duas cópias da DGD devem ser fornecidas ao operador." }] },
-          { id: "8.1.3", title: "Correções e Alterações", blocks:[{ type: "paragraph", content: "Alterações ou correções na DGD não são permitidas, a menos que sejam assinadas pela mesma pessoa que assinou a declaração." }] },
-          { id: "8.2", title: "Conhecimento Aéreo (Air Waybill)", blocks: [{ type: "paragraph", content: "O AWB deve conter declarações específicas na caixa 'Handling Information' quando acompanha uma DGD." }, { type: "warning", content: { text: "Statement obrigatório: 'Dangerous Goods as per attached Shipper's Declaration' ou 'Dangerous Goods as per attached DGD'." } }] }
+          { id: "8.0", title: "Aplicabilidade", blocks: [{ type: "paragraph", content: "Salvo exceções (como Quantidades Limitadas Seção II, Gelo Seco como refrigerante, etc.), uma Shipper's Declaration for Dangerous Goods (DGD) preenchida e assinada é necessária para cada remessa de mercadorias perigosas." }] },
+          { id: "8.1", title: "Shipper's Declaration (DGD)", blocks: [{ type: "paragraph", content: "A DGD é um documento legal onde o expedidor certifica que a remessa está em total conformidade com os regulamentos da IATA. Deve ser apresentada em duas cópias (uma para o operador de origem, outra para acompanhar a carga)." }] },
+          { id: "8.1.1", title: "Preenchimento da DGD", blocks:[{ type: "paragraph", content: "A DGD deve ser preenchida com precisão. A seção de identificação da mercadoria perigosa deve seguir uma sequência estrita:" }, {type: 'definition-list', content: [
+              {term: 'UN Number', definition: 'O número de 4 dígitos precedido por "UN".'},
+              {term: 'Proper Shipping Name (PSN)', definition: 'O nome em negrito da Tabela 4.2. Para entradas N.O.S., o nome técnico deve ser adicionado entre parênteses.'},
+              {term: 'Class or Division', definition: 'A classe de risco primária, seguida pelo risco subsidiário entre parênteses, se houver.'},
+              {term: 'Packing Group', definition: 'O grupo de embalagem (I, II ou III), se aplicável.'}
+          ]}, { type: "note", content: { title: "Exemplo de Sequência", text: "UN 1263, Paint, 3, PG II" } }] },
+          { id: "8.1.2", title: "Quantidade e Tipo de Embalagem", blocks:[{ type: "paragraph", content: "Esta coluna deve detalhar o número de volumes, o tipo de embalagem e a quantidade líquida por volume. Exemplo: '1 Fibreboard Box x 5 L'. Para overpacks, a declaração 'Overpack Used' é obrigatória." }] },
+          { id: "8.1.3", title: "Packing Instruction & Autorização", blocks:[{ type: "paragraph", content: "O número da Instrução de Embalagem (ex: 965) deve ser declarado. A coluna 'Autorização' é usada para Disposições Especiais, aprovações de autoridades competentes ou outras informações relevantes." }] },
+          { id: "8.1.4", title: "Declaração e Assinatura", blocks:[{ type: "paragraph", content: "O expedidor (ou seu agente designado) deve assinar, datar e indicar o local da assinatura, certificando a conformidade da remessa." }] },
+          { id: "8.2", title: "Conhecimento Aéreo (Air Waybill)", blocks: [{ type: "paragraph", content: "O AWB que acompanha uma remessa com DGD deve conter uma declaração clara no campo 'Handling Information' (Informações de Manuseio)." }, { type: "warning", content: { text: "Declaração Mandatória: 'Dangerous Goods as per attached Shipper's Declaration' ou 'Dangerous Goods as per attached DGD'." } }, { type: "note", content: {title: 'Carga sem DGD', text: 'Para cargas perigosas que não requerem DGD (ex: baterias de lítio Seção II), o AWB deve conter a declaração "Dangerous Goods - Shipper\'s Declaration Not Required" e outras informações aplicáveis.'}}] }
       ]
   },
   {
       id: 9,
       title: "Manuseio",
-      description: "Aceitação, armazenamento, carregamento e inspeção.",
+      description: "Aceitação, armazenamento, segregação, carregamento e o NOTOC.",
       color: "border-blue-700",
       icon: Plane,
       sections: [
-          { id: "9.1", title: "Aceitação", blocks: [ { type: "paragraph", content: "O operador não deve aceitar um volume ou remessa de mercadorias perigosas até que tenha verificado, por meio de um checklist, que os documentos e os pacotes estão em total conformidade com os regulamentos." } ] },
-          { id: "9.1.1", title: "Checklist de Aceitação", blocks:[{ type: "paragraph", content: "Um checklist deve ser usado para garantir que os volumes e a documentação estejam em conformidade antes da aceitação." }] }, 
-          { id: "9.1.2", title: "Recusa de Carga", blocks:[{ type: "paragraph", content: "Remessas que não cumprem os regulamentos devem ser recusadas e o expedidor notificado sobre as discrepâncias." }] },
-          { id: "9.2", title: "Armazenamento", blocks: [ { type: "paragraph", content: "Mercadorias perigosas devem ser armazenadas de forma segura e segregada em áreas designadas." } ] },
-          { id: "9.3", title: "Segregação", blocks: [ { type: "paragraph", content: "Volumes incompatíveis não devem ser carregados próximos um do outro para evitar reações perigosas." } ] },
-          { id: "9.3.1", title: "Tabela de Segregação (9.3.A)", blocks:[{type: "tool", content: { toolType: 'segregation-checker', title: 'Verificador de Segregação Interativo', data: { classes: ['1', '2.1', '2.2', '2.3', '3', '4.1', '4.2', '4.3', '5.1', '5.2', '6.1', '7', '8'], labels: {'1': 'Explosivos', '2.1': 'Gás Inflamável', '2.2': 'Gás Não-Inflamável', '2.3': 'Gás Tóxico', '3': 'Líquido Inflamável', '4.1': 'Sólido Inflamável', '4.2': 'Combustão Espontânea', '4.3': 'Perigoso Quando Molhado', '5.1': 'Oxidante', '5.2': 'Peróxido Orgânico', '6.1': 'Tóxico', '7': 'Radioativo', '8': 'Corrosivo'}, matrix: {}, notes: {}} }}] }, 
-          { id: "9.3.2", title: "Segregação de Radioativos", blocks:[{ type: "paragraph", content: "Material radioativo deve ser segregado de pessoas, animais vivos e filme fotográfico não revelado com base no Índice de Transporte (TI)." }] },
-          { id: "9.4", title: "Carregamento", blocks: [ { type: "paragraph", content: "Volumes devem ser fixados para prevenir movimento durante o voo e protegidos contra danos." } ] },
-          { id: "9.4.1", title: "Carregamento em ULDs", blocks:[{ type: "paragraph", content: "Requisitos específicos para o carregamento de mercadorias perigosas em Unit Load Devices." }] }, 
-          { id: "9.4.2", title: "Fixação e Amarração", blocks:[{ type: "paragraph", content: "Os volumes devem ser adequadamente amarrados para evitar movimento em voo." }] },
-          { id: "9.5", title: "Informação ao Piloto em Comando (NOTOC)", blocks: [{ type: "paragraph", content: "O piloto deve ser notificado por escrito (NOTOC) sobre as mercadorias perigosas a bordo, incluindo UN Number, Proper Shipping Name, Class/Division, Packing Group, quantidade líquida, localização na aeronave e, para material radioativo, o Índice de Transporte." }] },
-          { id: "9.6", title: "Fornecimento de Informações", blocks: [{ type: "paragraph", content: "Informações sobre mercadorias perigosas devem ser disponibilizadas em diversas situações." }] },
-          { id: "9.6.1", title: "Informações para Passageiros", blocks: [{ type: "paragraph", content: "Os operadores devem fornecer informações aos passageiros sobre as mercadorias perigosas proibidas em sua bagagem." }] },
-          { id: "9.6.2", title: "Informações em Caso de Emergência", blocks: [{ type: "paragraph", content: "Em caso de emergência em voo, o piloto em comando deve informar o controle de tráfego aéreo sobre as mercadorias perigosas a bordo." }] },
-          { id: "9.7", title: "Manutenção de Registros", blocks: [{ type: "paragraph", content: "Documentos como a DGD e o NOTOC devem ser retidos por no mínimo 3 meses após o voo." }] }
+          { id: "9.1", title: "Aceitação", blocks: [ { type: "paragraph", content: "O operador não deve aceitar uma remessa de mercadorias perigosas a menos que tenha sido inspecionada por pessoal treinado, usando um checklist, para garantir que a documentação e os volumes estejam em total conformidade." } ] },
+          { id: "9.1.1", title: "Checklist de Aceitação", blocks:[{ type: "paragraph", content: "O checklist é uma ferramenta sistemática para verificar cada requisito regulatório. A falha em qualquer item resulta na recusa da remessa." }, {type: 'checklist', content: {id: 'acceptance-checklist', title: 'Checklist de Aceitação (Exemplo Simplificado)', items: [
+              {id: 'c1', text: 'Documentação: DGD e AWB estão consistentes e corretamente preenchidos?', reference: '8.1, 8.2'},
+              {id: 'c2', text: 'Idioma: Documentos e marcações estão em inglês?', reference: '8.1.1'},
+              {id: 'c3', text: 'Marcações: Todos os volumes possuem UN Number, PSN e endereços completos?', reference: '7.1'},
+              {id: 'c4', text: 'Etiquetas: Etiquetas de risco primário/subsidiário e de manuseio estão corretas e visíveis?', reference: '7.2, 7.3'},
+              {id: 'c5', text: 'Embalagem: O tipo de embalagem corresponde ao declarado e está em boas condições (sem vazamentos ou danos)?', reference: '5.0.2'},
+              {id: 'c6', text: 'Quantidade: A quantidade por volume está dentro dos limites da Instrução de Embalagem aplicável?', reference: '4.2'},
+              {id: 'c7', text: 'Variações: Todas as variações de Estado e Operador aplicáveis foram cumpridas?', reference: '2.8'}
+          ]}}] }, 
+          { id: "9.2", title: "Armazenamento", blocks: [ { type: "paragraph", content: "Volumes de mercadorias perigosas devem ser armazenados em locais seguros, protegidos do clima e de danos, e segregados de materiais incompatíveis e de áreas de alto tráfego." } ] },
+          { id: "9.3", title: "Segregação", blocks: [ { type: "paragraph", content: "Mercadorias perigosas incompatíveis não devem ser carregadas na aeronave de forma que possam vazar e se misturar perigosamente. A segregação também se aplica ao armazenamento." } ] },
+          { id: "9.3.1", title: "Tabela de Segregação (9.3.A)", blocks:[{ type: "paragraph", content: "A Tabela 9.3.A define os requisitos de segregação entre as classes de risco. Um 'X' na tabela indica que os pacotes devem ser segregados." }, {type: 'table', content: {
+              headers: ["", "1", "2.1", "2.2", "2.3", "3", "4.1", "4.2", "4.3", "5.1", "5.2", "6.1", "7", "8"],
+              rows: [
+                  ["1", false, false, false, false, false, false, false, false, false, false, false, true, false],
+                  ["2.1", false, true, true, true, true, true, false, false, false, false, true, true, true],
+                  ["2.2", false, true, true, true, true, true, false, false, false, false, true, true, true],
+                  ["2.3", false, true, true, true, true, true, false, false, false, false, true, true, true],
+                  ["3", false, true, true, true, true, true, false, false, false, false, true, true, true],
+                  ["4.1", false, true, true, true, true, true, false, false, false, false, true, true, true],
+                  ["4.2", false, false, false, false, false, false, true, false, false, false, false, true, false],
+                  ["4.3", false, false, false, false, false, false, false, true, false, false, false, true, false],
+                  ["5.1", false, false, false, false, false, false, false, false, true, false, false, true, false],
+                  ["5.2", false, false, false, false, false, false, false, false, false, true, false, true, false],
+                  ["6.1", false, true, true, true, true, true, false, false, false, false, true, true, true],
+                  ["7", true, true, true, true, true, true, true, true, true, true, true, true, true],
+                  ["8", false, true, true, true, true, true, false, false, false, false, true, true, true]
+              ],
+              caption: "Tabela 9.3.A - Requisitos de Segregação",
+              type: 'matrix',
+              footnotes: ["'true' (ou X na DGR): Segregação necessária.", "'false' (ou célula em branco na DGR): Segregação não necessária."]
+          }}] },
+          { id: "9.5", title: "Informação ao Piloto em Comando (NOTOC)", blocks: [{ type: "paragraph", content: "Antes da partida, o operador deve fornecer ao piloto em comando (PIC) informações precisas e legíveis sobre as mercadorias perigosas a bordo. Este documento é o NOTOC." }, {type: 'list', content: {ordered: true, items: [
+              "Número do Conhecimento Aéreo (AWB)",
+              "Número UN e Nome Apropriado para Embarque",
+              "Classe/Divisão e Riscos Subsidiários",
+              "Grupo de Embalagem",
+              "Número de volumes e sua localização exata na aeronave (ex: CPT 3 AFT)",
+              "Quantidade líquida ou massa bruta por volume",
+              "Para Classe 7: Índice de Transporte (TI), Categoria e Dimensões",
+              "Confirmação de que nenhum pacote danificado foi carregado."
+          ]}}] },
+          { id: "9.7", title: "Retenção de Documentos", blocks: [{ type: "paragraph", content: "O operador deve reter uma cópia da DGD, do checklist de aceitação e do NOTOC por um período mínimo de três meses após o voo." }] }
       ]
   },
   {
       id: 10,
       title: "Material Radioativo",
-      description: "Classificação, embalagem e documentação específica para Classe 7.",
+      description: "Conceitos chave para classificação, embalagem e manuseio de Classe 7.",
       color: "border-yellow-600",
       icon: Radiation,
       sections: [
-          { id: "10.0", title: "Aplicabilidade e Disposições Gerais", blocks:[{ type: "paragraph", content: "Esta seção se aplica ao transporte de material radioativo (Classe 7)." }] },
-          { id: "10.1", title: "Limitações", blocks:[{ type: "paragraph", content: "Limites de atividade para pacotes e remessas." }] },
-          { id: "10.2", title: "Classificação", blocks:[{ type: "paragraph", content: "Classificação baseada em atividade, radionuclídeo e forma." }] },
-          { id: "10.3", title: "Identificação", blocks:[{ type: "paragraph", content: "Seleção do UN Number e Nome Apropriado para Embarque corretos." }] },
-          { id: "10.3.1", title: "Determinação dos valores A1 e A2", blocks:[{ type: "paragraph", content: "Valores A1 (forma especial) e A2 (forma normal) são usados para determinar os limites de atividade para radionuclídeos." }] },
-          { id: "10.4", title: "Disposições Especiais", blocks: [{ type: "paragraph", content: "Disposições especiais aplicáveis a materiais radioativos." }] },
-          { id: "10.5", title: "Embalagem", blocks: [{ type: "paragraph", content: "Requisitos de embalagem para material radioativo são altamente específicos." }] },
-          { id: "10.5.1", title: "Determinação do Índice de Transporte (TI)", blocks:[{ type: "paragraph", content: "O TI é um número que controla a exposição à radiação. É determinado medindo o nível de radiação a 1 metro da superfície do pacote." }] },
-          { id: "10.5.2", title: "Categorias I-Branca, II-Amarela, III-Amarela", blocks:[{ type: "paragraph", content: "Os pacotes são categorizados com base no TI e no nível de radiação na superfície." }] },
-          { id: "10.6", title: "Especificações de Embalagem e Requisitos de Teste", blocks:[{ type: "paragraph", content: "Detalhes sobre pacotes Excepted, Industriais, Tipo A, Tipo B(U), Tipo B(M) e Tipo C." }] },
-          { id: "10.7", title: "Marcação e Etiquetagem", blocks:[{ type: "paragraph", content: "Requisitos específicos de marcação e etiquetagem para volumes contendo material radioativo." }] },
-          { id: "10.8", title: "Documentação", blocks:[{ type: "paragraph", content: "Informações adicionais requeridas na Shipper's Declaration para material radioativo." }] },
-          { id: "10.9", title: "Manuseio", blocks:[{ type: "paragraph", content: "Procedimentos de manuseio, incluindo segregação de pessoas e cargas." }] }
+          { id: "10.0", title: "Aplicabilidade", blocks:[{ type: "paragraph", content: "Este capítulo estabelece os requisitos para o transporte aéreo seguro de material radioativo (Classe 7), que são baseados nos regulamentos da Agência Internacional de Energia Atômica (AIEA)." }] },
+          { id: "10.3", title: "Determinação do Nível de Atividade", blocks:[{ type: "paragraph", content: "A classificação e os limites de um material radioativo são determinados por sua atividade (medida em Becquerels, Bq) e pelos valores A1 e A2." }, {type: 'definition-list', content: [
+              {term: 'Valor A1', definition: 'Limite de atividade para material radioativo de "forma especial". Material de forma especial é encapsulado de forma a não se dispersar em caso de acidente.'},
+              {term: 'Valor A2', definition: 'Limite de atividade para material radioativo de "forma normal" (não especial), como líquidos ou pós, que podem se dispersar.'}
+          ]}] },
+          { id: "10.5", title: "Requisitos de Embalagem e Limites", blocks:[{ type: "paragraph", content: "A embalagem de material radioativo é categorizada com base nos níveis de radiação externos, controlados pelo Índice de Transporte (TI) e pelo nível de radiação na superfície." }] },
+          { id: "10.5.1", title: "Índice de Transporte (TI)", blocks:[{ type: "paragraph", content: "O TI é um número único atribuído a um volume para controlar a exposição à radiação. Ele é determinado medindo a dose máxima de radiação em mSv/h a 1 metro da superfície do volume e multiplicando por 100." }, {type: 'warning', content: {text: "O TI é o principal fator para determinar os requisitos de segregação de pessoas e de outras cargas sensíveis."}} ] },
+          { id: "10.5.2", title: "Categorias de Volumes", blocks:[{ type: "paragraph", content: "Os volumes são classificados em três categorias, cada uma com sua própria etiqueta de risco:" }, {type: 'table', content: {
+              headers: ['Categoria', 'Nível de Radiação na Superfície', 'Índice de Transporte (TI)'],
+              rows: [
+                  ['I-BRANCA', '≤ 0.005 mSv/h', '0'],
+                  ['II-AMARELA', '> 0.005 mSv/h a ≤ 0.5 mSv/h', '> 0 a ≤ 1'],
+                  ['III-AMARELA', '> 0.5 mSv/h a ≤ 2 mSv/h', '> 1 a ≤ 10']
+              ],
+              caption: 'Categorias de Volumes Radioativos'
+          }}] },
+          { id: "10.7", title: "Marcação e Etiquetagem", blocks:[{ type: "paragraph", content: "Além das marcações padrão (UN, PSN), os volumes radioativos devem ser etiquetados com a etiqueta de categoria apropriada (I-BRANCA, II-AMARELA ou III-AMARELA). A etiqueta deve incluir o nome do radionuclídeo, a atividade e o Índice de Transporte (para categorias II e III)." }] },
+          { id: "10.8", title: "Documentação (DGD)", blocks:[{ type: "paragraph", content: "A DGD para Classe 7 requer informações adicionais, incluindo: nome ou símbolo de cada radionuclídeo, descrição da forma física e química, atividade máxima em Bq, categoria do volume, e Índice de Transporte (TI)." }] },
+          { id: "10.9", title: "Manuseio e Segregação", blocks:[{ type: "paragraph", content: "Volumes radioativos devem ser segregados de pessoas e de filme fotográfico não revelado. A distância de segregação é determinada pela soma dos Índices de Transporte (TI) de todos os volumes carregados. Existem limites máximos para a soma de TIs por compartimento de aeronave e por aeronave." }] }
       ]
   },
   {

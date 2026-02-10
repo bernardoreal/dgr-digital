@@ -71,6 +71,12 @@
         background-repeat: no-repeat;
         background-size: cover;
       }
+      /* Disable parallax on mobile to prevent rendering issues and improve performance */
+      @media (max-width: 768px) {
+        .parallax-bg {
+          background-attachment: scroll;
+        }
+      }
     </style>
   <script type="importmap">
 {

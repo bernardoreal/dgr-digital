@@ -46,10 +46,9 @@ interface ChapterDetailProps {
   chapter: DGRChapter;
   onBack: () => void;
   initialSearchTerm?: string;
-  isMobileView?: boolean;
 }
 
-const ChapterDetail: React.FC<ChapterDetailProps> = ({ chapter, onBack, initialSearchTerm = '', isMobileView = false }) => {
+const ChapterDetail: React.FC<ChapterDetailProps> = ({ chapter, onBack, initialSearchTerm = '' }) => {
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
   
@@ -1447,7 +1446,7 @@ const ChapterDetail: React.FC<ChapterDetailProps> = ({ chapter, onBack, initialS
   };
 
   return (
-    <div className={`animate-fade-in pb-32 ${isMobileView ? 'pt-4 px-2' : ''}`}>
+    <div className="animate-fade-in pb-32 pt-4 px-2">
       {/* Header */}
       <div className="mb-6 flex items-start space-x-4">
         <button 
@@ -1476,7 +1475,7 @@ const ChapterDetail: React.FC<ChapterDetailProps> = ({ chapter, onBack, initialS
       <div className="grid grid-cols-12 gap-8 items-start">
         
         {/* Table of Contents */}
-        <aside className="col-span-12 md:col-span-3 sticky top-24 md:block">
+        <aside className="col-span-12 md:col-span-3 md:sticky md:top-24">
             <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
                 <h3 className="font-bold text-sm mb-3 flex items-center text-gray-700">
                    <List className="w-4 h-4 mr-2" />
@@ -1507,7 +1506,7 @@ const ChapterDetail: React.FC<ChapterDetailProps> = ({ chapter, onBack, initialS
         {/* Main Content */}
         <main className="col-span-12 md:col-span-9">
             {chapter.sections.map(section => (
-                <section key={section.id} id={section.id} className="mb-12 scroll-mt-24">
+                <section key={section.id} id={section.id} className="mb-12 scroll-mt-20 md:scroll-mt-24">
                     <div className="flex items-center mb-4 pb-2 border-b-2 border-latam-indigo/20">
                         <span className="font-mono text-xl font-extrabold text-latam-indigo mr-4 bg-indigo-50 px-2 py-1 rounded">{section.id}</span>
                         <h3 className="text-xl font-bold text-gray-800">{section.title}</h3>

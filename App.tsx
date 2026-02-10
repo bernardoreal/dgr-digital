@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Plane, Search, ShieldCheck, ArrowRight, Sparkles, Bot, AlertTriangle, X, Settings, CheckCircle, Smartphone, Monitor } from 'lucide-react';
+import { Plane, Search, ShieldCheck, ArrowRight, Sparkles, Bot, AlertTriangle, X, Settings, CheckCircle } from 'lucide-react';
 import { DGR_CHAPTERS, APP_VERSION } from './constants';
 import { DGRChapter, ViewState, DGRTable } from './types';
 import ChapterCard from './components/ChapterCard';
@@ -16,7 +16,6 @@ const App: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [scrolled, setScrolled] = useState(false);
   const [aiStatus, setAiStatus] = useState<'checking' | 'online'>('checking');
-  const [isMobileView, setIsMobileView] = useState(false);
   
   // Regulatory Config State
   const [regConfig, setRegConfig] = useState(getRegulatoryConfig());
@@ -105,10 +104,7 @@ const App: React.FC = () => {
   }
 
   return (
-    <div 
-        className={`min-h-screen flex flex-col font-sans text-latam-text bg-latam-bg transition-all duration-300 ${isMobileView ? 'shadow-2xl my-4 rounded-3xl overflow-hidden border-8 border-gray-800' : ''}`}
-        style={isMobileView ? { transform: 'translate3d(0,0,0)', maxWidth: '414px', margin: '20px auto' } : {}}
-    >
+    <div className="min-h-screen flex flex-col font-sans text-latam-text bg-latam-bg transition-all duration-300">
       
       {/* Safety Disclaimer Banner - ONLY shown if Unverified */}
       {showDisclaimer && regConfig.validationStatus !== 'VERIFIED_OPERATIONAL' && (
@@ -139,7 +135,6 @@ const App: React.FC = () => {
             ? 'bg-gradient-to-r from-latam-indigo via-[#2e1065] to-latam-coral shadow-lg backdrop-blur-lg py-3 border-b border-white/10 top-0' 
             : `bg-transparent py-5 ${showDisclaimer && regConfig.validationStatus !== 'VERIFIED_OPERATIONAL' ? 'top-12' : 'top-0'}`
         }`}
-        style={isMobileView ? { position: 'absolute' } : {}}
       >
         <div className="container mx-auto px-6 h-12 flex items-center justify-between text-white relative">
           
@@ -165,7 +160,7 @@ const App: React.FC = () => {
           </div>
 
           {/* CENTER COLUMN: Search Bar (Flexbox Centered) */}
-          <div className={`flex-1 flex items-center justify-center z-20 ${!isMobileView ? 'hidden md:flex' : 'hidden'}`}>
+          <div className="flex-1 flex items-center justify-center z-20 hidden md:flex">
             <div className={`relative w-full max-w-lg transition-all duration-500 transform ${
                 isHeaderActive ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-4 pointer-events-none'
             }`}>
@@ -185,19 +180,6 @@ const App: React.FC = () => {
           {/* RIGHT COLUMN: Actions */}
           <div className="flex-1 flex items-center justify-end space-x-4 min-w-0 z-30">
             
-            {/* View Toggle */}
-            <button
-                onClick={() => setIsMobileView(!isMobileView)}
-                className={`p-2 rounded-lg transition-all duration-300 border ${
-                    isHeaderActive 
-                    ? 'bg-white/10 border-white/20 hover:bg-white/20 text-white' 
-                    : 'bg-white/20 border-white/20 text-white hover:bg-white/30'
-                }`}
-                title={isMobileView ? "Mudar para Desktop" : "Mudar para Mobile"}
-            >
-                {isMobileView ? <Monitor className="w-5 h-5" /> : <Smartphone className="w-5 h-5" />}
-            </button>
-
             {/* AI Status Indicator */}
             <div className={`flex flex-col items-end md:items-start justify-center md:border-l md:pl-4 transition-colors duration-300 ${isHeaderActive ? 'border-white/20' : 'border-white/20'}`}>
                 <div className="flex items-center space-x-1.5">
@@ -310,7 +292,6 @@ const App: React.FC = () => {
                 chapter={selectedChapter} 
                 onBack={handleBackToDashboard} 
                 initialSearchTerm={searchTerm}
-                isMobileView={isMobileView}
               />
             )}
           </main>
