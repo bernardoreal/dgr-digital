@@ -474,8 +474,29 @@ export const DGR_CHAPTERS: DGRChapter[] = [
     sections: [
         { id: "3.0", title: "Responsabilidade pela Classificação", blocks: [{ type: "paragraph", content: "O expedidor é responsável por classificar corretamente as mercadorias perigosas de acordo com os critérios detalhados nesta seção." }] },
         { id: "3.1", title: "Classe 1 - Explosivos", blocks: [{ type: "paragraph", content: "Qualquer substância ou artigo que tenha a capacidade de produzir, por reação química, gás a tal temperatura, pressão e velocidade que cause danos ao seu redor." }] },
-        { id: "3.1.1", title: "Divisões", blocks:[{ type: "paragraph", content: "A Classe 1 é dividida em seis divisões baseadas no tipo de risco que apresentam, de 1.1 (risco de explosão em massa) a 1.6 (artigos extremamente insensíveis)." }] }, 
-        { id: "3.1.2", title: "Grupos de Compatibilidade", blocks:[{ type: "paragraph", content: "Os explosivos são atribuídos a um dos 13 grupos de compatibilidade (A-S, exceto I, M, O, P, Q, R) para controlar a segregação durante o transporte." }] },
+        { id: "3.1.1", title: "Divisões", blocks:[{ type: "paragraph", content: "A Classe 1 é dividida em seis divisões baseadas no tipo de risco que apresentam:" }, { type: 'definition-list', content: [
+            { term: 'Divisão 1.1', definition: 'Substâncias e artigos com risco de explosão em massa.' },
+            { term: 'Divisão 1.2', definition: 'Substâncias e artigos com risco de projeção, mas sem risco de explosão em massa.' },
+            { term: 'Divisão 1.3', definition: 'Substâncias e artigos com risco de fogo e risco menor de explosão ou projeção, mas sem risco de explosão em massa.' },
+            { term: 'Divisão 1.4', definition: 'Substâncias e artigos que não apresentam risco significativo.' },
+            { term: 'Divisão 1.5', definition: 'Substâncias muito insensíveis com risco de explosão em massa.' },
+            { term: 'Divisão 1.6', definition: 'Artigos extremamente insensíveis sem risco de explosão em massa.' }
+        ]}] }, 
+        { id: "3.1.2", title: "Grupos de Compatibilidade", blocks:[{ type: "paragraph", content: "Os explosivos são atribuídos a um dos 13 grupos de compatibilidade (A-S, exceto I, M, O, P, Q, R) para controlar a segregação durante o transporte:" }, { type: 'definition-list', content: [
+            { term: 'A', definition: 'Substância explosiva primária.' },
+            { term: 'B', definition: 'Artigo contendo uma substância explosiva primária, sem dois ou mais dispositivos de proteção eficazes.' },
+            { term: 'C', definition: 'Substância explosiva propelente ou outra substância explosiva deflagrante.' },
+            { term: 'D', definition: 'Substância explosiva detonante secundária; ou pólvora negra.' },
+            { term: 'E', definition: 'Artigo contendo uma substância explosiva detonante secundária, sem meios de iniciação, com carga propelente.' },
+            { term: 'F', definition: 'Artigo contendo uma substância explosiva detonante secundária, com seus próprios meios de iniciação.' },
+            { term: 'G', definition: 'Substância pirotécnica ou artigo contendo uma substância pirotécnica.' },
+            { term: 'H', definition: 'Artigo contendo uma substância explosiva e fósforo branco.' },
+            { term: 'J', definition: 'Artigo contendo uma substância explosiva e líquido ou gel inflamável.' },
+            { term: 'K', definition: 'Artigo contendo uma substância explosiva e um agente químico tóxico.' },
+            { term: 'L', definition: 'Substância explosiva ou artigo contendo uma substância explosiva que apresenta um risco especial.' },
+            { term: 'N', definition: 'Artigos contendo apenas substâncias detonantes extremamente insensíveis.' },
+            { term: 'S', definition: 'Substância ou artigo embalado ou projetado de forma que quaisquer efeitos perigosos fiquem confinados dentro do volume.' }
+        ]}] },
         { id: "3.2", title: "Classe 2 - Gases", blocks: [{ type: "paragraph", content: "Substâncias que são completamente gasosas a 20°C e 101.3 kPa, ou que têm uma pressão de vapor superior a 300 kPa a 50°C. Inclui gases comprimidos, liquefeitos, dissolvidos e refrigerados." }] },
         { id: "3.2.1", title: "Divisão 2.1 – Gases Inflamáveis", blocks:[{ type: "paragraph", content: "Gases que a 20°C e 101.3 kPa são inflamáveis em mistura de 13% ou menos por volume com ar, ou que têm uma faixa de inflamabilidade com ar de pelo menos 12 pontos percentuais." }] }, 
         { id: "3.2.2", title: "Divisão 2.2 – Gases Não-Inflamáveis, Não-Tóxicos", blocks:[{ type: "paragraph", content: "Gases que são asfixiantes, oxidantes ou que não se enquadram em outras divisões." }] }, 
