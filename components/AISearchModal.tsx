@@ -177,12 +177,24 @@ const AISearchModal: React.FC<AISearchModalProps> = ({ isOpen, onClose }) => {
                     <div className="space-y-5">
                         <div>
                             <label className="block text-xs font-bold text-gray-600 mb-1.5">Itens (UN, Qtd, Tipo)</label>
-                            <textarea 
-                                className="w-full p-3 border border-gray-300 rounded-lg text-sm bg-white text-gray-900 focus:ring-2 focus:ring-latam-indigo/20 focus:border-latam-indigo min-h-[120px] shadow-sm placeholder-gray-400"
-                                placeholder="Ex: 5L de UN 1263 Paint e 2kg de UN 3480 Lithium Batteries..."
-                                value={scenarioData.unNumbers}
-                                onChange={(e) => setScenarioData(prev => ({...prev, unNumbers: e.target.value}))}
-                            />
+                            <div className="relative">
+                                <textarea 
+                                    className="w-full p-3 pr-8 border border-gray-300 rounded-lg text-sm bg-white text-gray-900 focus:ring-2 focus:ring-latam-indigo/20 focus:border-latam-indigo min-h-[120px] shadow-sm placeholder-gray-400"
+                                    placeholder="Ex: 5L de UN 1263 Paint e 2kg de UN 3480 Lithium Batteries..."
+                                    value={scenarioData.unNumbers}
+                                    onChange={(e) => setScenarioData(prev => ({...prev, unNumbers: e.target.value}))}
+                                />
+                                {scenarioData.unNumbers && (
+                                    <button
+                                        type="button"
+                                        onClick={() => setScenarioData(prev => ({...prev, unNumbers: ''}))}
+                                        className="absolute top-2 right-2 p-1 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-full"
+                                        title="Limpar campo"
+                                    >
+                                        <X className="w-4 h-4" />
+                                    </button>
+                                )}
+                            </div>
                         </div>
 
                         <div>
@@ -360,15 +372,27 @@ const AISearchModal: React.FC<AISearchModalProps> = ({ isOpen, onClose }) => {
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         placeholder="Digite o UN Number ou dúvida regulatória..."
-                        className="flex-grow pl-4 pr-12 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-latam-indigo/20 focus:border-latam-indigo focus:bg-white transition-all text-gray-800 placeholder-gray-400 shadow-inner"
+                        className="flex-grow pl-4 pr-24 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-latam-indigo/20 focus:border-latam-indigo focus:bg-white transition-all text-gray-800 placeholder-gray-400 shadow-inner"
                         />
-                        <button 
-                        type="submit"
-                        disabled={isLoading || !query.trim()}
-                        className="absolute right-2 p-2 bg-latam-indigo text-white rounded-lg hover:bg-latam-indigoLight disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg active:scale-95"
-                        >
-                        <Send className="w-4 h-4" />
-                        </button>
+                        <div className="absolute right-2 flex items-center space-x-1">
+                            {query && !isLoading && (
+                                <button
+                                    type="button"
+                                    onClick={() => setQuery('')}
+                                    className="p-2 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-lg"
+                                    title="Limpar"
+                                >
+                                    <X className="w-4 h-4" />
+                                </button>
+                            )}
+                            <button 
+                                type="submit"
+                                disabled={isLoading || !query.trim()}
+                                className="p-2 bg-latam-indigo text-white rounded-lg hover:bg-latam-indigoLight disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg active:scale-95"
+                            >
+                                <Send className="w-4 h-4" />
+                            </button>
+                        </div>
                     </form>
                     </div>
                 )}

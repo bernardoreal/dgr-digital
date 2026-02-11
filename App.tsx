@@ -193,10 +193,21 @@ const App: React.FC = () => {
               <input
                 type="text"
                 placeholder="Pesquisar..."
-                className="block w-full pl-11 pr-4 py-2.5 border border-white/20 rounded-full leading-5 bg-white/10 text-white placeholder-white/50 focus:outline-none focus:bg-white/20 focus:ring-2 focus:ring-white/40 focus:border-white/40 sm:text-sm transition-all shadow-lg backdrop-blur-md"
+                className="block w-full pl-11 pr-11 py-2.5 border border-white/20 rounded-full leading-5 bg-white/10 text-white placeholder-white/50 focus:outline-none focus:bg-white/20 focus:ring-2 focus:ring-white/40 focus:border-white/40 sm:text-sm transition-all shadow-lg backdrop-blur-md"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
+              {searchTerm && (
+                <div className="absolute inset-y-0 right-0 flex items-center pr-4">
+                    <button
+                    onClick={() => setSearchTerm('')}
+                    className="p-1 text-white/50 hover:text-white hover:bg-white/20 rounded-full"
+                    title="Limpar busca"
+                    >
+                    <X className="w-4 h-4" />
+                    </button>
+                </div>
+              )}
             </div>
           </div>
 
@@ -264,18 +275,21 @@ const App: React.FC = () => {
                 <input
                   type="text"
                   placeholder="Pesquise por palavra-chave, número UN (ex: 3481) ou capítulo..."
-                  className="block w-full pl-14 pr-16 py-4 md:py-5 rounded-xl text-base md:text-lg bg-white shadow-2xl border-none outline-none text-gray-800 placeholder-gray-400 focus:ring-4 focus:ring-latam-indigo/20 transition-all"
+                  className="block w-full pl-14 pr-12 py-4 md:py-5 rounded-xl text-base md:text-lg bg-white shadow-2xl border-none outline-none text-gray-800 placeholder-gray-400 focus:ring-4 focus:ring-latam-indigo/20 transition-all"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <div className="absolute inset-y-0 right-2 flex items-center">
-                    <button 
-                      className="bg-latam-indigo text-white p-2 rounded-lg hover:bg-latam-indigoLight transition-colors shadow-md"
-                      onClick={() => console.log('Search clicked')}
+                {searchTerm && (
+                    <div className="absolute inset-y-0 right-0 flex items-center pr-4">
+                    <button
+                        onClick={() => setSearchTerm('')}
+                        className="p-1 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-full"
+                        title="Limpar busca"
                     >
-                      <ArrowRight className="w-5 h-5" />
+                        <X className="w-5 h-5" />
                     </button>
-                </div>
+                    </div>
+                )}
               </div>
             </div>
           </div>
