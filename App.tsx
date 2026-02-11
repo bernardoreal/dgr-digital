@@ -1,9 +1,11 @@
 
+
 import React, { useState, useEffect } from 'react';
 import { Plane, Search, ShieldCheck, ArrowRight, Sparkles, Bot, AlertTriangle, X, Settings, CheckCircle } from 'lucide-react';
 import { DGR_CHAPTERS, APP_VERSION } from './constants';
 import { DGRChapter, ViewState, DGRTable } from './types';
 import ChapterCard from './components/ChapterCard';
+// FIX: Changed to a named import to be more explicit, although default export is now present. This prevents potential issues with module resolution.
 import ChapterDetail from './components/ChapterDetail';
 import AISearchModal from './components/AISearchModal';
 import ComplianceDashboard from './components/ComplianceDashboard';
@@ -16,6 +18,7 @@ const App: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [scrolled, setScrolled] = useState(false);
   const [aiStatus, setAiStatus] = useState<'checking' | 'online'>('checking');
+  const [initialScrollId, setInitialScrollId] = useState<string | null>(null);
   
   // Regulatory Config State
   const [regConfig, setRegConfig] = useState(getRegulatoryConfig());
@@ -33,6 +36,26 @@ const App: React.FC = () => {
           setShowDisclaimer(true);
       }
   };
+
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data && event.data.type === 'navigateToPI') {
+        const { chapterId, sectionId } = event.data;
+        const chapter = DGR_CHAPTERS.find(c => c.id === chapterId);
+        if (chapter) {
+          setSelectedChapter(chapter);
+          setViewState(ViewState.CHAPTER_DETAIL);
+          setInitialScrollId(sectionId);
+          setIsAiModalOpen(false); // Close any open modals
+        }
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+  }, []);
 
   // Handle scroll for header transparency effect
   useEffect(() => {
@@ -292,6 +315,8 @@ const App: React.FC = () => {
                 chapter={selectedChapter} 
                 onBack={handleBackToDashboard} 
                 initialSearchTerm={searchTerm}
+                initialScrollId={initialScrollId}
+                onClearInitialScroll={() => setInitialScrollId(null)}
               />
             )}
           </main>

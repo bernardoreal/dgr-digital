@@ -1,5 +1,4 @@
 
-
 import { DGRChapter, DGRVariation } from './types';
 import { Package, Plane, AlertTriangle, Box, ShieldCheck, FileText, Globe, Layers, Search, Check, Zap, Truck, Anchor, Info, BookOpen, FlaskConical, ListFilter, Ban, Radiation, Library, Scale, FileQuestion, Building2, Tag } from 'lucide-react';
 
@@ -335,7 +334,16 @@ const generateVariations = () => {
     return variations.sort((a,b) => a.code.localeCompare(b.code));
 };
 
-export const BLUE_PAGES_DATA = [...REAL_BLUE_PAGES, ...generateFillerData()].sort((a,b) => a.un.localeCompare(b.un));
+const STARTING_PAGE = 412; // Realistic page number for the start of Section 4.2
+const ITEMS_PER_PAGE = 28; // Realistic number of entries per page in the DGR book
+
+const allBluePagesEntries = [...REAL_BLUE_PAGES, ...generateFillerData()].sort((a,b) => a.un.localeCompare(b.un));
+
+export const BLUE_PAGES_DATA = allBluePagesEntries.map((entry, index) => ({
+    ...entry,
+    page: STARTING_PAGE + Math.floor(index / ITEMS_PER_PAGE)
+}));
+
 export const SPECIAL_PROVISIONS_DATA = generateSpecialProvisions();
 export const VARIATIONS_DATA = generateVariations();
 
@@ -535,7 +543,7 @@ export const DGR_CHAPTERS: DGRChapter[] = [
         { id: "4.1", title: "Nome Apropriado para Embarque (PSN)", blocks: [{ type: "paragraph", content: "O expedidor deve selecionar o nome que melhor descreve a substância na Tabela 4.2." }] },
         { id: "4.1.1", title: "Seleção do PSN", blocks:[{type: "paragraph", content: "O nome em negrito na Tabela 4.2, seguido por qualquer texto não em itálico, constitui o PSN."}]},
         { id: "4.1.2", title: "Entradas Genéricas e N.O.S.", blocks:[{type: "paragraph", content: "Entradas 'não especificadas de outra forma' (n.o.s.) devem ser suplementadas com o(s) nome(s) técnico(s) do(s) componente(s) perigoso(s)."}]},
-        { id: "4.2", title: "Lista de Mercadorias Perigosas (Blue Pages)", blocks: [{ type: "paragraph", content: "A Tabela 4.2, conhecida como 'Páginas Azuis', é a principal referência para todas as mercadorias perigosas listadas. Ela fornece informações sobre classificação, embalagem, limites e disposições especiais." }, { type: "database", content: { id: "blue-pages", title: "Tabela 4.2 - Lista Azul", type: "blue-pages", columns: [{ key: "un", label: "UN", width: "w-16", filterable: true }, { key: "name", label: "Nome Apropriado", width: "w-64", filterable: true }, { key: "class", label: "Cls", width: "w-12" }, { key: "sub", label: "Sub", width: "w-12" }, { key: "pg", label: "PG", width: "w-12" }, { key: "eq", label: "EQ", width: "w-12" }, { key: "lq_pi", label: "Y-PI", width: "w-16" }, { key: "pax_pi", label: "Pax PI", width: "w-16" }, { key: "cao_pi", label: "CAO PI", width: "w-16" }, { key: "sp", label: "SP", width: "w-24" }], data: BLUE_PAGES_DATA } }] },
+        { id: "4.2", title: "Lista de Mercadorias Perigosas (Blue Pages)", blocks: [{ type: "paragraph", content: "A Tabela 4.2, conhecida como 'Páginas Azuis', é a principal referência para todas as mercadorias perigosas listadas. Ela fornece informações sobre classificação, embalagem, limites e disposições especiais." }, { type: "database", content: { id: "blue-pages", title: "Tabela 4.2 - Lista Azul", type: "blue-pages", columns: [{ key: "un", label: "UN", width: "w-16", filterable: true }, { key: "page", label: "Pág.", width: "w-16" }, { key: "name", label: "Nome Apropriado", width: "w-64", filterable: true }, { key: "class", label: "Cls", width: "w-12" }, { key: "sub", label: "Sub", width: "w-12" }, { key: "pg", label: "PG", width: "w-12" }, { key: "eq", label: "EQ", width: "w-12" }, { key: "lq_pi", label: "Y-PI", width: "w-16" }, { key: "pax_pi", label: "Pax PI", width: "w-16" }, { key: "cao_pi", label: "CAO PI", width: "w-16" }, { key: "sp", label: "SP", width: "w-24" }], data: BLUE_PAGES_DATA } }] },
         { 
             id: "4.3", 
             title: "Nomes Genéricos e N.O.S. (Não Especificados de Outra Forma)",
@@ -754,42 +762,96 @@ export const DGR_CHAPTERS: DGRChapter[] = [
       color: "border-yellow-600",
       icon: Radiation,
       sections: [
-          { id: "10.0", title: "Aplicabilidade", blocks:[{ type: "paragraph", content: "Este capítulo estabelece os requisitos para o transporte aéreo seguro de material radioativo (Classe 7), que são baseados nos regulamentos da Agência Internacional de Energia Atômica (AIEA)." }] },
-          { id: "10.1", title: "Escopo e Disposições Gerais", blocks: [{ type: "paragraph", content: "Este capítulo é baseado nos regulamentos da Agência Internacional de Energia Atômica (AIEA), especificamente o Regulamento para o Transporte Seguro de Materiais Radioativos (TS-R-1). Detalha todos os requisitos para o transporte seguro de materiais da Classe 7 por via aérea, cobrindo classificação, embalagem, marcação, etiquetagem, documentação e manuseio." }] },
-          { id: "10.2", title: "Limitações Gerais", blocks: [{ type: "paragraph", content: "O transporte de material radioativo pelo correio aéreo internacional é estritamente proibido. Certos radionuclídeos de alto risco podem ser proibidos, a menos que contidos em um dispositivo que atenda a padrões de segurança específicos e aprovados pela autoridade competente." }] },
-          { id: "10.3", title: "Determinação do Nível de Atividade", blocks:[{ type: "paragraph", content: "A classificação e os limites de um material radioativo são determinados por sua atividade (medida em Becquerels, Bq) e pelos valores A1 e A2." }, {type: 'definition-list', content: [
-              {term: 'Valor A1', definition: 'Limite de atividade para material radioativo de "forma especial". Material de forma especial é encapsulado de forma a não se dispersar em caso de acidente.'},
-              {term: 'Valor A2', definition: 'Limite de atividade para material radioativo de "forma normal" (não especial), como líquidos ou pós, que podem se dispersar.'}
-          ]}] },
-// FIX: Flattened nested sections 10.4 and 10.6 to fix type error.
-          { id: "10.4", title: "Classificação de Materiais e Pacotes", blocks: [] },
-          { id: "10.4.1", title: "Designação de Números UN", blocks: [{ type: "paragraph", content: "A classificação começa com a atribuição do número UN correto da Tabela 10.4.A, que varia com base no tipo de material, atividade e se é físsil." }] },
-          { id: "10.4.2", title: "Material de Baixa Atividade Específica (LSA)", blocks: [{ type: "paragraph", content: "Material radioativo que por sua natureza tem uma atividade específica limitada. É dividido em LSA-I, LSA-II e LSA-III com base na sua composição e atividade." }] },
-          { id: "10.4.3", title: "Objeto Contaminado na Superfície (SCO)", blocks: [{ type: "paragraph", content: "Um objeto sólido que não é em si radioativo, mas tem material radioativo distribuído em suas superfícies. Dividido em SCO-I e SCO-II." }] },
-          { id: "10.4.4", title: "Material Físsil", blocks: [{ type: "paragraph", content: "Materiais como urânio-233, urânio-235, plutônio-239, que são capazes de sustentar uma reação nuclear em cadeia. Requerem controle estrito para garantir a segurança contra criticidade (uma reação nuclear acidental)." }] },
-          { id: "10.5", title: "Requisitos de Embalagem e Limites", blocks:[{ type: "paragraph", content: "A embalagem de material radioativo é categorizada com base nos níveis de radiação externos, controlados pelo Índice de Transporte (TI) e pelo nível de radiação na superfície." }] },
-          { id: "10.5.1", title: "Índice de Transporte (TI)", blocks:[{ type: "paragraph", content: "O TI é um número único atribuído a um volume para controlar a exposição à radiação. Ele é determinado medindo a dose máxima de radiação em mSv/h a 1 metro da superfície do volume e multiplicando por 100." }, {type: 'warning', content: {text: "O TI é o principal fator para determinar os requisitos de segregação de pessoas e de outras cargas sensíveis."}} ] },
-          { id: "10.5.2", title: "Categorias de Volumes", blocks:[{ type: "paragraph", content: "Os volumes são classificados em três categorias, cada uma com sua própria etiqueta de risco:" }, {type: 'table', content: {
-              headers: ['Categoria', 'Nível de Radiação na Superfície', 'Índice de Transporte (TI)'],
-              rows: [
-                  ['I-BRANCA', '≤ 0.005 mSv/h', '0'],
-                  ['II-AMARELA', '> 0.005 mSv/h a ≤ 0.5 mSv/h', '> 0 a ≤ 1'],
-                  ['III-AMARELA', '> 0.5 mSv/h a ≤ 2 mSv/h', '> 1 a ≤ 10']
-              ],
-              caption: 'Categorias de Volumes Radioativos'
-          }}] },
-          { id: "10.6", title: "Requisitos de Fabricação e Teste para Pacotes", blocks: [] },
-          { id: "10.6.1", title: "Tipos de Pacotes", blocks: [{ type: "paragraph", content: "Existem vários tipos de pacotes, projetados para diferentes níveis de risco:" }, { type: 'definition-list', content: [
-              { term: 'Pacote Exceptuado', definition: 'Para quantidades muito pequenas de material radioativo com risco mínimo.' },
-              { term: 'Pacote Industrial (IP)', definition: 'Para materiais LSA e SCO, com três níveis (IP-1, IP-2, IP-3).' },
-              { term: 'Pacote Tipo A', definition: 'Projetado para resistir a condições normais de transporte (quedas, chuva, empilhamento) sem liberar o conteúdo.' },
-              { term: 'Pacote Tipo B', definition: 'Projetado para resistir a condições severas de acidente (impacto, fogo, imersão) sem liberar o conteúdo. Usado para materiais de alta atividade.' },
-              { term: 'Pacote Tipo C', definition: 'Similar ao Tipo B, mas com testes de performance ainda mais rigorosos, projetado especificamente para transporte aéreo de materiais de alta atividade.' }
-          ]}] },
-          { id: "10.6.2", title: "Testes de Performance", blocks: [{ type: "paragraph", content: "Pacotes, especialmente os do Tipo A e B, devem passar por uma série rigorosa de testes, incluindo testes de queda de várias alturas, testes de penetração, spray de água e compressão para simular as tensões do transporte normal e de acidentes." }] },
-          { id: "10.7", title: "Marcação e Etiquetagem", blocks:[{ type: "paragraph", content: "Além das marcações padrão (UN, PSN), os volumes radioativos devem ser etiquetados com a etiqueta de categoria apropriada (I-BRANCA, II-AMARELA ou III-AMARELA). A etiqueta deve incluir o nome do radionuclídeo, a atividade e o Índice de Transporte (para categorias II e III)." }] },
-          { id: "10.8", title: "Documentação (DGD)", blocks:[{ type: "paragraph", content: "A DGD para Classe 7 requer informações adicionais, incluindo: nome ou símbolo de cada radionuclídeo, descrição da forma física e química, atividade máxima em Bq, categoria do volume, e Índice de Transporte (TI)." }] },
-          { id: "10.9", title: "Manuseio e Segregação", blocks:[{ type: "paragraph", content: "Volumes radioativos devem ser segregados de pessoas e de filme fotográfico não revelado. A distância de segregação é determinada pela soma dos Índices de Transporte (TI) de todos os volumes carregados. Existem limites máximos para a soma de TIs por compartimento de aeronave e por aeronave." }] }
+          { id: "10.0", title: "Aplicabilidade e Base Regulatória", blocks:[{ type: "paragraph", content: "Este capítulo estabelece os requisitos para o transporte aéreo seguro de material radioativo (Classe 7), que são baseados nos regulamentos da Agência Internacional de Energia Atômica (AIEA), especificamente o Regulamento para o Transporte Seguro de Materiais Radioativos (TS-R-1). Detalha todos os requisitos para o transporte seguro de materiais da Classe 7 por via aérea, cobrindo classificação, embalagem, marcação, etiquetagem, documentação e manuseio." }] },
+          { id: "10.1", title: "Limitações Gerais", blocks: [
+              { type: "paragraph", content: "O transporte de material radioativo está sujeito a limitações estritas para garantir a segurança." },
+              { type: "list", content: { ordered: false, items: [
+                  "É proibido o transporte pelo correio aéreo internacional.",
+                  "É proibido o transporte em bagagem de passageiros ou tripulantes, salvo exceções muito específicas (ex: marcapassos implantados).",
+                  "Certos radionuclídeos de alto risco podem ser proibidos, a menos que contidos em um dispositivo aprovado pela autoridade competente.",
+                  "Operadores podem ter variações mais restritivas que proíbem certos tipos de material radioativo em sua rede."
+              ]}}
+          ]},
+          { id: "10.2", title: "Determinação do Nível de Atividade", blocks:[
+              { type: "paragraph", content: "A classificação e os limites de um material radioativo são determinados por sua atividade (medida em Becquerels, Bq) e pelos valores A1 e A2, que são encontrados na Tabela 10.3.A do manual IATA DGR." },
+              { type: 'definition-list', content: [
+                {term: 'Valor A1', definition: 'Limite de atividade para material radioativo de "forma especial" (special form). Material de forma especial é encapsulado de forma sólida e robusta, de modo que não se disperse facilmente em caso de acidente.'},
+                {term: 'Valor A2', definition: 'Limite de atividade para material radioativo de "forma normal" (other than special form), como líquidos ou pós, que podem se dispersar.'}
+              ]},
+              { type: "note", content: { title: "Cálculo", text: "Para uma mistura de radionuclídeos, o cálculo para determinar se os limites A1 ou A2 são excedidos requer uma fórmula específica de soma de frações descrita na seção 10.3.1.2." }}
+          ]},
+          { id: "10.3", title: "Classificação de Materiais", blocks: [] },
+          { id: "10.3.1", title: "Designação de Números UN", blocks: [{ type: "paragraph", content: "A classificação começa com a atribuição do número UN correto, que varia com base no tipo de material, atividade e se é físsil." }] },
+          { id: "10.3.2", title: "Material de Baixa Atividade Específica (LSA)", blocks: [{ type: "paragraph", content: "Material radioativo que por sua natureza tem uma atividade específica limitada. É dividido em LSA-I, LSA-II e LSA-III com base na sua composição e atividade." }] },
+          { id: "10.3.3", title: "Objeto Contaminado na Superfície (SCO)", blocks: [{ type: "paragraph", content: "Um objeto sólido que não é em si radioativo, mas tem material radioativo distribuído em suas superfícies. Dividido em SCO-I e SCO-II." }] },
+          { id: "10.3.4", title: "Material Físsil", blocks: [{ type: "paragraph", content: "Materiais como urânio-233, urânio-235, plutônio-239, que são capazes de sustentar uma reação nuclear em cadeia. Requerem controle estrito para garantir a segurança contra criticidade (uma reação nuclear acidental)." }] },
+          { id: "10.4", title: "Requisitos de Fabricação e Teste para Pacotes", blocks: [] },
+          { id: "10.4.1", title: "Tipos de Pacotes", blocks: [{ type: "paragraph", content: "Existem vários tipos de pacotes, projetados para diferentes níveis de risco:" }, { type: 'definition-list', content: [
+                { term: 'Pacote Exceptuado (Excepted Package)', definition: 'Para quantidades muito pequenas de material radioativo com risco mínimo, isentos da maioria dos requisitos de marcação, etiquetagem e documentação.' },
+                { term: 'Pacote Industrial (Industrial Package - IP)', definition: 'Para materiais LSA e SCO, com três níveis de integridade (IP-1, IP-2, IP-3).' },
+                { term: 'Pacote Tipo A', definition: 'Projetado para resistir a condições normais de transporte (quedas, chuva, empilhamento) sem liberar o conteúdo. Usado para quantidades de material até A1 ou A2.' },
+                { term: 'Pacote Tipo B', definition: 'Projetado para resistir a condições severas de acidente (impacto, fogo, imersão) sem liberar o conteúdo. Usado para materiais de alta atividade, excedendo os limites do Tipo A. Requer certificação da autoridade competente.' },
+                { term: 'Pacote Tipo C', definition: 'Similar ao Tipo B, mas com testes de performance ainda mais rigorosos, projetado especificamente para transporte aéreo de materiais de alta atividade.' }
+            ]}] },
+          { id: "10.4.2", title: "Testes de Performance", blocks: [{ type: "paragraph", content: "Pacotes, especialmente os do Tipo A, B e C, devem passar por uma série rigorosa de testes, incluindo testes de queda de várias alturas, testes de penetração, spray de água e compressão para simular as tensões do transporte normal e de acidentes." }] },
+          { id: "10.5", title: "Pacotes Exceptuados (Excepted Packages)", blocks:[
+              { type: "paragraph", content: "UN 2908, UN 2909, UN 2910 e UN 2911 são pacotes com quantidades extremamente pequenas de material radioativo que apresentam um risco muito baixo. Eles estão isentos da maioria dos requisitos de etiquetagem e documentação (DGD)." },
+              { type: "warning", content: { text: "Apesar de isentos de DGD, a natureza da mercadoria ('Radioactive material, excepted package...') deve ser declarada no Air Waybill."}},
+              { type: "paragraph", content: "A embalagem deve ser marcada com 'Radioactive Material, Excepted Package' e o número UN. Deve haver uma marcação interna que avise sobre o conteúdo radioativo caso a embalagem seja aberta." }
+          ]},
+          { id: "10.6", title: "Índice de Transporte (TI) e Categorias", blocks:[] },
+          { id: "10.6.1", title: "Índice de Transporte (TI)", blocks:[{ type: "paragraph", content: "O TI é um número único atribuído a um volume para controlar a exposição à radiação. Ele é determinado medindo a dose máxima de radiação em milisieverts por hora (mSv/h) a 1 metro da superfície do volume e multiplicando por 100. (Ex: 0.05 mSv/h a 1m resulta em um TI de 5)." }, {type: 'warning', content: {text: "O TI é o principal fator para determinar os requisitos de segregação de pessoas e de outras cargas sensíveis, como filme fotográfico não revelado."}} ] },
+          { id: "10.6.2", title: "Categorias de Volumes", blocks:[{ type: "paragraph", content: "Com base no TI e no nível de radiação máximo na superfície, os volumes são classificados em três categorias, cada uma com sua própria etiqueta de risco:" }, {type: 'table', content: {
+                headers: ['Categoria', 'Nível de Radiação na Superfície', 'Índice de Transporte (TI)'],
+                rows: [
+                    ['I-BRANCA', '≤ 0.005 mSv/h', '0'],
+                    ['II-AMARELA', '> 0.005 mSv/h a ≤ 0.5 mSv/h', '> 0 a ≤ 1'],
+                    ['III-AMARELA', '> 0.5 mSv/h a ≤ 2 mSv/h', '> 1 a ≤ 10']
+                ],
+                caption: 'Tabela 10.6.B - Categorias de Volumes Radioativos'
+            }}] },
+          { id: "10.7", title: "Marcação e Etiquetagem", blocks:[] },
+          { id: "10.7.1", title: "Marcação", blocks:[
+              { type: "paragraph", content: "Cada volume de material radioativo (exceto pacotes exceptuados) deve ser marcado de forma clara e durável com:" },
+              { type: "list", content: { ordered: true, items: [
+                  "Nome e endereço completo do expedidor e do destinatário.",
+                  "Número UN, precedido pelas letras 'UN', e o Nome Apropriado para Embarque (PSN).",
+                  "Massa bruta, se exceder 50 kg.",
+                  "O tipo de pacote (ex: 'TYPE A', 'TYPE B(U)').",
+                  "A marca de conformidade da autoridade competente para pacotes Tipo B(U), B(M) ou C."
+              ]}}
+          ]},
+          { id: "10.7.2", title: "Etiquetagem", blocks:[
+              { type: "paragraph", content: "Cada volume deve ser etiquetado com a(s) etiqueta(s) de categoria apropriada(s). A informação na etiqueta deve ser preenchida de forma legível:"},
+              { type: "list", content: { ordered: true, items: [
+                  "**Conteúdo (Contents):** O nome ou símbolo do(s) radionuclídeo(s) principal(is).",
+                  "**Atividade (Activity):** A atividade máxima do conteúdo radioativo em Becquerels (Bq).",
+                  "**Índice de Transporte (TI - Transport Index):** Apenas para as categorias II-AMARELA e III-AMARELA."
+              ]}},
+              { type: "paragraph", content: "As etiquetas de risco subsidiário (ex: Corrosivo) também são necessárias, se aplicável. A etiqueta 'Cargo Aircraft Only' é obrigatória se o volume for proibido em aeronaves de passageiros."},
+              { type: "visual-mark", content: { type: 'radioactive-i', caption: "Categoria I-BRANCA" } },
+              { type: "visual-mark", content: { type: 'radioactive-ii', caption: "Categoria II-AMARELA" } },
+              { type: "visual-mark", content: { type: 'radioactive-iii', caption: "Categoria III-AMARELA" } },
+          ]},
+          { id: "10.8", title: "Documentação (DGD)", blocks:[
+              { type: "paragraph", content: "Além dos requisitos padrão, a Declaração do Expedidor para Classe 7 deve incluir as seguintes informações adicionais:" },
+              { type: 'list', content: { ordered: true, items: [
+                  "Nome ou símbolo de cada radionuclídeo.",
+                  "Uma descrição da forma física e química do material.",
+                  "A atividade máxima do conteúdo radioativo em Becquerels (Bq).",
+                  "A categoria da etiqueta do volume (I-BRANCA, II-AMARELA, III-AMARELA).",
+                  "O Índice de Transporte (TI), se aplicável.",
+                  "Para material físsil, o Índice de Segurança de Criticidade (CSI - Criticality Safety Index).",
+                  "Identificação de qualquer certificado de aprovação de autoridade competente (ex: para pacotes Tipo B)."
+              ]}}
+          ]},
+          { id: "10.9", title: "Manuseio, Segregação e Limites", blocks:[
+              { type: "paragraph", content: "Volumes radioativos devem ser segregados de pessoas, animais vivos e filme fotográfico não revelado. A distância de segregação é determinada pela soma dos Índices de Transporte (TI) de todos os volumes carregados, utilizando a Tabela 10.9.C." },
+              { type: "warning", content: { title: "Limites de TI por Aeronave/Compartimento", text: "A soma total dos Índices de Transporte em uma única aeronave não deve exceder 200. Para um único compartimento de carga, o limite é 50."}}
+          ]},
+          { id: "10.10", title: "Disposições para Emergências", blocks: [
+              { type: "paragraph", content: "Em caso de incidente ou acidente envolvendo material radioativo, os procedimentos de emergência devem ser ativados imediatamente. A área deve ser isolada e o acesso restrito. O NOTOC (Notification to Captain) é a fonte primária de informação para a tripulação e equipes de emergência sobre os materiais a bordo. As autoridades competentes nacionais e de aviação civil devem ser notificadas." }
+          ]}
       ]
   },
   {
@@ -809,7 +871,13 @@ export const DGR_CHAPTERS: DGRChapter[] = [
       color: "border-gray-400",
       icon: Scale,
       sections: [
-          { id: "B.1", title: "Unidades de Medida SI", blocks: [{ type: "table", content: { headers: ["Grandeza", "Unidade SI", "Equivalente Imperial/Comum"], rows: [["Pressão", "kPa (kilopascal)", "1 bar = 100 kPa"], ["Volume", "L (Litro)", "1 gal (US) = 3.785 L"], ["Massa", "kg (Quilograma)", "1 lb = 0.4536 kg"], ["Radioatividade", "Bq (Becquerel)", "1 Ci (Curie) = 37 GBq"]] } }] }
+          { id: "B.1", title: "Unidades de Medida SI", blocks: [{ type: "paragraph", content: "Este apêndice fornece fatores de conversão para unidades comumente usadas no transporte de mercadorias perigosas. As regulamentações da IATA são baseadas no Sistema Internacional de Unidades (SI)."}] },
+          { id: "B.2", title: "Tabelas de Conversão Comuns", blocks: [
+                {type: "table", content: { caption: "Conversão de Massa", headers: ["Unidade", "Equivalente em kg"], rows: [["1 quilograma (kg)", "1.0 kg"], ["1 grama (g)", "0.001 kg"], ["1 libra (lb)", "0.453592 kg"], ["1 onça (oz)", "0.028350 kg"]]}},
+                {type: "table", content: { caption: "Conversão de Volume", headers: ["Unidade", "Equivalente em Litros (L)"], rows: [["1 Litro (L)", "1.0 L"], ["1 mililitro (mL)", "0.001 L"], ["1 galão americano (US gal)", "3.78541 L"], ["1 galão imperial (Imp gal)", "4.54609 L"]]}},
+                {type: "table", content: { caption: "Conversão de Pressão", headers: ["Unidade", "Equivalente em kPa"], rows: [["1 quilopascal (kPa)", "1.0 kPa"], ["1 bar", "100 kPa"], ["1 libra por polegada² (psi)", "6.89476 kPa"], ["1 atmosfera (atm)", "101.325 kPa"]]}},
+                {type: "table", content: { caption: "Conversão de Radioatividade", headers: ["Unidade", "Equivalente em Becquerel (Bq)"], rows: [["1 Becquerel (Bq)", "1 Bq (1 desintegração/s)"], ["1 Curie (Ci)", "3.7 x 10¹⁰ Bq (37 GBq)"], ["1 milicurie (mCi)", "3.7 x 10⁷ Bq (37 MBq)"], ["1 microcurie (μCi)", "3.7 x 10⁴ Bq (37 kBq)"]]}}
+          ]}
       ]
   },
   {
@@ -819,7 +887,26 @@ export const DGR_CHAPTERS: DGRChapter[] = [
       color: "border-gray-400",
       icon: FileQuestion,
       sections: [
-          { id: "C.1", title: "Classificação de Substâncias Não Listadas", blocks: [{ type: "paragraph", content: "Quando uma substância não está listada pelo nome na Tabela 4.2, ela deve ser classificada com base nos critérios do Capítulo 3 e transportada sob uma entrada genérica ou 'n.o.s.' (not otherwise specified) apropriada." }] }
+          { id: "C.1", title: "Classificação de Substâncias Não Listadas", blocks: [
+              { type: "paragraph", content: "Quando uma substância ou mistura não está listada pelo nome na Tabela 4.2, ela deve ser classificada com base em sua estrutura química, propriedades físicas e nos critérios de perigo definidos no Capítulo 3. Após a determinação da classe e do grupo de embalagem, o expedidor deve atribuir a entrada 'genérica' ou 'não especificada de outra forma' (N.O.S.) mais apropriada." },
+              { type: "note", content: { title: "Nome Técnico Obrigatório", text: "Para a maioria das entradas N.O.S., o Nome Apropriado para Embarque deve ser complementado com o(s) nome(s) técnico(s) do(s) componente(s) que contribui(em) para o perigo, por exemplo, 'UN 1993, Flammable liquid, n.o.s. (Ethanol, Methanol)'." }}
+          ]},
+          { id: "C.2", title: "Precedência de Riscos para Classificação", blocks: [
+              { type: "paragraph", content: "Se uma substância apresenta múltiplos riscos, a classe primária é determinada usando a Tabela de Precedência de Riscos (ver Tabela 3.10.A). Esta tabela estabelece uma hierarquia de perigos para garantir que o risco mais significativo seja sempre o primário." },
+              { type: "warning", content: { title: "Exceções à Precedência", text: "A tabela de precedência não se aplica a substâncias das Classes 1, 2, 7, Divisões 5.2 e 6.2, e substâncias auto-reativas da Divisão 4.1. Esses riscos sempre têm precedência." }},
+              { type: "table", content: {
+                  caption: "Tabela de Precedência de Riscos (Simplificada)",
+                  headers: ["Risco", "Prioridade Mais Alta Sobre"],
+                  rows: [
+                      ["4.2 (Combustão Espontânea)", "Todos os outros riscos (exceto exceções)"],
+                      ["4.3 (Perigoso Quando Molhado)", "Todos os outros riscos (exceto 4.2 e exceções)"],
+                      ["6.1 PG I (Tóxico - Inalação)", "Todos os outros riscos (exceto 4.2, 4.3 e exceções)"],
+                      ["3 (Líquido Inflamável)", "8 (Corrosivo), 6.1 (Tóxico Oral/Dérmico)"],
+                      ["8 (Corrosivo)", "9 (Miscelânea)"]
+                  ],
+                  footnotes: ["Esta é uma representação simplificada. Consulte sempre a Tabela 3.10.A completa no Capítulo 3 para classificação oficial."]
+              }}
+          ]}
       ]
   },
   {
@@ -829,7 +916,7 @@ export const DGR_CHAPTERS: DGRChapter[] = [
       color: "border-gray-400",
       icon: Building2,
       sections: [
-          { id: "D.1", title: "Lista de Contatos", blocks: [{ type: "table", content: { headers: ["País", "Autoridade", "Website"], rows: [["Brasil", "ANAC - Agência Nacional de Aviação Civil", "www.anac.gov.br"], ["Estados Unidos", "FAA - Federal Aviation Administration", "www.faa.gov"], ["Reino Unido", "CAA - Civil Aviation Authority", "www.caa.co.uk"], ["Canadá", "Transport Canada", "tc.canada.ca"], ["União Europeia", "EASA", "www.easa.europa.eu"]] } }] }
+          { id: "D.1", title: "Lista de Contatos (Exemplos)", blocks: [{ type: "paragraph", content: "A lista completa de autoridades competentes é mantida pela ICAO. Abaixo estão alguns exemplos:" }, { type: "table", content: { headers: ["País", "Autoridade", "Website"], rows: [["Brasil", "ANAC - Agência Nacional de Aviação Civil", "www.anac.gov.br"], ["Estados Unidos", "FAA - Federal Aviation Administration", "www.faa.gov"], ["Reino Unido", "CAA - Civil Aviation Authority", "www.caa.co.uk"], ["Canadá", "Transport Canada", "tc.canada.ca"], ["União Europeia", "EASA", "www.easa.europa.eu"]] } }] }
       ]
   },
   {

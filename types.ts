@@ -41,7 +41,7 @@ export interface DGRFigure {
 }
 
 export interface DGRMark {
-  type: 'lq' | 'lq-y' | 'eq' | 'lithium-battery' | 'orientation' | 'cargo-only' | 'cryogenic' | 'keep-away-heat' | 'mag';
+  type: 'lq' | 'lq-y' | 'eq' | 'lithium-battery' | 'orientation' | 'cargo-only' | 'cryogenic' | 'keep-away-heat' | 'mag' | 'radioactive-i' | 'radioactive-ii' | 'radioactive-iii';
   data?: {
     class?: string; // For EQ
     unNumbers?: string; // For Battery Mark

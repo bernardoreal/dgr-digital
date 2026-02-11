@@ -1,6 +1,7 @@
 
+
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { ArrowLeft, Bookmark, Share2, List, FileText, ShieldCheck, AlertTriangle, Check, X as XIcon, ChevronRight, Package, Plane, Globe, BookOpen, Search, CheckSquare, Square, RefreshCw, ArrowRightLeft, GitMerge, RotateCcw, Filter, ArrowUpDown, Eye, ShieldAlert, BadgeCheck, CloudDownload, Box, ExternalLink, Table as TableIcon, Database, Wind, ThermometerSnowflake, Sun } from 'lucide-react';
+import { ArrowLeft, Bookmark, Share2, List, FileText, ShieldCheck, AlertTriangle, Check, X as XIcon, ChevronRight, Package, Plane, Globe, BookOpen, Search, CheckSquare, Square, RefreshCw, ArrowRightLeft, GitMerge, RotateCcw, Filter, ArrowUpDown, Eye, ShieldAlert, BadgeCheck, CloudDownload, Box, ExternalLink, Table as TableIcon, Database, Wind, ThermometerSnowflake, Sun, Radiation } from 'lucide-react';
 import { DGRChapter, DGRSection, DGRContentBlock, DGRTable, DGRList, DGRNote, DGRFigure, DGRPackingInstruction, DGRVariation, DGRDefinition, DGRMark, DGRChecklist, DGRTool, DGRWizard, DGRDatabase } from '../types';
 import UNDetailModal from './UNDetailModal';
 import { fetchOfficialUNData } from '../services/geminiService';
@@ -46,9 +47,11 @@ interface ChapterDetailProps {
   chapter: DGRChapter;
   onBack: () => void;
   initialSearchTerm?: string;
+  initialScrollId?: string | null;
+  onClearInitialScroll: () => void;
 }
 
-const ChapterDetail: React.FC<ChapterDetailProps> = ({ chapter, onBack, initialSearchTerm = '' }) => {
+const ChapterDetail: React.FC<ChapterDetailProps> = ({ chapter, onBack, initialSearchTerm = '', initialScrollId, onClearInitialScroll }) => {
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
   
@@ -64,6 +67,20 @@ const ChapterDetail: React.FC<ChapterDetailProps> = ({ chapter, onBack, initialS
 
   // Wizard State
   const [wizardStates, setWizardStates] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    if (initialScrollId) {
+      setTimeout(() => {
+        const element = document.getElementById(initialScrollId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          element.classList.add('ring-4', 'ring-offset-4', 'ring-latam-coral', 'transition-all', 'duration-1000', 'ease-in-out', 'rounded-lg');
+          setTimeout(() => element.classList.remove('ring-4', 'ring-offset-4', 'ring-latam-coral', 'rounded-lg'), 2500);
+        }
+        onClearInitialScroll();
+      }, 200);
+    }
+  }, [initialScrollId, onClearInitialScroll, chapter]);
 
   const toggleCheck = (id: string) => {
       setCheckedItems(prev => ({ ...prev, [id]: !prev[id] }));
@@ -668,9 +685,13 @@ const ChapterDetail: React.FC<ChapterDetailProps> = ({ chapter, onBack, initialS
                                     <tr class="${rowClass} transition-colors">
                                         ${db.columns.map(col => {
                                             let cellContent = row[col.key] || '';
-                                            
-                                            // Specific styling for Name
-                                            if (col.key === 'name') {
+                                            const piValue = String(row[col.key] || '');
+                                            const piNumber = piValue.replace('Y', '');
+                                            const isClickablePI = (col.key === 'pax_pi' || col.key === 'cao_pi' || col.key === 'lq_pi') && piNumber && piNumber !== 'Forbidden' && !isNaN(Number(piNumber));
+
+                                            if (isClickablePI) {
+                                                cellContent = `<button class="text-blue-600 underline font-bold hover:text-blue-800" onclick="window.opener.postMessage({ type: 'navigateToPI', chapterId: 5, sectionId: '${piNumber}' }, '*'); window.close();">${piValue}</button>`;
+                                            } else if (col.key === 'name') {
                                                 if (isVerified) {
                                                     cellContent = `<div class="flex justify-between items-center"><span>${cellContent}</span><span class="text-[9px] uppercase font-bold text-green-700 bg-green-100 border border-green-200 rounded px-1.5 py-0.5 ml-2">Oficial</span></div>`;
                                                 } else if (isSimulated) {
@@ -1068,433 +1089,212 @@ const ChapterDetail: React.FC<ChapterDetailProps> = ({ chapter, onBack, initialS
           );
       case 'cryogenic':
           return (
-            <div className="w-32 h-32 bg-green-600 text-white relative border-4 border-white shadow-xl mx-auto my-8 flex flex-col items-center justify-center group hover:scale-105 transition-transform duration-300">
-                <ThermometerSnowflake className="w-16 h-16" strokeWidth={2}/>
-                <div className="mt-2 text-xs font-bold uppercase tracking-wider">Cryogenic Liquid</div>
-            </div>
-          );
-       case 'keep-away-heat':
-          return (
-            <div className="w-32 h-32 bg-red-600 text-white relative border-4 border-white shadow-xl mx-auto my-8 flex flex-col items-center justify-center group hover:scale-105 transition-transform duration-300">
-                <Sun className="w-12 h-12 mb-2" strokeWidth={2.5}/>
-                <Box className="w-10 h-10" strokeWidth={2}/>
-                <div className="mt-2 text-[10px] font-bold uppercase tracking-wider text-center">Keep Away<br/>From Heat</div>
+            <div className="w-32 h-32 bg-green-600 text-white relative border-4 border-white shadow-xl mx-auto my-8 flex flex-col items-center justify-center group hover:scale-105 transition-transform duration-300 p-2">
+                <ThermometerSnowflake className="w-16 h-16"/>
+                <div className="font-bold text-xs uppercase mt-2 text-center leading-tight">Cryogenic<br/>Liquid</div>
             </div>
           );
       default:
         return null;
     }
   };
+// FIX: Add missing content block renderers and main component body
+const renderContentBlock = (block: DGRContentBlock, index: number, sectionId: string) => {
+    const blockId = `${sectionId}-${index}`;
 
-  const renderBlock = (block: DGRContentBlock, idx: number | string) => {
     switch (block.type) {
-      case 'paragraph':
-        return (
-          <p key={idx} className="mb-3 text-gray-800 leading-relaxed text-justify text-[14px] font-medium">
-             <HighlightText text={block.content as string} highlight={initialSearchTerm} />
-          </p>
-        );
-
-      case 'list':
-        const listData = block.content as DGRList;
-        const ListTag = listData.ordered ? 'ol' : 'ul';
-        const listStyle = listData.type === 'alpha' ? 'list-[lower-alpha]' : listData.ordered ? 'list-decimal' : 'list-disc';
-        return (
-          <ListTag key={idx} className={`mb-4 pl-8 space-y-1 text-gray-700 ${listStyle} marker:text-latam-indigo marker:font-bold text-sm`}>
-            {listData.items.map((item, i) => (
-              <li key={i} className="pl-1">
-                 <HighlightText text={item} highlight={initialSearchTerm} />
-              </li>
-            ))}
-          </ListTag>
-        );
-      
-      case 'definition-list':
-        const defData = block.content as DGRDefinition[];
-        return (
-          <dl key={idx} className="my-6 space-y-4">
-            {defData.map((item, i) => (
-              <div key={i} className="pb-4 border-b border-gray-100 last:border-0">
-                <dt className="font-bold text-latam-indigo text-sm mb-1">{item.term}</dt>
-                <dd className="text-gray-600 text-sm leading-relaxed pl-4 border-l-2 border-gray-200">
-                    <HighlightText text={item.definition} highlight={initialSearchTerm} />
-                </dd>
-              </div>
-            ))}
-          </dl>
-        );
-
-      case 'checklist':
-        const checkData = block.content as DGRChecklist;
-        return (
-            <div key={idx} className="my-6 bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
-                <div className="bg-gray-100 p-4 border-b border-gray-200 flex items-center justify-between">
-                    <h4 className="font-bold text-gray-800">{checkData.title}</h4>
-                    <span className="text-xs font-mono text-gray-500 bg-gray-200 px-2 py-1 rounded">{checkData.id}</span>
-                </div>
-                <div className="divide-y divide-gray-100">
-                    {checkData.items.map((item) => {
-                         const isChecked = checkedItems[item.id] || false;
-                         return (
-                            <div 
-                                key={item.id} 
-                                onClick={() => toggleCheck(item.id)}
-                                className={`p-4 flex items-start cursor-pointer hover:bg-blue-50 transition-colors ${isChecked ? 'bg-blue-50/50' : ''}`}
-                            >
-                                <div className={`mr-4 mt-0.5 transition-colors ${isChecked ? 'text-green-600' : 'text-gray-300'}`}>
-                                    {isChecked ? <CheckSquare className="w-5 h-5" /> : <Square className="w-5 h-5" />}
-                                </div>
-                                <div className="flex-1">
-                                    <p className={`text-sm font-medium ${isChecked ? 'text-gray-800' : 'text-gray-600'}`}>{item.text}</p>
-                                    {item.reference && (
-                                        <span className="text-xs text-latam-indigo mt-1 inline-block">Ref: {item.reference}</span>
-                                    )}
-                                </div>
-                            </div>
-                         );
-                    })}
-                </div>
-                <div className="bg-gray-50 p-3 text-center border-t border-gray-200">
-                    <button 
-                        onClick={() => setCheckedItems({})}
-                        className="text-xs text-red-500 hover:text-red-700 font-bold uppercase tracking-wide"
-                    >
-                        Limpar Checklist
-                    </button>
-                </div>
-            </div>
-        );
-
-      case 'tool':
-        const toolData = block.content as DGRTool;
-        if (toolData.toolType === 'segregation-checker') {
-            const isCompatible = segregationClassA && segregationClassB 
-                ? toolData.data.matrix[segregationClassA]?.[segregationClassB] 
-                : null;
-            
-            return (
-                <div key={idx} className="my-8 bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-xl shadow-sm p-6">
-                    <div className="flex items-center mb-4">
-                        <ArrowRightLeft className="w-5 h-5 text-latam-indigo mr-2" />
-                        <h4 className="font-bold text-gray-800">{toolData.title}</h4>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                        <div>
-                            <label className="block text-xs font-bold text-gray-500 mb-1">Classe do Volume 1</label>
-                            <select 
-                                value={segregationClassA}
-                                onChange={(e) => setSegregationClassA(e.target.value)}
-                                className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-latam-indigo focus:border-latam-indigo"
-                            >
-                                <option value="">Selecione...</option>
-                                {toolData.data.classes.map((c: string) => (
-                                    <option key={c} value={c}>{toolData.data.labels[c]}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div>
-                            <label className="block text-xs font-bold text-gray-500 mb-1">Classe do Volume 2</label>
-                            <select 
-                                value={segregationClassB}
-                                onChange={(e) => setSegregationClassB(e.target.value)}
-                                className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-latam-indigo focus:border-latam-indigo"
-                            >
-                                <option value="">Selecione...</option>
-                                {toolData.data.classes.map((c: string) => (
-                                    <option key={c} value={c}>{toolData.data.labels[c]}</option>
-                                ))}
-                            </select>
-                        </div>
-                    </div>
-
-                    {segregationClassA && segregationClassB && (
-                        <div className={`p-4 rounded-lg flex items-start animate-fade-in ${isCompatible ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`}>
-                            {isCompatible ? (
-                                <Check className="w-6 h-6 text-green-600 mr-3 mt-0.5" />
-                            ) : (
-                                <XIcon className="w-6 h-6 text-red-600 mr-3 mt-0.5" />
-                            )}
-                            <div>
-                                <h5 className={`font-bold ${isCompatible ? 'text-green-800' : 'text-red-800'}`}>
-                                    {isCompatible ? 'Compatível' : 'Segregação Necessária'}
-                                </h5>
-                                <p className={`text-sm mt-1 ${isCompatible ? 'text-green-700' : 'text-red-700'}`}>
-                                    {isCompatible 
-                                        ? "Estes volumes podem ser carregados juntos (salvo exceções específicas)." 
-                                        : "Estes volumes NÃO devem ser carregados próximos um do outro."}
-                                </p>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            )
-        }
-        return null;
-
-      case 'wizard':
-        const wizard = block.content as DGRWizard;
-        const currentNodeId = wizardStates[wizard.id] || wizard.startNodeId;
-        const isResult = wizard.results && wizard.results[currentNodeId];
+        case 'paragraph':
+            return <p key={blockId} className="prose prose-sm lg:prose-base max-w-none text-gray-700 mb-4 leading-relaxed"><HighlightText text={block.content as string} highlight={initialSearchTerm || ''} /></p>;
         
-        return (
-            <div key={idx} className="my-10 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden animate-fade-in">
-                <div className="bg-gradient-to-r from-latam-indigo to-latam-indigoLight p-5 flex items-center justify-between text-white">
-                    <div className="flex items-center space-x-3">
-                        <GitMerge className="w-5 h-5" />
-                        <h4 className="font-bold tracking-tight">{wizard.title}</h4>
-                    </div>
-                    {currentNodeId !== wizard.startNodeId && (
-                        <button 
-                            onClick={() => resetWizard(wizard.id, wizard.startNodeId)}
-                            className="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition-colors flex items-center"
-                        >
-                            <RotateCcw className="w-3 h-3 mr-1.5" />
-                            Reiniciar
+        case 'list': {
+            const list = block.content as DGRList;
+            const ListTag = list.ordered ? 'ol' : 'ul';
+            const listTypeClass = list.ordered 
+                ? (list.type === 'alpha' ? 'list-[lower-alpha]' : 'list-decimal') 
+                : 'list-disc';
+            return (
+                <ListTag key={blockId} className={`prose prose-sm lg:prose-base max-w-none pl-6 mb-4 space-y-1 ${listTypeClass}`}>
+                    {list.items.map((item, i) => <li key={i}><HighlightText text={item} highlight={initialSearchTerm || ''} /></li>)}
+                </ListTag>
+            );
+        }
+
+        case 'table': {
+            const table = block.content as DGRTable;
+            return (
+                <div key={blockId} className="my-6 bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
+                        <div>
+                            {table.caption && <h4 className="font-bold text-gray-800 text-sm">{table.caption}</h4>}
+                        </div>
+                        <button onClick={() => openTableInNewWindow(table)} className="text-xs font-bold text-latam-indigo hover:underline flex items-center gap-1">
+                            <ExternalLink className="w-3 h-3"/> Abrir Tabela
                         </button>
-                    )}
-                </div>
-                
-                <div className="p-6 md:p-8">
-                    {isResult ? (
-                        <div className="animate-fade-in text-center">
-                            <div className={`
-                                w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6
-                                ${wizard.results[currentNodeId].type === 'success' ? 'bg-green-100 text-green-600' : ''}
-                                ${wizard.results[currentNodeId].type === 'warning' ? 'bg-yellow-100 text-yellow-600' : ''}
-                                ${wizard.results[currentNodeId].type === 'danger' ? 'bg-red-100 text-red-600' : ''}
-                            `}>
-                                {wizard.results[currentNodeId].type === 'success' && <Check className="w-10 h-10" />}
-                                {wizard.results[currentNodeId].type === 'warning' && <AlertTriangle className="w-10 h-10" />}
-                                {wizard.results[currentNodeId].type === 'danger' && <XIcon className="w-10 h-10" />}
-                            </div>
-                            
-                            <h3 className="text-2xl font-bold text-gray-800 mb-3">{wizard.results[currentNodeId].title}</h3>
-                            <p className="text-gray-600 mb-8 max-w-lg mx-auto leading-relaxed">{wizard.results[currentNodeId].description}</p>
-                            
-                            {wizard.results[currentNodeId].actionText && (
-                                <div className="inline-block px-4 py-2 bg-gray-100 text-gray-700 font-mono text-sm rounded border border-gray-200">
-                                    {wizard.results[currentNodeId].actionText}
-                                </div>
-                            )}
-                        </div>
-                    ) : (
-                        <div className="animate-fade-in">
-                            <h5 className="text-lg font-medium text-gray-800 mb-6 text-center">
-                                {wizard.nodes[currentNodeId]?.question}
-                            </h5>
-                            
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
-                                {wizard.nodes[currentNodeId]?.options.map((option, optIdx) => (
-                                    <button
-                                        key={optIdx}
-                                        onClick={() => handleWizardOption(wizard.id, option.nextNodeId)}
-                                        className="p-4 border-2 border-gray-100 hover:border-latam-indigo hover:bg-indigo-50/30 rounded-xl transition-all duration-200 text-left group"
-                                    >
-                                        <span className="font-semibold text-gray-700 group-hover:text-latam-indigo flex items-center justify-between">
-                                            {option.label}
-                                            <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                        </span>
-                                    </button>
+                    </div>
+                    <div className="overflow-x-auto">
+                        <table className="min-w-full text-sm">
+                            <thead className="bg-gray-100 text-xs uppercase text-gray-500 font-bold">
+                                <tr>
+                                    {table.headers.map((h, i) => <th key={i} className="px-4 py-3 text-left border-r last:border-r-0 border-gray-200">{h}</th>)}
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-200">
+                                {table.rows.map((row, i) => (
+                                    <tr key={i} className="hover:bg-gray-50">
+                                        {row.map((cell, j) => <td key={j} className="px-4 py-3 border-r last:border-r-0 border-gray-200">{typeof cell === 'boolean' ? (cell ? <Check className="text-green-600"/> : <XIcon className="text-red-600"/>) : String(cell)}</td>)}
+                                    </tr>
                                 ))}
-                            </div>
+                            </tbody>
+                        </table>
+                    </div>
+                    {table.footnotes && <div className="p-4 bg-yellow-50 text-xs text-yellow-800 border-t border-yellow-200">{table.footnotes.join('; ')}</div>}
+                </div>
+            );
+        }
+        
+        case 'note': {
+             const note = block.content as DGRNote;
+             return (
+                 <div key={blockId} className="my-4 bg-gray-50 border-l-4 border-gray-400 p-4 rounded-r-lg">
+                     {note.title && <h5 className="font-bold text-gray-800 mb-1">{note.title}</h5>}
+                     <p className="text-sm text-gray-600"><HighlightText text={note.text} highlight={initialSearchTerm || ''} /></p>
+                 </div>
+             );
+        }
+        
+        case 'warning': {
+            const warning = block.content as DGRNote;
+            return (
+                <div key={blockId} className="my-4 bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg">
+                    {warning.title && <h5 className="font-bold text-red-800 mb-1">{warning.title}</h5>}
+                    <p className="text-sm text-red-700"><HighlightText text={warning.text} highlight={initialSearchTerm || ''} /></p>
+                </div>
+            );
+       }
+        
+        case 'figure': {
+            const figure = block.content as DGRFigure;
+            return (
+                <div key={blockId} className="my-8 text-center p-4 bg-gray-100 rounded-lg">
+                    {renderHazardLabel(figure.labelClass)}
+                    <p className="text-xs text-gray-600 italic mt-2"><HighlightText text={figure.caption} highlight={initialSearchTerm || ''} /></p>
+                </div>
+            );
+        }
+        
+        case 'visual-mark': {
+            const mark = block.content as DGRMark;
+            return (
+                <div key={blockId} className="my-8 text-center p-4 bg-gray-100 rounded-lg">
+                    {renderVisualMark(mark)}
+                    <p className="text-xs text-gray-600 italic mt-2"><HighlightText text={mark.caption} highlight={initialSearchTerm || ''} /></p>
+                </div>
+            );
+        }
+        
+        case 'packing-instruction': {
+            const pi = block.content as DGRPackingInstruction;
+            return (
+                <div id={pi.id} key={blockId} className="my-6 bg-white border-2 border-gray-800 rounded-lg shadow-md scroll-mt-24">
+                    <div className="bg-gray-800 text-white px-4 py-3 flex justify-between items-center rounded-t-md">
+                        <h4 className="font-bold text-lg"><span className="font-mono">PI {pi.id}</span> - {pi.title}</h4>
+                        <span className={`text-xs px-2 py-1 rounded-full font-bold ${pi.transportMode === 'Cargo Aircraft Only' ? 'bg-orange-500' : 'bg-blue-500'}`}>{pi.transportMode}</span>
+                    </div>
+                    <div className="p-4 space-y-4">
+                        {pi.content.map((b, i) => renderContentBlock(b, i, `${sectionId}-pi-${pi.id}`))}
+                    </div>
+                </div>
+            );
+        }
+
+        case 'definition-list': {
+            const definitions = block.content as DGRDefinition[];
+            return (
+                <dl key={blockId} className="space-y-4 my-4">
+                    {definitions.map((def, i) => (
+                        <div key={i} className="pl-4 border-l-2 border-gray-200">
+                            <dt className="font-bold text-gray-900"><HighlightText text={def.term} highlight={initialSearchTerm || ''} /></dt>
+                            <dd className="text-sm text-gray-600 mt-1"><HighlightText text={def.definition} highlight={initialSearchTerm || ''} /></dd>
                         </div>
-                    )}
+                    ))}
+                </dl>
+            );
+        }
+        
+        case 'database': {
+            const db = block.content as DGRDatabase;
+            return (
+                 <div key={blockId} className="my-8">
+                     <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
+                         <div className="p-4 bg-gray-50/50 border-b border-gray-200 flex justify-between items-center">
+                             <h4 className="font-bold text-gray-800 flex items-center gap-2"><Database className="w-4 h-4"/>{db.title}</h4>
+                             <button onClick={() => openDatabaseInNewWindow(db, verifiedRegistry)} className="text-xs font-bold text-latam-indigo hover:underline flex items-center gap-1">
+                                 <ExternalLink className="w-3 h-3"/> Abrir Base de Dados
+                             </button>
+                         </div>
+                         <div className="p-4">
+                             <p className="text-sm text-gray-500">Esta seção contém uma base de dados interativa. Clique no botão acima para abrir, pesquisar, filtrar e classificar os {db.data.length} registros.</p>
+                         </div>
+                     </div>
+                 </div>
+            );
+        }
+
+        case 'checklist': {
+            const checklist = block.content as DGRChecklist;
+            const allChecked = checklist.items.every(item => checkedItems[item.id]);
+            return (
+                <div key={blockId} className="my-6 bg-white border border-gray-200 rounded-lg shadow-sm">
+                    <div className={`p-4 border-b border-gray-200 flex justify-between items-center ${allChecked ? 'bg-green-50' : 'bg-gray-50'}`}>
+                        <h4 className="font-bold text-gray-800 flex items-center gap-2"><CheckSquare className="w-4 h-4"/>{checklist.title}</h4>
+                        {allChecked && <span className="text-xs font-bold text-green-700 bg-green-100 px-2 py-1 rounded-full">Completo</span>}
+                    </div>
+                    <div className="p-4 space-y-3">
+                        {checklist.items.map(item => (
+                            <div key={item.id} onClick={() => toggleCheck(item.id)} className={`flex items-start p-3 rounded-md cursor-pointer transition-colors ${checkedItems[item.id] ? 'bg-green-50' : 'hover:bg-gray-50'}`}>
+                                <div className="mr-3 mt-0.5">
+                                    {checkedItems[item.id] ? <CheckSquare className="w-5 h-5 text-green-600"/> : <Square className="w-5 h-5 text-gray-400"/>}
+                                </div>
+                                <div className="flex-grow">
+                                    <p className={`text-sm ${checkedItems[item.id] ? 'text-gray-500 line-through' : 'text-gray-800'}`}>{item.text}</p>
+                                    {item.reference && <p className="text-xs text-gray-400 mt-1">Ref: {item.reference}</p>}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
-            </div>
-        );
-
-      case 'note':
-        const noteData = block.content as DGRNote;
-        return (
-          <div key={idx} className="my-4 p-3 bg-slate-50 border border-slate-200 rounded text-sm relative overflow-hidden">
-             <div className="absolute top-0 left-0 w-1 h-full bg-slate-300"></div>
-            <div className="flex">
-                <span className="font-bold text-slate-700 mr-2 uppercase text-xs flex-shrink-0">
-                {noteData.title || 'Nota'}:
-                </span>
-                <span className="text-slate-600">
-                    <HighlightText text={noteData.text} highlight={initialSearchTerm} />
-                </span>
-            </div>
-          </div>
-        );
-
-      case 'warning':
-        const warningData = block.content as DGRNote;
-        return (
-          <div key={idx} className="my-4 p-4 bg-red-50 border-2 border-red-100 rounded flex items-start">
-            <AlertTriangle className="w-6 h-6 text-red-600 mt-0.5 mr-3 flex-shrink-0" />
-            <div>
-              <span className="block font-bold text-red-700 text-sm uppercase mb-1">
-                {warningData.title || 'Atenção'}
-              </span>
-              <p className="text-red-800 text-sm font-medium">
-                  <HighlightText text={warningData.text} highlight={initialSearchTerm} />
-              </p>
-            </div>
-          </div>
-        );
-      
-      case 'database':
-          const db = block.content as DGRDatabase;
-          // CARD VIEW WITH BUTTON: Replaces the inline DatabaseBlock to reduce clutter.
-          return (
-            <div key={idx} className="my-8 flex flex-col items-center justify-center bg-gray-50 p-8 rounded-xl border border-gray-200 border-dashed animate-fade-in group hover:border-latam-indigo/30 transition-colors">
-                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-4 shadow-sm text-gray-400 group-hover:text-latam-indigo group-hover:scale-110 transition-all duration-300">
-                    <Database className="w-6 h-6" />
-                </div>
-                <h4 className="text-sm font-bold text-gray-600 mb-2 uppercase tracking-wider text-center">
-                    {db.title}
-                </h4>
-                <p className="text-xs text-gray-400 mb-6 text-center max-w-sm">
-                    Base de dados contendo {db.data.length} registros. Clique para acessar a versão interativa completa.
-                </p>
-                <button 
-                    onClick={() => openDatabaseInNewWindow(db, verifiedRegistry)}
-                    className="flex items-center space-x-2 px-5 py-2.5 bg-white border border-gray-300 hover:border-latam-indigo text-gray-700 hover:text-latam-indigo rounded-lg shadow-sm hover:shadow-md transition-all font-medium text-sm"
-                >
-                   <span>Abrir Base de Dados</span>
-                   <ExternalLink className="w-4 h-4" />
-                </button>
-            </div>
-          );
-
-      case 'table':
-        const tableData = block.content as DGRTable;
-        return (
-          <div key={idx} className="my-8 flex flex-col items-center justify-center bg-gray-50 p-8 rounded-xl border border-gray-200 border-dashed animate-fade-in group hover:border-latam-indigo/30 transition-colors">
-            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-4 shadow-sm text-gray-400 group-hover:text-latam-indigo group-hover:scale-110 transition-all duration-300">
-                <TableIcon className="w-6 h-6" />
-            </div>
-            <h4 className="text-sm font-bold text-gray-600 mb-2 uppercase tracking-wider text-center">
-                {tableData.caption || 'Tabela de Dados'}
-            </h4>
-            <p className="text-xs text-gray-400 mb-6 text-center max-w-sm">
-                Esta tabela contém {tableData.rows.length} linhas de dados regulatórios detalhados.
-            </p>
-            <button 
-                onClick={() => openTableInNewWindow(tableData)}
-                className="flex items-center space-x-2 px-5 py-2.5 bg-white border border-gray-300 hover:border-latam-indigo text-gray-700 hover:text-latam-indigo rounded-lg shadow-sm hover:shadow-md transition-all font-medium text-sm"
-            >
-               <span>Abrir Tabela Completa</span>
-               <ExternalLink className="w-4 h-4" />
-            </button>
-          </div>
-        );
-
-      case 'packing-instruction':
-        const piData = block.content as DGRPackingInstruction;
-        return (
-          <div key={idx} className="my-10 border-2 border-gray-800 bg-white">
-            {/* PI Header */}
-            {/* Updated top-24 to fix overlap with main header */}
-            <div className="bg-gray-800 text-white px-6 py-4 flex justify-between items-center sticky top-24 z-10 transition-all duration-300">
-               <div className="flex flex-col">
-                  <span className="text-[10px] uppercase tracking-widest opacity-80">Instrução de Embalagem</span>
-                  <span className="text-3xl font-bold font-mono">{piData.id}</span>
-               </div>
-               <div className="text-right">
-                  <div className="flex items-center text-xs font-bold bg-white/10 px-3 py-1 rounded-full mb-1">
-                     <Plane className="w-3 h-3 mr-2" />
-                     {piData.transportMode}
-                  </div>
-               </div>
-            </div>
-            
-            {/* PI Body */}
-            <div className="p-6 md:p-8 space-y-6">
-               <div className="border-b border-gray-200 pb-4 mb-4">
-                  <h4 className="font-bold text-lg text-gray-900">{piData.title}</h4>
-               </div>
-               
-               {/* Recursive Render of PI Blocks */}
-               {piData.content.map((b, i) => (
-                  <div key={i} className="pi-content-block">
-                     {renderBlock(b, `${idx}-${i}`)}
-                  </div>
-               ))}
-            </div>
-          </div>
-        );
-
-      case 'figure':
-        const figData = block.content as DGRFigure;
-        return (
-            <div key={idx} className="my-8 flex flex-col items-center">
-                {renderHazardLabel(figData.labelClass)}
-                <div className="mt-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest text-center border-t border-gray-200 pt-2 w-full max-w-xs">
-                    {figData.caption}
-                </div>
-            </div>
-        );
-      
-      case 'visual-mark':
-        const markData = block.content as DGRMark;
-        return (
-             <div key={idx} className="my-8 flex flex-col items-center">
-                {renderVisualMark(markData)}
-                <div className="mt-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest text-center border-t border-gray-200 pt-2 w-full max-w-xs">
-                    {markData.caption}
-                </div>
-            </div>
-        );
-
-      default:
-        return null;
+            );
+        }
+        
+        default:
+            return null;
     }
-  };
+};
 
   return (
-    <div className="animate-fade-in pb-32 pt-4 px-2">
-      {/* Header */}
-      <div className="mb-6 flex items-start space-x-4">
-        <button 
-          onClick={onBack}
-          className="p-2 rounded-full hover:bg-gray-200 text-gray-500 transition-colors bg-white">
-              <ArrowLeft className="w-5 h-5" />
-        </button>
-        <div className="flex-grow pt-1">
-           <h2 className="text-2xl font-bold text-gray-900 leading-tight">
-                <span className="font-mono text-gray-400 mr-2">{!isNaN(Number(chapter.id)) ? String(chapter.id).padStart(2, '0') : chapter.id}</span>
-                {chapter.title}
-           </h2>
-           <p className="text-sm text-gray-500 mt-1">{chapter.description}</p>
-        </div>
-        <div className="flex space-x-2">
-            <button className="p-2 rounded-full hover:bg-gray-200 text-gray-500 transition-colors">
-                <Bookmark className="w-5 h-5" />
-            </button>
-            <button className="p-2 rounded-full hover:bg-gray-200 text-gray-500 transition-colors">
-                <Share2 className="w-5 h-5" />
-            </button>
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className="grid grid-cols-12 gap-8 items-start">
-        
-        {/* Table of Contents */}
-        <aside className="col-span-12 md:col-span-3 md:sticky md:top-24">
-            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-                <h3 className="font-bold text-sm mb-3 flex items-center text-gray-700">
-                   <List className="w-4 h-4 mr-2" />
-                   Navegação
-                </h3>
+    <div className="flex flex-col lg:flex-row gap-x-12 animate-fade-in">
+        <aside className="lg:w-1/4 xl:w-1/5 lg:sticky top-24 self-start">
+            <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                <button onClick={onBack} className="flex items-center text-sm font-bold text-gray-500 hover:text-latam-indigo mb-4 transition-colors">
+                    <ArrowLeft className="w-4 h-4 mr-2"/>
+                    Voltar
+                </button>
+                <div className="flex items-start gap-3 mb-4">
+                    <div className="bg-gray-100 rounded-lg p-2 text-latam-indigo">
+                        {chapter.icon ? <chapter.icon className="w-5 h-5" /> : <BookOpen className="w-5 h-5"/>}
+                    </div>
+                    <div>
+                        <h2 className="font-bold text-lg text-gray-800 leading-tight">{chapter.title}</h2>
+                        <p className="text-xs text-gray-500">Capítulo {chapter.id}</p>
+                    </div>
+                </div>
                 <nav>
-                    <ul>
+                    <ul className="space-y-1">
                         {chapter.sections.map(section => (
                             <li key={section.id}>
-                                <a 
-                                  href={`#${section.id}`} 
-                                  onClick={(e) => {
-                                      e.preventDefault();
-                                      document.getElementById(section.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                      setActiveSectionId(section.id);
-                                  }}
-                                  className={`block text-sm py-2 px-3 rounded-md transition-all ${activeSectionId === section.id ? 'bg-indigo-50 text-latam-indigo font-bold' : 'text-gray-600 hover:bg-gray-100'}`}
-                                >
-                                  {section.id} - {section.title}
+                                <a href={`#${section.id}`} className="block text-sm px-3 py-2 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">
+                                    <span className="font-bold mr-2">{section.id}</span>
+                                    {section.title}
                                 </a>
                             </li>
                         ))}
@@ -1503,188 +1303,34 @@ const ChapterDetail: React.FC<ChapterDetailProps> = ({ chapter, onBack, initialS
             </div>
         </aside>
 
-        {/* Main Content */}
-        <main className="col-span-12 md:col-span-9">
-            {chapter.sections.map(section => (
-                <section key={section.id} id={section.id} className="mb-12 scroll-mt-20 md:scroll-mt-24">
-                    <div className="flex items-center mb-4 pb-2 border-b-2 border-latam-indigo/20">
-                        <span className="font-mono text-xl font-extrabold text-latam-indigo mr-4 bg-indigo-50 px-2 py-1 rounded">{section.id}</span>
-                        <h3 className="text-xl font-bold text-gray-800">{section.title}</h3>
+        <main className="lg:w-3/4 xl:w-4/5 min-w-0">
+             {chapter.sections.map((section, sectionIdx) => (
+                <section key={section.id} id={section.id} className="mb-16 scroll-mt-24">
+                    <div className="border-b-2 border-latam-coral pb-2 mb-6">
+                        <h3 className="text-2xl lg:text-3xl font-bold text-latam-indigo flex items-baseline">
+                           <span className="text-latam-coral mr-3">{section.id}</span>
+                           <HighlightText text={section.title} highlight={initialSearchTerm || ''} />
+                        </h3>
                     </div>
                     <div className="space-y-4">
-                        {section.blocks.map((block, i) => renderBlock(block, `${section.id}-${i}`))}
+                        {section.blocks.map((block, blockIdx) => renderContentBlock(block, blockIdx, section.id))}
+                        
+                        {section.subsections && section.subsections.map(sub => (
+                            <div key={sub.id} id={sub.id} className="ml-4 pl-4 border-l-2 border-gray-200 mt-8 scroll-mt-24">
+                                <h4 className="text-xl font-bold text-gray-800 mb-4">{sub.id} - <HighlightText text={sub.title} highlight={initialSearchTerm || ''}/></h4>
+                                {sub.blocks.map((block, blockIdx) => renderContentBlock(block, blockIdx, sub.id))}
+                            </div>
+                        ))}
                     </div>
                 </section>
-            ))}
+             ))}
         </main>
-
-      </div>
-
-      {selectedUNEntry && (
-        <UNDetailModal data={selectedUNEntry} onClose={() => setSelectedUNEntry(null)} />
-      )}
+        
+        {selectedUNEntry && (
+            <UNDetailModal data={selectedUNEntry} onClose={() => setSelectedUNEntry(null)} />
+        )}
     </div>
   );
 };
 
-//--- Database Component (Embedded for locality) ---
-
-interface DatabaseBlockProps {
-  db: DGRDatabase;
-  highlight: string;
-  onRowClick: (row: any) => void;
-  onHydrate: (un: string) => void;
-  verifiedRegistry: Record<string, any>;
-}
-
-const DatabaseBlock: React.FC<DatabaseBlockProps> = ({ db, highlight, onRowClick, onHydrate, verifiedRegistry }) => {
-    const [filter, setFilter] = useState('');
-    const [sortBy, setSortBy] = useState<{ key: string; order: 'asc' | 'desc' } | null>(null);
-
-    const filteredAndSortedData = useMemo(() => {
-        let data = [...db.data];
-
-        // Filter
-        if (filter.trim()) {
-            const lowerFilter = filter.toLowerCase();
-            data = data.filter(row => {
-                return Object.values(row).some(val => 
-                    String(val).toLowerCase().includes(lowerFilter)
-                );
-            });
-        }
-        
-        // Merge verified data (prioritizing it)
-        data = data.map(row => {
-            if (row.un && verifiedRegistry[row.un]) {
-                return { ...row, ...verifiedRegistry[row.un], isVerified: true };
-            }
-            return row;
-        });
-
-        // Sort
-        if (sortBy) {
-            data.sort((a, b) => {
-                const valA = a[sortBy.key];
-                const valB = b[sortBy.key];
-                
-                if (valA < valB) return sortBy.order === 'asc' ? -1 : 1;
-                if (valA > valB) return sortBy.order === 'asc' ? 1 : -1;
-                return 0;
-            });
-        }
-        return data;
-    }, [db.data, filter, sortBy, verifiedRegistry]);
-
-    const handleSort = (key: string) => {
-        if (sortBy && sortBy.key === key) {
-            setSortBy({ key, order: sortBy.order === 'asc' ? 'desc' : 'asc' });
-        } else {
-            setSortBy({ key, order: 'asc' });
-        }
-    };
-    
-    // Virtualization state (simple implementation)
-    const [visibleRows, setVisibleRows] = useState(50);
-    const tableContainerRef = useRef<HTMLDivElement>(null);
-
-    const handleScroll = () => {
-        if (tableContainerRef.current) {
-            const { scrollTop, scrollHeight, clientHeight } = tableContainerRef.current;
-            if (scrollTop + clientHeight >= scrollHeight - 200 && visibleRows < filteredAndSortedData.length) {
-                setVisibleRows(prev => Math.min(prev + 50, filteredAndSortedData.length));
-            }
-        }
-    };
-
-    return (
-        <div className="my-6 bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
-            <div className="p-4 bg-gray-50 border-b border-gray-200 flex items-center justify-between sticky top-0 z-20">
-                <div className="flex items-center">
-                    <Database className="w-5 h-5 text-latam-indigo mr-2" />
-                    <h4 className="font-bold text-gray-800">{db.title}</h4>
-                </div>
-                <div className="relative w-1/3">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                    <input 
-                        type="text"
-                        value={filter}
-                        onChange={e => setFilter(e.target.value)}
-                        placeholder={`Filtrar ${db.data.length} registros...`}
-                        className="w-full pl-9 pr-3 py-1.5 border border-gray-300 rounded-full text-sm"
-                    />
-                </div>
-            </div>
-            <div 
-                ref={tableContainerRef}
-                onScroll={handleScroll}
-                className="overflow-x-auto overflow-y-auto max-h-[600px] relative"
-                style={{ scrollbarWidth: 'thin' }}
-            >
-                <table className="min-w-full text-xs border-collapse">
-                    <thead className="bg-white sticky top-0 z-10 shadow-sm">
-                        <tr>
-                            {db.columns.map(col => (
-                                <th 
-                                    key={col.key} 
-                                    onClick={() => handleSort(col.key)}
-                                    className={`px-3 py-2 text-left font-bold text-gray-500 uppercase cursor-pointer hover:bg-gray-100 ${col.width || ''}`}
-                                >
-                                    <div className="flex items-center">
-                                       {col.label}
-                                       {sortBy && sortBy.key === col.key && (
-                                           <span className="ml-1">{sortBy.order === 'asc' ? '▲' : '▼'}</span>
-                                       )}
-                                    </div>
-                                </th>
-                            ))}
-                            <th className="px-3 py-2 text-left font-bold text-gray-500 uppercase">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-100">
-                        {filteredAndSortedData.slice(0, visibleRows).map((row, idx) => (
-                            <tr 
-                                key={idx} 
-                                onClick={() => onRowClick(row)}
-                                className={`group cursor-pointer ${row.isSimulated ? 'bg-gray-50 text-gray-500' : 'bg-white'} ${row.isVerified ? 'bg-emerald-50 hover:bg-emerald-100' : 'hover:bg-blue-50'}`}
-                            >
-                                {db.columns.map(col => (
-                                    <td key={col.key} className="px-3 py-2 whitespace-nowrap">
-                                        <HighlightText text={String(row[col.key] || '')} highlight={filter} />
-                                    </td>
-                                ))}
-                                <td className="px-3 py-2 whitespace-nowrap">
-                                    <div className="flex items-center space-x-2">
-                                        <button title="Ver Detalhes" className="p-1 rounded text-gray-400 hover:bg-gray-200 hover:text-gray-700">
-                                            <Eye className="w-3 h-3" />
-                                        </button>
-                                        {!row.isVerified && (
-                                            <button 
-                                                onClick={(e) => { e.stopPropagation(); onHydrate(row.un); }}
-                                                title="Verificar com IA" 
-                                                className="p-1 rounded text-green-500 hover:bg-green-100 hover:text-green-700 animate-pulse-slow group-hover:animate-none"
-                                            >
-                                                <BadgeCheck className="w-3 h-3" />
-                                            </button>
-                                        )}
-                                    </div>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-                 {visibleRows < filteredAndSortedData.length && (
-                    <div className="text-center p-4 text-xs text-gray-500">
-                        Carregando mais...
-                    </div>
-                )}
-            </div>
-            <div className="p-2 bg-gray-50 border-t border-gray-200 text-right text-[10px] text-gray-400">
-                Exibindo {Math.min(visibleRows, filteredAndSortedData.length)} de {filteredAndSortedData.length}
-            </div>
-        </div>
-    );
-};
-
-// FIX: Move export to the end of the file
 export default ChapterDetail;
