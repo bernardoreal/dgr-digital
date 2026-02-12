@@ -5,7 +5,6 @@ import { Plane, Search, ShieldCheck, ArrowRight, Sparkles, Bot, AlertTriangle, X
 import { DGR_CHAPTERS, APP_VERSION } from './constants';
 import { DGRChapter, ViewState, DGRTable } from './types';
 import ChapterCard from './components/ChapterCard';
-// FIX: Changed to a named import to be more explicit, although default export is now present. This prevents potential issues with module resolution.
 import ChapterDetail from './components/ChapterDetail';
 import AISearchModal from './components/AISearchModal';
 import ComplianceDashboard from './components/ComplianceDashboard';

@@ -13,7 +13,7 @@ export interface DGRTable {
 export interface DGRDatabase {
   id: string;
   title: string;
-  type: 'blue-pages' | 'variations' | 'glossary';
+  type: 'blue-pages' | 'variations' | 'glossary' | 'pi-list';
   columns: { key: string; label: string; width?: string; filterable?: boolean }[];
   data: Record<string, any>[];
 }
@@ -111,7 +111,6 @@ export interface DGRSection {
   id: string;
   title: string;
   blocks: DGRContentBlock[]; 
-  subsections?: DGRSection[];
 }
 
 export interface DGRChapter {

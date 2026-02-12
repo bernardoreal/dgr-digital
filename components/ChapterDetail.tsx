@@ -1044,293 +1044,426 @@ const ChapterDetail: React.FC<ChapterDetailProps> = ({ chapter, onBack, initialS
                  <div className="flex space-x-3">
                       <div className="flex flex-col items-center">
                           <div className="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[12px] border-b-white"></div>
-                          <div className="w-1.5 h-10 bg-white"></div>
-                          <div className="w-6 h-0.5 bg-white mt-1"></div>
+                          <div className="w-3 h-8 bg-white"></div>
+                          <div className="w-8 h-1 bg-white"></div>
                       </div>
                       <div className="flex flex-col items-center">
                           <div className="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[12px] border-b-white"></div>
-                          <div className="w-1.5 h-10 bg-white"></div>
-                          <div className="w-6 h-0.5 bg-white mt-1"></div>
+                          <div className="w-3 h-8 bg-white"></div>
+                          <div className="w-8 h-1 bg-white"></div>
                       </div>
                  </div>
               </div>
           );
       case 'cargo-only':
-        return (
-          <div className="w-40 h-44 bg-orange-500 relative shadow-xl mx-auto my-8 flex items-center justify-center border-4 border-black group hover:scale-105 transition-transform duration-300">
-             <div className="flex flex-col items-center justify-center w-full h-full p-2">
-                 <div className="flex-1 w-full flex items-center justify-center">
-                    <div className="text-black font-bold text-xs uppercase text-center w-full">
-                        <div className="mb-2 text-[10px] leading-tight">CARGO AIRCRAFT<br/>ONLY</div>
-                        <Plane className="w-16 h-16 mx-auto" strokeWidth={2}/>
-                    </div>
-                 </div>
-                 <div className="w-full bg-black h-1 my-1"></div>
-                 <div className="text-black text-[10px] font-bold uppercase text-center leading-tight">
-                    FORBIDDEN IN PASSENGER AIRCRAFT
-                 </div>
+         return (
+             <div className="w-32 h-24 bg-orange-500 relative shadow-xl mx-auto my-8 flex flex-col items-center justify-center p-2 group hover:scale-105 transition-transform duration-300 rounded-sm text-black">
+                <Plane className="w-10 h-10 mb-1"/>
+                <div className="font-extrabold text-xs text-center leading-tight">CARGO AIRCRAFT<br/>ONLY</div>
              </div>
-          </div>
-        );
-      case 'mag':
-          return (
-            <div className="w-32 h-32 bg-white relative border-2 border-black shadow-xl mx-auto my-8 overflow-hidden flex items-center justify-center group hover:scale-105 transition-transform duration-300">
-                <div className="absolute inset-0 bg-white p-2 flex flex-col justify-between">
-                    <div className="text-center font-bold text-[10px] uppercase">Magnetized Material</div>
-                    <div className="flex justify-center">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-12 h-12 text-blue-800">
-                           <path d="M15 7h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-3m-6 0H6a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h3M6 11h12"/>
-                           <path d="M12 20v-8m-3 3 3 3 3-3"/>
-                        </svg>
-                    </div>
-                    <div className="text-center font-bold text-[10px] uppercase text-blue-800">Keep away from flight deck</div>
-                </div>
-            </div>
-          );
+         );
       case 'cryogenic':
           return (
-            <div className="w-32 h-32 bg-green-600 text-white relative border-4 border-white shadow-xl mx-auto my-8 flex flex-col items-center justify-center group hover:scale-105 transition-transform duration-300 p-2">
-                <ThermometerSnowflake className="w-16 h-16"/>
-                <div className="font-bold text-xs uppercase mt-2 text-center leading-tight">Cryogenic<br/>Liquid</div>
+            <div className="w-24 h-32 bg-green-500 text-white relative shadow-xl mx-auto my-8 flex flex-col items-center justify-center p-2 group hover:scale-105 transition-transform duration-300 rounded-sm">
+                <ThermometerSnowflake className="w-10 h-10 mb-2"/>
+                <div className="font-bold text-xs text-center leading-tight">NON-FLAMMABLE<br/>GAS</div>
+                <div className="font-extrabold text-2xl mt-1">2</div>
             </div>
           );
-      default:
-        return null;
+      case 'keep-away-heat':
+           return (
+             <div className="w-24 h-32 bg-white border-2 border-red-600 text-red-600 relative shadow-xl mx-auto my-8 flex flex-col items-center justify-center p-2 group hover:scale-105 transition-transform duration-300 rounded-sm">
+                 <Sun className="w-10 h-10 mb-2"/>
+                 <div className="font-bold text-xs text-center leading-tight">KEEP AWAY FROM HEAT</div>
+                 <div className="font-extrabold text-2xl mt-1">4.1</div>
+             </div>
+           );
+      case 'radioactive-i':
+          return (
+            <div className="w-24 h-24 bg-white border-2 border-black text-black relative shadow-xl mx-auto my-8 flex flex-col items-center justify-center p-1 group hover:scale-105 transition-transform duration-300 rounded-sm">
+                 <div className="font-bold text-[8px] text-center mb-1">RADIOACTIVE</div>
+                 <div className="w-full h-0.5 bg-black my-1"></div>
+                 <div className="text-xs font-mono text-center leading-tight">
+                     CONTENTS...<br/>
+                     ACTIVITY...
+                 </div>
+                 <div className="font-extrabold text-sm mt-1 px-2 py-0.5 bg-gray-300 rounded-sm">I</div>
+                 <div className="font-extrabold text-2xl mt-auto">7</div>
+            </div>
+          );
+      case 'radioactive-ii':
+          return (
+             <div className="w-24 h-24 bg-yellow-400 border-2 border-black text-black relative shadow-xl mx-auto my-8 flex flex-col items-center justify-center p-1 group hover:scale-105 transition-transform duration-300 rounded-sm">
+                 <div className="absolute top-0 w-full h-1/2 bg-yellow-400"></div>
+                 <div className="absolute bottom-0 w-full h-1/2 bg-white"></div>
+                 <div className="relative z-10 w-full h-full flex flex-col items-center p-1">
+                     <div className="font-bold text-[8px] text-center mb-1">RADIOACTIVE</div>
+                     <div className="w-full h-0.5 bg-black my-1"></div>
+                     <div className="text-xs font-mono text-center leading-tight">
+                         CONTENTS...<br/>
+                         ACTIVITY...<br/>
+                         TI: 0.5
+                     </div>
+                     <div className="font-extrabold text-sm mt-1 px-2 py-0.5 bg-gray-300 rounded-sm">II</div>
+                     <div className="font-extrabold text-2xl mt-auto">7</div>
+                 </div>
+             </div>
+          );
+      case 'radioactive-iii':
+            return (
+                <div className="w-24 h-24 bg-yellow-400 border-2 border-black text-black relative shadow-xl mx-auto my-8 flex flex-col items-center justify-center p-1 group hover:scale-105 transition-transform duration-300 rounded-sm">
+                    <div className="absolute top-0 w-full h-1/2 bg-yellow-400"></div>
+                    <div className="absolute bottom-0 w-full h-1/2 bg-white"></div>
+                    <div className="relative z-10 w-full h-full flex flex-col items-center p-1">
+                        <div className="font-bold text-[8px] text-center mb-1">RADIOACTIVE</div>
+                        <div className="w-full h-0.5 bg-black my-1"></div>
+                        <div className="text-xs font-mono text-center leading-tight">
+                            CONTENTS...<br/>
+                            ACTIVITY...<br/>
+                            TI: 7.3
+                        </div>
+                        <div className="font-extrabold text-sm mt-1 px-2 py-0.5 bg-red-600 text-white rounded-sm">III</div>
+                        <div className="font-extrabold text-2xl mt-auto">7</div>
+                    </div>
+                </div>
+            );
+      default: return null;
     }
   };
-// FIX: Add missing content block renderers and main component body
-const renderContentBlock = (block: DGRContentBlock, index: number, sectionId: string) => {
-    const blockId = `${sectionId}-${index}`;
 
-    switch (block.type) {
-        case 'paragraph':
-            return <p key={blockId} className="prose prose-sm lg:prose-base max-w-none text-gray-700 mb-4 leading-relaxed"><HighlightText text={block.content as string} highlight={initialSearchTerm || ''} /></p>;
-        
-        case 'list': {
-            const list = block.content as DGRList;
-            const ListTag = list.ordered ? 'ol' : 'ul';
-            const listTypeClass = list.ordered 
-                ? (list.type === 'alpha' ? 'list-[lower-alpha]' : 'list-decimal') 
-                : 'list-disc';
-            return (
-                <ListTag key={blockId} className={`prose prose-sm lg:prose-base max-w-none pl-6 mb-4 space-y-1 ${listTypeClass}`}>
-                    {list.items.map((item, i) => <li key={i}><HighlightText text={item} highlight={initialSearchTerm || ''} /></li>)}
-                </ListTag>
-            );
-        }
+  const renderContentBlock = (block: DGRContentBlock, idx: number | string) => {
+    switch(block.type) {
+      case 'paragraph': return <p key={idx} className="mb-4 leading-relaxed text-gray-700"><HighlightText text={block.content as string} highlight={initialSearchTerm} /></p>;
+      case 'list': 
+        const list = block.content as DGRList;
+        const ListTag = list.ordered ? 'ol' : 'ul';
+        const listStyle = {
+          'alpha': 'list-[lower-alpha]',
+          'numeric': 'list-decimal',
+          'bullet': 'list-disc'
+        }[list.type || (list.ordered ? 'numeric' : 'bullet')] || 'list-disc';
+        return (
+          <ListTag key={idx} className={`${listStyle} pl-6 mb-4 space-y-2 text-gray-700`}>
+            {list.items.map((item, i) => <li key={i}><HighlightText text={item} highlight={initialSearchTerm} /></li>)}
+          </ListTag>
+        );
+      case 'table':
+          const table = block.content as DGRTable;
+          const isMatrix = table.type === 'matrix';
+          return (
+              <div key={idx} className="my-6 relative group">
+                  <h4 className="text-sm font-bold text-gray-600 mb-2 pl-2 border-l-4 border-gray-300">{table.caption}</h4>
+                  <div className="overflow-x-auto border border-gray-200 rounded-lg shadow-sm">
+                      <table className="min-w-full text-sm">
+                          <thead className="bg-gray-100 text-gray-600 font-semibold">
+                              <tr>
+                                  {table.headers.map((h, i) => <th key={i} className="p-3 text-left border-r border-gray-200 last:border-r-0">{h}</th>)}
+                              </tr>
+                          </thead>
+                          <tbody className="bg-white divide-y divide-gray-200">
+                              {table.rows.map((row, rIdx) => (
+                                  <tr key={rIdx} className="hover:bg-blue-50/50 transition-colors">
+                                      {row.map((cell, cIdx) => {
+                                          let content = cell;
+                                          if (isMatrix) {
+                                              if (cell === true) content = <div className="text-center"><XIcon className="w-5 h-5 text-red-500 mx-auto" /></div>;
+                                              else if (cell === false) content = <div className="text-center font-bold text-gray-300">-</div>;
+                                          } else {
+                                              if (typeof cell === 'boolean') {
+                                                content = cell ? 
+                                                    <span className="inline-flex items-center text-green-700 bg-green-100 px-2 py-0.5 rounded text-xs font-bold border border-green-200">SIM</span> : 
+                                                    <span className="inline-flex items-center text-red-700 bg-red-50 px-2 py-0.5 rounded text-xs font-bold border border-red-100">NÃO</span>;
+                                              }
+                                          }
+                                          return <td key={cIdx} className="p-3 border-r border-gray-200 last:border-r-0"><HighlightText text={String(content)} highlight={initialSearchTerm} /></td>;
+                                      })}
+                                  </tr>
+                              ))}
+                          </tbody>
+                      </table>
+                  </div>
+                  {table.footnotes && (
+                      <div className="mt-2 text-xs text-gray-500 space-y-1">
+                          {table.footnotes.map((note, i) => <p key={i}>* <HighlightText text={note} highlight={initialSearchTerm} /></p>)}
+                      </div>
+                  )}
+                  <button onClick={() => openTableInNewWindow(table)} className="absolute top-2 right-2 p-2 bg-white/50 backdrop-blur-sm rounded-full text-gray-500 hover:text-latam-indigo hover:bg-white shadow-sm opacity-0 group-hover:opacity-100 transition-opacity" title="Abrir em Nova Janela">
+                      <ExternalLink className="w-4 h-4"/>
+                  </button>
+              </div>
+          );
+      case 'note':
+          const note = block.content as DGRNote;
+          return (
+              <div key={idx} className="my-4 p-4 bg-gray-100 border-l-4 border-gray-400 text-gray-800 rounded-r-md">
+                  {note.title && <h5 className="font-bold mb-1">{note.title}</h5>}
+                  <p className="text-sm"><HighlightText text={note.text} highlight={initialSearchTerm} /></p>
+              </div>
+          );
+      case 'warning':
+          const warning = block.content as DGRNote;
+          return (
+              <div key={idx} className="my-4 p-4 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800 rounded-r-md">
+                  {warning.title && <h5 className="font-bold mb-1">{warning.title}</h5>}
+                  <p className="text-sm"><HighlightText text={warning.text} highlight={initialSearchTerm} /></p>
+              </div>
+          );
+      case 'figure':
+        const figure = block.content as DGRFigure;
+        return (
+          <div key={idx} className="my-6 p-4 border border-dashed border-gray-300 rounded-lg text-center">
+             {renderHazardLabel(figure.labelClass)}
+             <p className="text-xs text-gray-500 font-semibold mt-2">{figure.caption}</p>
+          </div>
+        );
+      case 'packing-instruction':
+          const pi = block.content as DGRPackingInstruction;
+          return (
+            <div key={idx} id={pi.id} className="my-6 p-4 border-2 border-gray-800 rounded-lg shadow-sm bg-white">
+                <div className="bg-gray-800 text-white -m-4 mb-4 p-3 rounded-t-md flex justify-between items-center">
+                    <h4 className="font-bold text-lg flex items-center">
+                        <Package className="w-5 h-5 mr-2" />
+                        Instrução de Embalagem {pi.id}
+                    </h4>
+                    <span className="text-xs bg-white/20 px-2 py-0.5 rounded font-semibold">{pi.transportMode}</span>
+                </div>
+                <div className="space-y-3">
+                  {pi.content.map((b, i) => renderContentBlock(b, `${idx}-${i}`))}
+                </div>
+            </div>
+          );
+      case 'variation': return null; // Variations are handled in their own database view
+      case 'definition-list':
+          const defs = block.content as DGRDefinition[];
+          return (
+              <dl key={idx} className="my-4 space-y-3">
+                  {defs.map((def, i) => (
+                      <div key={i} className="pl-4 border-l-2 border-gray-200">
+                          <dt className="font-bold text-gray-800"><HighlightText text={def.term} highlight={initialSearchTerm} /></dt>
+                          <dd className="text-sm text-gray-600"><HighlightText text={def.definition} highlight={initialSearchTerm} /></dd>
+                      </div>
+                  ))}
+              </dl>
+          );
+      case 'visual-mark':
+          const mark = block.content as DGRMark;
+          return (
+            <div key={idx} className="my-6 p-4 border border-dashed border-gray-300 rounded-lg text-center bg-gray-50">
+               {renderVisualMark(mark)}
+               <p className="text-xs text-gray-500 font-semibold mt-2">{mark.caption}</p>
+            </div>
+          );
+      case 'checklist':
+          const checklist = block.content as DGRChecklist;
+          return (
+              <div key={idx} id={checklist.id} className="my-6 p-4 border border-blue-200 bg-blue-50/50 rounded-lg">
+                  <h4 className="font-bold text-blue-800 mb-4 flex items-center"><CheckSquare className="w-5 h-5 mr-2"/>{checklist.title}</h4>
+                  <div className="space-y-3">
+                      {checklist.items.map(item => (
+                          <div key={item.id} className="flex items-start bg-white p-3 rounded shadow-sm border border-gray-100">
+                              <button onClick={() => toggleCheck(item.id)} className="mr-3 mt-0.5">
+                                  {checkedItems[item.id] ? <CheckSquare className="w-5 h-5 text-blue-600"/> : <Square className="w-5 h-5 text-gray-400"/>}
+                              </button>
+                              <div className="flex-grow">
+                                  <p className="text-sm text-gray-800">{item.text}</p>
+                                  {item.reference && <p className="text-xs text-gray-400 mt-1">Ref: {item.reference}</p>}
+                              </div>
+                          </div>
+                      ))}
+                  </div>
+              </div>
+          );
+      case 'tool':
+          const tool = block.content as DGRTool;
+          if (tool.toolType === 'segregation-checker') {
+              const result = segregationClassA && segregationClassB ? (tool.data.matrix[segregationClassA]?.[segregationClassB] ?? null) : null;
+              return (
+                  <div key={idx} className="my-6 p-4 border border-gray-300 bg-white rounded-lg shadow-inner">
+                      <h4 className="font-bold mb-4 flex items-center"><GitMerge className="w-5 h-5 mr-2"/>{tool.title}</h4>
+                      <div className="grid grid-cols-2 gap-4 mb-4">
+                          <div>
+                              <label className="text-xs font-bold text-gray-500 block mb-1">Classe A</label>
+                              <select value={segregationClassA} onChange={e => setSegregationClassA(e.target.value)} className="w-full p-2 border border-gray-300 rounded">
+                                  <option value="">Selecione...</option>
+                                  {tool.data.classes.map(c => <option key={c} value={c}>{c} - {tool.data.labels[c]}</option>)}
+                              </select>
+                          </div>
+                          <div>
+                              <label className="text-xs font-bold text-gray-500 block mb-1">Classe B</label>
+                              <select value={segregationClassB} onChange={e => setSegregationClassB(e.target.value)} className="w-full p-2 border border-gray-300 rounded">
+                                <option value="">Selecione...</option>
+                                {tool.data.classes.map(c => <option key={c} value={c}>{c} - {tool.data.labels[c]}</option>)}
+                              </select>
+                          </div>
+                      </div>
+                      {result !== null && (
+                          <div className={`p-4 rounded text-center font-bold text-lg animate-fade-in ${result ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                              {result ? '✓ COMPATÍVEL' : '✕ SEGREGAÇÃO OBRIGATÓRIA'}
+                          </div>
+                      )}
+                  </div>
+              )
+          }
+          return null;
+      case 'wizard':
+          const wizard = block.content as DGRWizard;
+          const currentNodeId = wizardStates[wizard.id] || wizard.startNodeId;
+          const currentNode = wizard.nodes[currentNodeId];
+          const resultNode = wizard.results[currentNodeId];
 
-        case 'table': {
-            const table = block.content as DGRTable;
-            return (
-                <div key={blockId} className="my-6 bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
-                    <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
-                        <div>
-                            {table.caption && <h4 className="font-bold text-gray-800 text-sm">{table.caption}</h4>}
+          return (
+            <div key={idx} className="my-6 p-5 border border-purple-200 bg-purple-50 rounded-lg shadow-sm">
+                <div className="flex justify-between items-start mb-4">
+                    <h4 className="font-bold text-purple-800 text-lg">{wizard.title}</h4>
+                    <button onClick={() => resetWizard(wizard.id, wizard.startNodeId)} className="text-xs text-purple-600 hover:underline flex items-center"><RotateCcw className="w-3 h-3 mr-1"/>Reiniciar</button>
+                </div>
+
+                {currentNode && (
+                    <div className="bg-white p-4 rounded shadow-inner border border-gray-100 animate-fade-in">
+                        <p className="font-semibold text-gray-800 mb-4">{currentNode.question}</p>
+                        <div className="space-y-2">
+                            {currentNode.options.map((opt, i) => (
+                                <button key={i} onClick={() => handleWizardOption(wizard.id, opt.nextNodeId)} className="w-full text-left p-3 bg-gray-50 hover:bg-purple-100 rounded border border-gray-200 text-sm font-medium flex items-center justify-between">
+                                    <span>{opt.label}</span>
+                                    <ChevronRight className="w-4 h-4"/>
+                                </button>
+                            ))}
                         </div>
-                        <button onClick={() => openTableInNewWindow(table)} className="text-xs font-bold text-latam-indigo hover:underline flex items-center gap-1">
-                            <ExternalLink className="w-3 h-3"/> Abrir Tabela
-                        </button>
                     </div>
-                    <div className="overflow-x-auto">
-                        <table className="min-w-full text-sm">
-                            <thead className="bg-gray-100 text-xs uppercase text-gray-500 font-bold">
-                                <tr>
-                                    {table.headers.map((h, i) => <th key={i} className="px-4 py-3 text-left border-r last:border-r-0 border-gray-200">{h}</th>)}
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-200">
-                                {table.rows.map((row, i) => (
-                                    <tr key={i} className="hover:bg-gray-50">
-                                        {row.map((cell, j) => <td key={j} className="px-4 py-3 border-r last:border-r-0 border-gray-200">{typeof cell === 'boolean' ? (cell ? <Check className="text-green-600"/> : <XIcon className="text-red-600"/>) : String(cell)}</td>)}
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                    {table.footnotes && <div className="p-4 bg-yellow-50 text-xs text-yellow-800 border-t border-yellow-200">{table.footnotes.join('; ')}</div>}
-                </div>
-            );
-        }
-        
-        case 'note': {
-             const note = block.content as DGRNote;
-             return (
-                 <div key={blockId} className="my-4 bg-gray-50 border-l-4 border-gray-400 p-4 rounded-r-lg">
-                     {note.title && <h5 className="font-bold text-gray-800 mb-1">{note.title}</h5>}
-                     <p className="text-sm text-gray-600"><HighlightText text={note.text} highlight={initialSearchTerm || ''} /></p>
-                 </div>
-             );
-        }
-        
-        case 'warning': {
-            const warning = block.content as DGRNote;
-            return (
-                <div key={blockId} className="my-4 bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg">
-                    {warning.title && <h5 className="font-bold text-red-800 mb-1">{warning.title}</h5>}
-                    <p className="text-sm text-red-700"><HighlightText text={warning.text} highlight={initialSearchTerm || ''} /></p>
-                </div>
-            );
-       }
-        
-        case 'figure': {
-            const figure = block.content as DGRFigure;
-            return (
-                <div key={blockId} className="my-8 text-center p-4 bg-gray-100 rounded-lg">
-                    {renderHazardLabel(figure.labelClass)}
-                    <p className="text-xs text-gray-600 italic mt-2"><HighlightText text={figure.caption} highlight={initialSearchTerm || ''} /></p>
-                </div>
-            );
-        }
-        
-        case 'visual-mark': {
-            const mark = block.content as DGRMark;
-            return (
-                <div key={blockId} className="my-8 text-center p-4 bg-gray-100 rounded-lg">
-                    {renderVisualMark(mark)}
-                    <p className="text-xs text-gray-600 italic mt-2"><HighlightText text={mark.caption} highlight={initialSearchTerm || ''} /></p>
-                </div>
-            );
-        }
-        
-        case 'packing-instruction': {
-            const pi = block.content as DGRPackingInstruction;
-            return (
-                <div id={pi.id} key={blockId} className="my-6 bg-white border-2 border-gray-800 rounded-lg shadow-md scroll-mt-24">
-                    <div className="bg-gray-800 text-white px-4 py-3 flex justify-between items-center rounded-t-md">
-                        <h4 className="font-bold text-lg"><span className="font-mono">PI {pi.id}</span> - {pi.title}</h4>
-                        <span className={`text-xs px-2 py-1 rounded-full font-bold ${pi.transportMode === 'Cargo Aircraft Only' ? 'bg-orange-500' : 'bg-blue-500'}`}>{pi.transportMode}</span>
-                    </div>
-                    <div className="p-4 space-y-4">
-                        {pi.content.map((b, i) => renderContentBlock(b, i, `${sectionId}-pi-${pi.id}`))}
-                    </div>
-                </div>
-            );
-        }
-
-        case 'definition-list': {
-            const definitions = block.content as DGRDefinition[];
-            return (
-                <dl key={blockId} className="space-y-4 my-4">
-                    {definitions.map((def, i) => (
-                        <div key={i} className="pl-4 border-l-2 border-gray-200">
-                            <dt className="font-bold text-gray-900"><HighlightText text={def.term} highlight={initialSearchTerm || ''} /></dt>
-                            <dd className="text-sm text-gray-600 mt-1"><HighlightText text={def.definition} highlight={initialSearchTerm || ''} /></dd>
-                        </div>
-                    ))}
-                </dl>
-            );
-        }
-        
-        case 'database': {
-            const db = block.content as DGRDatabase;
-            return (
-                 <div key={blockId} className="my-8">
-                     <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
-                         <div className="p-4 bg-gray-50/50 border-b border-gray-200 flex justify-between items-center">
-                             <h4 className="font-bold text-gray-800 flex items-center gap-2"><Database className="w-4 h-4"/>{db.title}</h4>
-                             <button onClick={() => openDatabaseInNewWindow(db, verifiedRegistry)} className="text-xs font-bold text-latam-indigo hover:underline flex items-center gap-1">
-                                 <ExternalLink className="w-3 h-3"/> Abrir Base de Dados
-                             </button>
-                         </div>
-                         <div className="p-4">
-                             <p className="text-sm text-gray-500">Esta seção contém uma base de dados interativa. Clique no botão acima para abrir, pesquisar, filtrar e classificar os {db.data.length} registros.</p>
-                         </div>
+                )}
+                {resultNode && (
+                     <div className={`p-4 rounded mt-4 border animate-fade-in ${
+                        resultNode.type === 'success' ? 'bg-green-50 border-green-200 text-green-800' : 
+                        resultNode.type === 'warning' ? 'bg-yellow-50 border-yellow-200 text-yellow-800' :
+                        'bg-red-50 border-red-200 text-red-800'
+                     }`}>
+                        <h5 className="font-bold flex items-center">
+                           {resultNode.type === 'success' && <Check className="w-4 h-4 mr-2"/>}
+                           {resultNode.type === 'warning' && <AlertTriangle className="w-4 h-4 mr-2"/>}
+                           {resultNode.type === 'danger' && <XIcon className="w-4 h-4 mr-2"/>}
+                           {resultNode.title}
+                        </h5>
+                        <p className="text-sm mt-1">{resultNode.description}</p>
                      </div>
-                 </div>
-            );
-        }
-
-        case 'checklist': {
-            const checklist = block.content as DGRChecklist;
-            const allChecked = checklist.items.every(item => checkedItems[item.id]);
-            return (
-                <div key={blockId} className="my-6 bg-white border border-gray-200 rounded-lg shadow-sm">
-                    <div className={`p-4 border-b border-gray-200 flex justify-between items-center ${allChecked ? 'bg-green-50' : 'bg-gray-50'}`}>
-                        <h4 className="font-bold text-gray-800 flex items-center gap-2"><CheckSquare className="w-4 h-4"/>{checklist.title}</h4>
-                        {allChecked && <span className="text-xs font-bold text-green-700 bg-green-100 px-2 py-1 rounded-full">Completo</span>}
-                    </div>
-                    <div className="p-4 space-y-3">
-                        {checklist.items.map(item => (
-                            <div key={item.id} onClick={() => toggleCheck(item.id)} className={`flex items-start p-3 rounded-md cursor-pointer transition-colors ${checkedItems[item.id] ? 'bg-green-50' : 'hover:bg-gray-50'}`}>
-                                <div className="mr-3 mt-0.5">
-                                    {checkedItems[item.id] ? <CheckSquare className="w-5 h-5 text-green-600"/> : <Square className="w-5 h-5 text-gray-400"/>}
-                                </div>
-                                <div className="flex-grow">
-                                    <p className={`text-sm ${checkedItems[item.id] ? 'text-gray-500 line-through' : 'text-gray-800'}`}>{item.text}</p>
-                                    {item.reference && <p className="text-xs text-gray-400 mt-1">Ref: {item.reference}</p>}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                )}
+            </div>
+          );
+      case 'database':
+        const db = block.content as DGRDatabase;
+        return (
+            <div key={idx} className="my-6 p-4 border border-gray-300 rounded-lg shadow-inner bg-white">
+                <div className="flex justify-between items-center mb-4">
+                    <h4 className="font-bold text-gray-800 flex items-center text-lg"><Database className="w-5 h-5 mr-2 text-latam-indigo"/>{db.title}</h4>
+                    <button onClick={() => openDatabaseInNewWindow(db, verifiedRegistry)} className="text-xs font-bold bg-gray-800 text-white px-3 py-2 rounded hover:bg-black flex items-center">
+                        <ExternalLink className="w-3 h-3 mr-1.5"/>
+                        ABRIR EM NOVA JANELA
+                    </button>
                 </div>
-            );
-        }
-        
-        default:
-            return null;
+                <p className="text-xs text-gray-500 mb-4">Exibindo os primeiros 5 de {db.data.length} registros. Use o botão acima para uma visualização completa e interativa.</p>
+                
+                <div className="overflow-x-auto border border-gray-200 rounded">
+                    <table className="min-w-full text-xs">
+                        <thead className="bg-gray-100 font-semibold">
+                            <tr>
+                                {db.columns.map(c => <th key={c.key} className="p-2 border-r text-left">{c.label}</th>)}
+                                {db.type === 'blue-pages' && <th className="p-2">Ações</th>}
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200">
+                            {db.data.slice(0, 5).map((row, i) => (
+                                <tr key={i} className="hover:bg-gray-50">
+                                    {db.columns.map(c => <td key={c.key} className="p-2 border-r"><HighlightText text={String(row[c.key] || '')} highlight={initialSearchTerm}/></td>)}
+                                    {db.type === 'blue-pages' && (
+                                        <td className="p-2 text-center space-x-2">
+                                            <button onClick={() => handleRowClick(row)} className="p-1 text-gray-400 hover:text-blue-600 rounded-full hover:bg-blue-100" title="Ver Detalhes">
+                                                <Eye className="w-4 h-4" />
+                                            </button>
+                                            {!verifiedRegistry[row.un] && (
+                                                <button onClick={() => handleRowVerification(row.un)} className="p-1 text-gray-400 hover:text-green-600 rounded-full hover:bg-green-100" title="Verificar Dados Oficiais (Live)">
+                                                    <ShieldAlert className="w-4 h-4" />
+                                                </button>
+                                            )}
+                                            {verifiedRegistry[row.un] && (
+                                                <span className="inline-block p-1 text-green-600" title="Dados Verificados">
+                                                    <BadgeCheck className="w-4 h-4"/>
+                                                </span>
+                                            )}
+                                        </td>
+                                    )}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        );
+      default: return null;
     }
-};
+  };
 
   return (
-    <div className="flex flex-col lg:flex-row gap-x-12 animate-fade-in">
-        <aside className="lg:w-1/4 xl:w-1/5 lg:sticky top-24 self-start">
-            <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-                <button onClick={onBack} className="flex items-center text-sm font-bold text-gray-500 hover:text-latam-indigo mb-4 transition-colors">
-                    <ArrowLeft className="w-4 h-4 mr-2"/>
-                    Voltar
-                </button>
-                <div className="flex items-start gap-3 mb-4">
-                    <div className="bg-gray-100 rounded-lg p-2 text-latam-indigo">
-                        {chapter.icon ? <chapter.icon className="w-5 h-5" /> : <BookOpen className="w-5 h-5"/>}
-                    </div>
-                    <div>
-                        <h2 className="font-bold text-lg text-gray-800 leading-tight">{chapter.title}</h2>
-                        <p className="text-xs text-gray-500">Capítulo {chapter.id}</p>
-                    </div>
-                </div>
-                <nav>
-                    <ul className="space-y-1">
-                        {chapter.sections.map(section => (
-                            <li key={section.id}>
-                                <a href={`#${section.id}`} className="block text-sm px-3 py-2 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">
-                                    <span className="font-bold mr-2">{section.id}</span>
-                                    {section.title}
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
-                </nav>
+    <div className="flex flex-col h-full animate-fade-in">
+      {/* Header */}
+      <div className="flex-none p-4 bg-gray-50/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-20">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            <button onClick={onBack} className="p-2 hover:bg-gray-200 rounded-full mr-2">
+              <ArrowLeft className="w-5 h-5 text-gray-700" />
+            </button>
+            <div>
+              <h2 className="text-lg font-bold text-latam-indigo">{chapter.title}</h2>
+              <p className="text-xs text-gray-500">Capítulo {chapter.id}</p>
             </div>
-        </aside>
+          </div>
+          <div className="flex items-center space-x-2">
+            <button className="p-2 hover:bg-gray-200 rounded-full text-gray-600"><Bookmark className="w-5 h-5" /></button>
+            <button className="p-2 hover:bg-gray-200 rounded-full text-gray-600"><Share2 className="w-5 h-5" /></button>
+          </div>
+        </div>
+      </div>
 
-        <main className="lg:w-3/4 xl:w-4/5 min-w-0">
-             {chapter.sections.map((section, sectionIdx) => (
-                <section key={section.id} id={section.id} className="mb-16 scroll-mt-24">
-                    <div className="border-b-2 border-latam-coral pb-2 mb-6">
-                        <h3 className="text-2xl lg:text-3xl font-bold text-latam-indigo flex items-baseline">
-                           <span className="text-latam-coral mr-3">{section.id}</span>
-                           <HighlightText text={section.title} highlight={initialSearchTerm || ''} />
-                        </h3>
-                    </div>
-                    <div className="space-y-4">
-                        {section.blocks.map((block, blockIdx) => renderContentBlock(block, blockIdx, section.id))}
-                        
-                        {section.subsections && section.subsections.map(sub => (
-                            <div key={sub.id} id={sub.id} className="ml-4 pl-4 border-l-2 border-gray-200 mt-8 scroll-mt-24">
-                                <h4 className="text-xl font-bold text-gray-800 mb-4">{sub.id} - <HighlightText text={sub.title} highlight={initialSearchTerm || ''}/></h4>
-                                {sub.blocks.map((block, blockIdx) => renderContentBlock(block, blockIdx, sub.id))}
-                            </div>
-                        ))}
-                    </div>
-                </section>
-             ))}
+      {/* Content */}
+      <div className="flex-grow flex">
+        {/* Sidebar Navigation */}
+        <nav className="w-64 flex-none overflow-y-auto p-4 border-r border-gray-200 hidden md:block">
+          <h3 className="text-xs font-bold uppercase text-gray-400 mb-2">Seções</h3>
+          <ul>
+            {chapter.sections.map(section => (
+              <li key={section.id}>
+                <a 
+                  href={`#${section.id}`} 
+                  className={`block text-sm p-2 rounded transition-colors ${activeSectionId === section.id ? 'bg-blue-100 text-blue-800 font-semibold' : 'text-gray-600 hover:bg-gray-100'}`}
+                >
+                  {section.id} - {section.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        {/* Main Content */}
+        <main className="flex-grow p-6 overflow-y-auto">
+          {chapter.sections.map(section => (
+            <section key={section.id} id={section.id} className="mb-12 scroll-mt-24">
+              <div className="border-b-2 border-latam-coral pb-2 mb-4">
+                 <h3 className="text-2xl font-bold text-gray-800">{section.id} - <HighlightText text={section.title} highlight={initialSearchTerm}/></h3>
+              </div>
+              {section.blocks.map((block, idx) => renderContentBlock(block, `${section.id}-${idx}`))}
+            </section>
+          ))}
         </main>
-        
-        {selectedUNEntry && (
-            <UNDetailModal data={selectedUNEntry} onClose={() => setSelectedUNEntry(null)} />
-        )}
+      </div>
+
+      {/* Modal for UN Details */}
+      {selectedUNEntry && (
+        <UNDetailModal 
+            data={verifiedRegistry[selectedUNEntry.un] || selectedUNEntry} 
+            onClose={() => setSelectedUNEntry(null)} 
+        />
+      )}
     </div>
   );
 };
 
+// FIX: Add default export to make the component available for import.
 export default ChapterDetail;

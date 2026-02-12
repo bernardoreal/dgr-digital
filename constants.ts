@@ -83,6 +83,7 @@ const REAL_BLUE_PAGES = [
     { un: "3082", name: "Environmentally hazardous substance, liquid, n.o.s.", class: "9", sub: "", pg: "III", eq: "E1", lq_pi: "Y964", lq_max: "30 kg", pax_pi: "964", pax_max: "450 L", cao_pi: "964", cao_max: "450 L", sp: "A97 A158", erg: "9L" },
     { un: "3090", name: "Lithium metal batteries", class: "9", sub: "", pg: "", eq: "E0", lq_pi: "Forbidden", lq_max: "Forbidden", pax_pi: "Forbidden", pax_max: "Forbidden", cao_pi: "968", cao_max: "35 kg", sp: "A88 A99", erg: "12FZ" },
     { un: "3091", name: "Lithium metal batteries contained in equipment", class: "9", sub: "", pg: "", eq: "E0", lq_pi: "Forbidden", lq_max: "Forbidden", pax_pi: "970", pax_max: "5 kg", cao_pi: "970", cao_max: "35 kg", sp: "A48", erg: "12FZ" },
+    { un: "3091", name: "Lithium metal batteries packed with equipment", class: "9", sub: "", pg: "", eq: "E0", lq_pi: "Forbidden", lq_max: "Forbidden", pax_pi: "969", pax_max: "5 kg", cao_pi: "969", cao_max: "35 kg", sp: "A48 A99", erg: "12FZ" },
     { un: "3166", name: "Vehicle, flammable gas powered", class: "9", sub: "", pg: "", eq: "E0", lq_pi: "Forbidden", lq_max: "Forbidden", pax_pi: "950", pax_max: "No Limit", cao_pi: "950", cao_max: "No Limit", sp: "A21", erg: "9L" },
     { un: "3171", name: "Battery-powered vehicle", class: "9", sub: "", pg: "", eq: "E0", lq_pi: "Forbidden", lq_max: "Forbidden", pax_pi: "952", pax_max: "No Limit", cao_pi: "952", cao_max: "No Limit", sp: "A21", erg: "9L" },
     { un: "3316", name: "Chemical kit", class: "9", sub: "", pg: "II", eq: "E0", lq_pi: "Y960", lq_max: "1 kg", pax_pi: "960", pax_max: "10 kg", cao_pi: "960", cao_max: "10 kg", sp: "A44 A163", erg: "9L" },
@@ -433,6 +434,168 @@ const GLOSSARY_DATA = [
     { term: "Wetting Agent", definition: "Uma substância que reduz a tensão superficial de um líquido, promovendo o espalhamento e penetração." }
 ];
 
+export const PACKING_INSTRUCTIONS_DATA = [
+    // --- CLASS 1 ---
+    { id: "101", title: "Explosivos (Div 1.1, 1.2, 1.3, 1.5)", applies_to: "Classe 1", type: "CAO Only", description: "PROIBIDO em aeronaves de passageiros. Requer embalagens de especificação UN (4G, 1A2). Exige aprovações de Estado e Operador." },
+    { id: "110", title: "Explosivos (Div 1.3)", applies_to: "UN 0075", type: "CAO Only", description: "Embalagens combinadas. Internas de metal ou plástico. Externas de madeira ou papelão." },
+    { id: "112", title: "Explosivos Deflagrantes (Div 1.1D, 1.3D)", applies_to: "UN 0160, UN 0161", type: "CAO Only", description: "Embalagens de metal ou plástico em caixas ou tambores. Requer design robusto." },
+    { id: "114", title: "Explosivos (Div 1.1, 1.3)", applies_to: "UN 0082, UN 0241", type: "CAO Only", description: "Embalagens internas de papel, plástico ou metal. Externas de madeira, papelão ou metal." },
+    { id: "116", title: "Pólvora sem Fumaça (Div 1.3C, 1.3G)", applies_to: "UN 0161", type: "CAO Only", description: "Requer embalagens combinadas. Internas em sacos de papel, plástico ou tecido. Externas em caixas (4C1, 4G) ou tambores (1G)." },
+    { id: "117", title: "Foguetes (Div 1.3C)", applies_to: "UN 0186", type: "CAO Only", description: "Embalagens externas robustas (madeira, metal). Artigos devem ser acondicionados para evitar movimento." },
+    { id: "130", title: "Explosivos (Div 1.4S)", applies_to: "UN 0012, UN 0014, UN 0323", type: "PAX/CAO", description: "Permite embalagens robustas como caixas de aço, madeira ou plástico (4A, 4B, 4C1, 4D, 4F, 4G). Quantidade máxima: 25kg (Pax) / 100kg (CAO)." },
+    { id: "131", title: "Isqueiros (Div 1.4S)", applies_to: "UN 0340", type: "PAX/CAO", description: "Embalagens internas devem separar os artigos. Máximo 10kg por volume." },
+    { id: "134", title: "Sinalizadores de Fumaça (Div 1.4G)", applies_to: "UN 0197, UN 0313", type: "CAO Only", description: "Embalagens externas de madeira, papelão ou metal. Máx 75kg." },
+    { id: "135", title: "Fogos de Artifício (Div 1.4G)", applies_to: "UN 0336", type: "CAO Only", description: "PROIBIDO em aeronaves de passageiros. Requer embalagens de especificação UN (ex: 4G, 4C1). Quantidade máxima por volume: 75kg." },
+    { id: "137", title: "Cargas de Profundidade (Div 1.1D)", applies_to: "UN 0056", type: "CAO Only", description: "Embalagens externas robustas e aprovadas. Devem ser seguras contra movimento." },
+    { id: "143", title: "Explosivos, n.o.s. (Div 1.4C, 1.4D, 1.4E)", applies_to: "UN 0384, UN 0481", type: "CAO Only", description: "Requer embalagens de especificação UN. Máx 75kg." },
+    
+    // --- CLASS 2 ---
+    { id: "200", title: "Gases Comprimidos ou Liquefeitos", applies_to: "UN 1066 (Nitrogênio), UN 1072 (Oxigênio)", type: "PAX/CAO", description: "Instrução padrão para cilindros de gás. Válvulas devem ser protegidas. Quantidade máxima: 75kg (Pax) / 150kg (CAO)." },
+    { id: "201", title: "Gases Liquefeitos, inflamáveis", applies_to: "UN 1011 (Butano)", type: "PAX/CAO", description: "Cilindros de metal. Válvulas devem ser protegidas. Quantidade máxima: 75kg (Pax) / 150kg (CAO)." },
+    { id: "202", title: "Gases Refrigerados Liquefeitos", applies_to: "UN 1977 (Nitrogênio, líquido refrigerado)", type: "PAX/CAO", description: "Requer recipientes criogênicos (dewars) com isolamento a vácuo. Devem ser transportados na vertical." },
+    { id: "203", title: "Aerossóis & Recipientes Pequenos com Gás", applies_to: "UN 1950", type: "PAX/CAO", description: "Embalagens externas fortes são necessárias. Limite por recipiente interno: 1L." },
+    { id: "Y203", title: "Aerossóis & Recipientes Pequenos (LQ)", applies_to: "UN 1950", type: "PAX (LQ)", description: "Embalagens externas fortes. Limite por recipiente interno: 1L. Peso bruto máximo do volume: 30kg." },
+    { id: "204", title: "Artigos Contendo Gás sob Pressão", applies_to: "UN 3164", type: "PAX/CAO", description: "Para artigos como amortecedores. Devem ser embalados em caixas ou engradados fortes. Máx 100kg." },
+    { id: "205", title: "Isqueiros", applies_to: "UN 1057", type: "CAO Only", description: "PROIBIDO em Pax. Os isqueiros devem ser embalados para prevenir movimento e descarga acidental. Quantidade máxima por volume: 10kg." },
+    { id: "206", title: "Gás Adsorvido", applies_to: "UN 3510, UN 3511", type: "PAX/CAO", description: "Requer cilindros especiais com material sólido poroso. Válvulas protegidas. Máx 75kg (Pax)/150kg (CAO)." },
+    { id: "207", title: "Recipientes Pequenos com Gás (Cartuchos)", applies_to: "UN 2037", type: "PAX/CAO", description: "Embalagens combinadas. Internas com capacidade máx de 120mL. Externas fortes. Máx 75kg (Pax)/150kg (CAO)." },
+    { id: "208", title: "Cilindros de Gás para Descarte", applies_to: "UN 1011, UN 1978", type: "CAO Only", description: "Cilindros não recarregáveis. Embalados em caixas externas fortes. Máx 150kg." },
+    { id: "210", title: "Recargas de Isqueiro", applies_to: "UN 1057", type: "PAX/CAO", description: "Aerossóis contendo gás inflamável. Embalagens externas fortes. Máx 75kg (Pax)/150kg (CAO)." },
+    { id: "211", title: "Gases Tóxicos, GE I (Inalação)", applies_to: "Classe 2.3", type: "CAO Only", description: "PROIBIDO em Pax. Requer cilindros de alta especificação e testes rigorosos. Quantidade máxima: 50kg." },
+    { id: "212", title: "Módulos de Airbag ou Pré-tensores", applies_to: "UN 3268", type: "PAX/CAO", description: "Embalados para prevenir ativação acidental. Máx 35kg (Pax)/50kg (CAO)." },
+    { id: "213", title: "Extintores de Incêndio", applies_to: "UN 1044", type: "PAX/CAO", description: "Devem ser embalados em caixas externas fortes para prevenir ativação acidental. Quantidade máxima: 75kg (Pax) / 150kg (CAO)." },
+    { id: "218", title: "Máquinas de Refrigeração", applies_to: "UN 2857", type: "PAX/CAO", description: "Contendo gás não-inflamável e não-tóxico. Embalagem robusta. Máx 150kg." },
+    { id: "219", title: "Gás Tóxico por Inalação (Líquidos)", applies_to: "UN 3308, UN 3309", type: "CAO Only", description: "PROIBIDO em Pax. Cilindros com testes de pressão rigorosos." },
+    { id: "220", title: "Veículos ou Motores a Gás", applies_to: "UN 3166", type: "PAX/CAO", description: "Transportado sob PI 950 ou 951, mas esta PI se aplica aos cilindros de gás se transportados separadamente." },
+    { id: "221", title: "Geradores de Gás Químico", applies_to: "UN 3356 (Geradores de Oxigênio)", type: "CAO Only", description: "Embalados para prevenir ativação. Artigos devem ser transportados de forma que fiquem visíveis à tripulação." },
+    { id: "222", title: "Dispositivos de Salva-Vidas com Gás Comprimido", applies_to: "UN 2990, UN 3072", type: "PAX/CAO", description: "Para coletes salva-vidas, escorregadores. Embalados para prevenir ativação acidental. Máx 100kg." },
+
+    // --- CLASS 3 ---
+    { id: "350", title: "Líquidos Inflamáveis, GE I (sem emb. interna)", applies_to: "Classe 3, GE I", type: "PAX", description: "Uso de embalagens únicas PROIBIDO. Use PI 351." },
+    { id: "351", title: "Líquidos Inflamáveis, GE I", applies_to: "Classe 3, GE I", type: "PAX", description: "Embalagens combinadas. Internas de vidro (máx 0.5L) ou plástico/metal (máx 1L). Quantidade máxima por volume: 1L." },
+    { id: "352", title: "Líquidos Inflamáveis com Sub-risco Tóxico, GE I/II", applies_to: "UN 1230 (Metanol)", type: "PAX", description: "Requisitos mais rigorosos. Internas de vidro (máx 0.5L) ou outras (máx 1L). Quantidade máxima por volume: 1L." },
+    { id: "353", title: "Líquidos Inflamáveis, GE II", applies_to: "UN 1090 (Acetona)", type: "PAX", description: "Embalagens combinadas. Internas de vidro (máx 1L) ou plástico/metal (máx 5L). Quantidade máxima por volume: 5L." },
+    { id: "354", title: "Líquidos Inflamáveis com Sub-risco, GE II", applies_to: "Classe 3 com sub-risco", type: "PAX", description: "Embalagens combinadas. Internas de vidro (máx 0.5L) ou outras (máx 2.5L). Quantidade máxima por volume: 5L." },
+    { id: "355", title: "Líquidos Inflamáveis, GE III", applies_to: "UN 1223 (Querosene)", type: "PAX", description: "Embalagens combinadas. Internas de vidro (máx 5L) ou plástico/metal (máx 10L). Quantidade máxima por volume: 60L." },
+    { id: "361", title: "Líquidos Inflamáveis, GE I", applies_to: "Classe 3, GE I", type: "CAO Only", description: "Permite embalagens únicas (tambores, bombonas) até 30L." },
+    { id: "362", title: "Líquidos Inflamáveis Tóxicos, GE I/II", applies_to: "UN 1230 (Metanol)", type: "CAO Only", description: "Permite embalagens únicas até 60L." },
+    { id: "364", title: "Líquidos Inflamáveis, GE II", applies_to: "UN 1090 (Acetona)", type: "CAO Only", description: "Permite embalagens únicas (tambores, bombonas) até 60L." },
+    { id: "366", title: "Líquidos Inflamáveis, GE III", applies_to: "UN 1223 (Querosene)", type: "CAO Only", description: "Permite embalagens únicas (tambores, bombonas) até 220L." },
+    { id: "370", title: "Líquidos Inflamáveis Viscosos", applies_to: "UN 1263 (Tinta)", type: "PAX/CAO", description: "Permite o uso de embalagens únicas maiores para líquidos viscosos que atendam a critérios específicos de teste. Máx 30L (Pax)/220L (CAO)." },
+    { id: "373", title: "Máquinas ou Aparelhos", applies_to: "UN 3166, UN 3363", type: "PAX/CAO", description: "Para equipamentos contendo líquidos inflamáveis. Devem ser drenados ou ter tanques selados. Sem limite de quantidade." },
+    { id: "378", title: "Motores de Combustão Interna", applies_to: "UN 3528", type: "PAX/CAO", description: "Motores devem ser drenados de combustível. Baterias removidas ou terminais protegidos. Sem limite de quantidade." },
+    { id: "Y341", title: "Líquidos Inflamáveis, GE II (LQ)", applies_to: "Classe 3, GE II", type: "PAX (LQ)", description: "Embalagens combinadas. Internas de vidro, plástico ou metal até 1L. Peso bruto máximo do volume: 30kg." },
+    { id: "Y344", title: "Líquidos Inflamáveis, GE III (LQ)", applies_to: "Classe 3, GE III", type: "PAX (LQ)", description: "Embalagens combinadas. Internas de vidro, plástico ou metal até 5L. Peso bruto máximo do volume: 30kg." },
+    
+    // --- CLASS 4 ---
+    { id: "445", title: "Sólidos Inflamáveis, GE II", applies_to: "Classe 4.1, GE II", type: "PAX", description: "Embalagens combinadas com internas até 5kg. Quantidade máxima por volume: 15kg." },
+    { id: "446", title: "Sólidos Inflamáveis, GE III", applies_to: "Classe 4.1, GE III", type: "PAX", description: "Embalagens combinadas com internas até 10kg. Quantidade máxima por volume: 25kg." },
+    { id: "448", title: "Sólidos Inflamáveis, GE II", applies_to: "Classe 4.1, GE II", type: "CAO Only", description: "Permite embalagens únicas (sacos, caixas) até 50kg." },
+    { id: "449", title: "Sólidos Inflamáveis, GE III", applies_to: "Classe 4.1, GE III", type: "CAO Only", description: "Permite embalagens únicas até 100kg." },
+    { id: "Y441", title: "Sólidos Inflamáveis, GE II (LQ)", applies_to: "Classe 4.1, GE II", type: "PAX (LQ)", description: "Embalagens combinadas. Internas até 1kg. Peso bruto máximo do volume: 30kg." },
+    { id: "Y443", title: "Sólidos Inflamáveis, GE III (LQ)", applies_to: "Classe 4.1, GE III", type: "PAX (LQ)", description: "Embalagens combinadas. Internas até 5kg. Peso bruto máximo do volume: 30kg." },
+    { id: "453", title: "Fósforos de Segurança", applies_to: "UN 1944", type: "PAX/CAO", description: "Embalagens internas devem ser caixas de fósforos. Externas de madeira ou papelão. Máx 25kg (Pax)/100kg (CAO)." },
+    { id: "454", title: "Baterias de Sódio", applies_to: "UN 3292", type: "PAX/CAO", description: "Baterias devem ser protegidas contra curto-circuito e acondicionadas em embalagens externas resistentes." },
+    { id: "459", title: "Substâncias Auto-Reativas", applies_to: "Classe 4.1", type: "PAX/CAO", description: "Requer embalagens de especificação UN. Muitas requerem controle de temperatura. Quantidades são geralmente muito limitadas." },
+    { id: "466", title: "Subst. Combustão Espontânea, GE II (Sólidos)", applies_to: "Classe 4.2, GE II", type: "PAX", description: "Requer embalagens hermeticamente fechadas. Quantidade máxima por volume: 15kg." },
+    { id: "468", title: "Subst. Combustão Espontânea, GE II (Sólidos)", applies_to: "Classe 4.2, GE II", type: "CAO Only", description: "Embalagens únicas hermeticamente fechadas até 50kg." },
+    { id: "471", title: "Subst. Combustão Espontânea, GE III (Sólidos)", applies_to: "Classe 4.2, GE III", type: "CAO Only", description: "Embalagens únicas até 100kg." },
+    { id: "484", title: "Subst. Perigosas Quando Molhadas, GE II (Sólidos)", applies_to: "Classe 4.3, GE II", type: "PAX", description: "Embalagens devem ser estanques (à prova d'água). Quantidade máxima: 15kg." },
+    { id: "487", title: "Subst. Perigosas Quando Molhadas, GE I (Líquidos)", applies_to: "Classe 4.3, GE I", type: "CAO Only", description: "PROIBIDO em Pax. Embalagens únicas estanques. Máx 30L." },
+    { id: "490", title: "Subst. Perigosas Quando Molhadas, GE II (Sólidos)", applies_to: "Classe 4.3, GE II", type: "CAO Only", description: "Embalagens únicas estanques até 50kg." },
+    { id: "492", title: "Artigos contendo Subst. Perigosas Quando Molhadas", applies_to: "UN 3292", type: "PAX/CAO", description: "Para baterias de sódio e outros artigos. Devem ser hermeticamente selados." },
+
+    // --- CLASS 5 ---
+    { id: "550", title: "Oxidantes, Líquidos, GE II", applies_to: "Classe 5.1, GE II", type: "PAX", description: "Embalagens combinadas com internas de vidro (máx 1L) ou outras (máx 2.5L). Quantidade máxima por volume: 5L." },
+    { id: "551", title: "Oxidantes, Líquidos, GE III", applies_to: "Classe 5.1, GE III", type: "PAX", description: "Embalagens combinadas com internas até 5L. Quantidade máxima por volume: 25L." },
+    { id: "553", title: "Oxidantes, Líquidos, com Sub-risco, GE II", applies_to: "Classe 5.1 com sub-risco", type: "PAX", description: "Requisitos mais rigorosos. Internas de vidro (máx 0.5L). Máx 2.5L por volume." },
+    { id: "554", title: "Oxidantes, Líquidos, GE II", applies_to: "Classe 5.1, GE II", type: "CAO Only", description: "Embalagens únicas até 25L." },
+    { id: "555", title: "Oxidantes, Líquidos, GE III", applies_to: "Classe 5.1, GE III", type: "CAO Only", description: "Embalagens únicas até 220L." },
+    { id: "558", title: "Oxidantes, Sólidos, GE II", applies_to: "Classe 5.1, GE II", type: "PAX", description: "Embalagens combinadas com internas de até 5kg. Quantidade máxima por volume: 25kg." },
+    { id: "562", title: "Oxidantes, Sólidos, GE II", applies_to: "Classe 5.1, GE II", type: "CAO Only", description: "Embalagens únicas até 100kg." },
+    { id: "563", title: "Oxidantes, Sólidos, GE III", applies_to: "Classe 5.1, GE III", type: "CAO Only", description: "Embalagens únicas até 200kg." },
+    { id: "565", title: "Geradores Químicos de Oxigênio", applies_to: "UN 3356", type: "CAO Only", description: "Dispositivo de ativação deve ser protegido. Proibido em Pax. Quantidade máxima por volume: 25kg." },
+    { id: "570", title: "Peróxidos Orgânicos (Líquidos e Sólidos)", applies_to: "Classe 5.2", type: "PAX/CAO", description: "Requer controle de temperatura para muitos peróxidos. Geralmente embalagens combinadas. Exige embalagens testadas UN." },
+    { id: "571", title: "Peróxidos Orgânicos (Líquidos e Sólidos)", applies_to: "Classe 5.2", type: "CAO Only", description: "Instrução para CAO, permitindo quantidades maiores que a PI 570. Pode requerer controle de temperatura." },
+    { id: "572", title: "Peróxidos Orgânicos (Líquidos e Sólidos, IBC)", applies_to: "Classe 5.2", type: "CAO Only", description: "Permite o uso de IBCs (Intermediate Bulk Containers) para peróxidos específicos. Requer aprovação." },
+
+    // --- CLASS 6 ---
+    { id: "602", title: "Substâncias Tóxicas por Inalação, Líquidas", applies_to: "UN 3381, UN 3382", type: "CAO Only", description: "PROIBIDO em Pax. Embalagens internas de metal em tambores ou caixas. Requer embalagem hermética." },
+    { id: "620", title: "Substância Infecciosa, Categoria A", applies_to: "UN 2814, UN 2900", type: "PAX/CAO", description: "Requer embalagem tríplice (primário estanque, secundário estanque, externo rígido) certificada UN. Limites: 50mL/g (Pax), 4L/kg (CAO)." },
+    { id: "621", title: "Resíduos Clínicos, n.o.s.", applies_to: "UN 3291", type: "CAO Only", description: "Embalagens rígidas, estanques, resistentes a perfurações, marcadas com o símbolo de risco biológico. Máx 100kg." },
+    { id: "622", title: "Resíduos Médicos Regulados, Categoria A", applies_to: "UN 3549", type: "CAO Only", description: "Proibido em Pax. Requer embalagens rígidas e estanques de especificação UN. Máximo 100kg." },
+    { id: "650", title: "Substância Biológica, Categoria B", applies_to: "UN 3373", type: "PAX/CAO", description: "Embalagem tríplice de boa qualidade (não precisa ser UN). Limite por recipiente primário: 1L/1kg. Limite por volume: 4L/4kg." },
+    { id: "652", title: "Líquidos Tóxicos, GE I", applies_to: "Classe 6.1, GE I", type: "PAX", description: "Embalagens combinadas com internas de vidro (máx 0.5L). Quantidade máxima por volume: 1L." },
+    { id: "654", title: "Líquidos Tóxicos, GE II", applies_to: "Classe 6.1, GE II", type: "PAX", description: "Embalagens combinadas. Internas de vidro (máx 1L) ou outras (máx 2L). Quantidade máxima por volume: 5L." },
+    { id: "655", title: "Líquidos Tóxicos, GE III", applies_to: "Classe 6.1, GE III", type: "PAX", description: "Embalagens combinadas. Internas de vidro (máx 5L) ou outras (máx 10L). Quantidade máxima por volume: 60L." },
+    { id: "658", title: "Líquidos Tóxicos, GE I", applies_to: "Classe 6.1, GE I", type: "CAO Only", description: "Embalagens únicas até 30L." },
+    { id: "659", title: "Sólidos Tóxicos, GE I", applies_to: "Classe 6.1, GE I", type: "PAX", description: "Embalagens combinadas. Internas até 0.5kg. Máx 5kg por volume." },
+    { id: "662", title: "Líquidos Tóxicos, GE II", applies_to: "Classe 6.1, GE II", type: "CAO Only", description: "Embalagens únicas até 60L." },
+    { id: "663", title: "Líquidos Tóxicos, GE III", applies_to: "Classe 6.1, GE III", type: "CAO Only", description: "Embalagens únicas até 220L." },
+    { id: "669", title: "Sólidos Tóxicos, GE II", applies_to: "Classe 6.1, GE II", type: "PAX", description: "Embalagens combinadas com internas até 5kg. Quantidade máxima por volume: 25kg." },
+    { id: "675", title: "Sólidos Tóxicos, GE III", applies_to: "Classe 6.1, GE III", type: "PAX", description: "Embalagens únicas até 200kg." },
+    { id: "676", title: "Sólidos Tóxicos, GE II", applies_to: "Classe 6.1, GE II", type: "CAO Only", description: "Embalagens únicas até 100kg." },
+    { id: "Y641", title: "Líquidos Tóxicos, GE II (LQ)", applies_to: "Classe 6.1, GE II", type: "PAX (LQ)", description: "Embalagens combinadas. Internas de vidro (máx 100mL) ou outras (máx 500mL). Peso bruto máximo: 30kg." },
+    { id: "Y642", title: "Líquidos Tóxicos, GE III (LQ)", applies_to: "Classe 6.1, GE III", type: "PAX (LQ)", description: "Embalagens combinadas. Internas até 1L. Peso bruto máximo: 30kg." },
+    { id: "Y644", title: "Sólidos Tóxicos, GE II (LQ)", applies_to: "Classe 6.1, GE II", type: "PAX (LQ)", description: "Embalagens combinadas. Internas até 500g. Peso bruto máximo: 30kg." },
+    
+    // --- CLASS 7 ---
+    { id: "N/A", title: "Material Radioativo", applies_to: "Classe 7", type: "PAX/CAO", description: "Embalagem de material radioativo não segue o sistema padrão de PI. Deve estar em conformidade com os requisitos detalhados no Capítulo 10." },
+    
+    // --- CLASS 8 ---
+    { id: "850", title: "Líquidos Corrosivos, GE I", applies_to: "Classe 8, GE I", type: "PAX", description: "Requisitos rigorosos. Embalagens combinadas. Internas de vidro (máx 0.5L). Quantidade máxima por volume: 0.5L." },
+    { id: "851", title: "Líquidos Corrosivos, GE II", applies_to: "Classe 8, GE II", type: "PAX", description: "Embalagens combinadas. Internas de vidro (máx 0.5L) ou outras (máx 1L). Quantidade máxima por volume: 1L." },
+    { id: "852", title: "Líquidos Corrosivos, GE III", applies_to: "Classe 8, GE III", type: "PAX", description: "Embalagens combinadas. Internas de vidro (máx 2.5L) ou outras (máx 5L). Quantidade máxima por volume: 5L." },
+    { id: "854", title: "Líquidos Corrosivos, GE I", applies_to: "Classe 8, GE I", type: "CAO Only", description: "Permite embalagens únicas (vidro, metal) até 2.5L." },
+    { id: "855", title: "Líquidos Corrosivos, GE II", applies_to: "Classe 8, GE II", type: "CAO Only", description: "Embalagens únicas até 30L." },
+    { id: "856", title: "Líquidos Corrosivos, GE III", applies_to: "Classe 8, GE III", type: "CAO Only", description: "Embalagens únicas até 60L." },
+    { id: "859", title: "Sólidos Corrosivos, GE II", applies_to: "Classe 8, GE II", type: "PAX", description: "Embalagens combinadas com internas até 5kg. Quantidade máxima por volume: 15kg." },
+    { id: "860", title: "Sólidos Corrosivos, GE III", applies_to: "Classe 8, GE III", type: "PAX", description: "Embalagens combinadas com internas até 10kg. Quantidade máxima por volume: 25kg." },
+    { id: "863", title: "Sólidos Corrosivos, GE II", applies_to: "Classe 8, GE II", type: "CAO Only", description: "Embalagens únicas até 100kg." },
+    { id: "864", title: "Sólidos Corrosivos, GE III", applies_to: "Classe 8, GE III", type: "CAO Only", description: "Embalagens únicas até 200kg." },
+    { id: "Y840", title: "Líquidos Corrosivos, GE II (LQ)", applies_to: "Classe 8, GE II", type: "PAX (LQ)", description: "Embalagens combinadas. Internas de vidro (máx 0.5L). Peso bruto máximo do volume: 30kg." },
+    { id: "Y841", title: "Líquidos Corrosivos, GE III (LQ)", applies_to: "Classe 8, GE III", type: "PAX (LQ)", description: "Embalagens combinadas. Internas de vidro ou plástico até 1L. Peso bruto máximo do volume: 30kg." },
+    { id: "Y845", title: "Sólidos Corrosivos, GE III (LQ)", applies_to: "Classe 8, GE III", type: "PAX (LQ)", description: "Embalagens combinadas. Internas até 5kg. Peso bruto máximo do volume: 30kg." },
+    { id: "869", title: "Kits de Teste ou Primeiros Socorros", applies_to: "UN 1760, UN 1848", type: "PAX", description: "Contendo pequenas quantidades de corrosivos. Embalagens internas até 250mL. Máx 1L por kit." },
+    { id: "870", title: "Baterias úmidas, com ácido", applies_to: "UN 2794", type: "PAX/CAO", description: "Baterias em contentores rígidos à prova de vazamento. Terminais protegidos. Máx 30kg (Pax), Sem limite (CAO)." },
+    { id: "871", title: "Baterias úmidas, com álcali", applies_to: "UN 2795", type: "PAX/CAO", description: "Baterias em contentores rígidos à prova de vazamento. Terminais protegidos. Máx 30kg (Pax), Sem limite (CAO)." },
+    { id: "872", title: "Baterias não derramáveis", applies_to: "UN 2800", type: "PAX/CAO", description: "Terminais protegidos. Se a bateria estiver intacta, não é necessária embalagem externa. Sem limite de quantidade." },
+
+    // --- CLASS 9 ---
+    { id: "950", title: "Veículos movidos a Gás Inflamável", applies_to: "UN 3166", type: "PAX/CAO", description: "Válvula do tanque fechada. Bateria desconectada. Sem limite de quantidade. Requer aprovação." },
+    { id: "951", title: "Motores movidos a Gás Inflamável", applies_to: "UN 3166", type: "PAX/CAO", description: "Combustível deve ser drenado. Bateria desconectada. Sem limite de quantidade. Requer aprovação." },
+    { id: "952", title: "Veículo movido a Bateria / Unidade de Carga", applies_to: "UN 3171, UN 3491", type: "PAX/CAO", description: "Para veículos elétricos e unidades de carga com baterias de lítio. Bateria firmemente fixada. Terminais protegidos. Sem limite de quantidade." },
+    { id: "953", title: "Dispositivos de Salva-Vidas", applies_to: "UN 2990, UN 3072", type: "PAX/CAO", description: "Para coletes salva-vidas, escorregadores, etc. Embalados para prevenir ativação acidental. Máx 100kg (Pax)/100kg (CAO)." },
+    { id: "954", title: "Gelo Seco (Dióxido de Carbono, sólido)", applies_to: "UN 1845", type: "PAX/CAO", description: "Embalagem deve permitir a liberação de gás (ventilação). Máximo de 200kg por volume." },
+    { id: "955", title: "Esferas Poliméricas Expansíveis", applies_to: "UN 2211", type: "PAX/CAO", description: "Embalagens devem ser feitas de material que não seja facilmente permeável ao vapor inflamável. Máx 100kg (Pax)/100kg(CAO)." },
+    { id: "956", title: "Subst. Perigosas ao Meio Ambiente, Sólidas", applies_to: "UN 3077", type: "PAX/CAO", description: "Instrução genérica para sólidos da Classe 9. Máx 400kg (Pax) / 400kg (CAO)." },
+    { id: "Y956", title: "Subst. Perigosas ao Meio Ambiente, Sólidas (LQ)", applies_to: "UN 3077", type: "PAX (LQ)", description: "Embalagens combinadas. Peso bruto máximo do volume: 30kg." },
+    { id: "957", title: "Material Magnetizado", applies_to: "UN 2807", type: "PAX/CAO", description: "Embalado de forma que o campo magnético não desvie a bússola em mais de 2 graus a 2.1m. Sem limite de quantidade." },
+    { id: "958", title: "Plásticos de Moldagem a Quente", applies_to: "UN 3314", type: "PAX/CAO", description: "Embalagens que permitam a ventilação, como sacos ou caixas. Máx 100kg (Pax)/200kg (CAO)." },
+    { id: "959", title: "Amianto", applies_to: "UN 2212, UN 2590", type: "PAX/CAO", description: "Embalagens rígidas, estanques à poeira. Máx 200kg (Pax)/400kg (CAO)." },
+    { id: "960", title: "Kits Químicos ou de Primeiros Socorros", applies_to: "UN 3316", type: "PAX/CAO", description: "Quantidade por embalagem interna não pode exceder 250ml/g. Máx 10kg por volume." },
+    { id: "Y960", title: "Kits Químicos ou de Primeiros Socorros (LQ)", applies_to: "UN 3316", type: "PAX (LQ)", description: "Quantidade por embalagem interna não pode exceder 30ml/g. Peso bruto máximo do volume: 1kg." },
+    { id: "961", title: "Baterias em Equipamento (alcalinas, zinco-carbono)", applies_to: "UN 3028", type: "PAX/CAO", description: "Equipamento deve ser protegido contra ativação acidental. Terminais protegidos. Sem limite de quantidade." },
+    { id: "962", title: "Aparelhos com Célula de Combustível", applies_to: "UN 3473, UN 3479", type: "PAX/CAO", description: "Para equipamentos eletrônicos com cartuchos de célula de combustível. Requer conformidade com IEC 62282-6-100." },
+    { id: "963", title: "Mercadoria de Consumo (Consumer Commodity)", applies_to: "ID 8000", type: "PAX/CAO (LQ)", description: "Para materiais embalados para varejo, elegíveis para LQ. Peso bruto máximo do volume: 30kg." },
+    { id: "964", title: "Subst. Perigosas ao Meio Ambiente, Líquidas", applies_to: "UN 3082", type: "PAX/CAO", description: "Instrução genérica para líquidos da Classe 9. Máx 450L (Pax) / 450L (CAO)." },
+    { id: "Y964", title: "Subst. Perigosas ao Meio Ambiente, Líquidas (LQ)", applies_to: "UN 3082", type: "PAX (LQ)", description: "Embalagens combinadas. Peso bruto máximo do volume: 30kg." },
+    { id: "965", title: "Baterias de Íon Lítio", applies_to: "UN 3480", type: "CAO Only", description: "Proibido em Pax. SoC (estado de carga) não >30%. Requer embalagem UN. Seção IA (>20Wh), IB (≤20Wh), II (≤2.7Wh)." },
+    { id: "966", title: "Baterias de Íon Lítio com Equipamento", applies_to: "UN 3481", type: "PAX/CAO", description: "Equipamento deve ser protegido. Seção I: DGD necessária. Seção II: Sem DGD, até 2 baterias extras, limites de Wh aplicam-se." },
+    { id: "967", title: "Baterias de Íon Lítio em Equipamento", applies_to: "UN 3481", type: "PAX/CAO", description: "Equipamento deve estar desligado e protegido. Seção I: DGD necessária. Seção II: Sem DGD, limites de Wh e quantidade por pacote aplicam-se." },
+    { id: "968", title: "Baterias de Lítio Metal", applies_to: "UN 3090", type: "CAO Only", description: "Proibido em Pax. Requer embalagem UN. Sujeito a aprovações. Seção IA (>2g Li), IB (≤2g Li), II (≤0.3g Li)." },
+    { id: "969", title: "Baterias de Lítio Metal com Equipamento", applies_to: "UN 3091", type: "PAX/CAO", description: "Equipamento deve ser protegido. Seção I: DGD necessária. Seção II: Sem DGD, até 2 baterias extras, limites de gramas de lítio aplicam-se." },
+    { id: "970", title: "Baterias de Lítio Metal em Equipamento", applies_to: "UN 3091, UN 3499 (Capacitor)", type: "PAX/CAO", description: "Equipamento deve estar desligado e protegido. Seção I: DGD necessária. Seção II: Sem DGD, limites aplicam-se. Também para Capacitores assimétricos." },
+].sort((a, b) => {
+    // Treat 'N/A' as a high number to place it correctly
+    const idA = a.id === 'N/A' ? 9999 : parseInt(a.id.replace('Y', ''));
+    const idB = b.id === 'N/A' ? 9999 : parseInt(b.id.replace('Y', ''));
+    if (idA !== idB) return idA - idB;
+    // If numbers are the same (e.g., 341 and Y341), 'Y' instructions come after
+    return a.id.startsWith('Y') ? 1 : -1;
+});
+
+
 export const DGR_CHAPTERS: DGRChapter[] = [
   {
     id: 1,
@@ -445,14 +608,14 @@ export const DGR_CHAPTERS: DGRChapter[] = [
         { id: "1.1", title: "Base da Regulamentação", blocks: [{ type: "paragraph", content: "Estas regulamentações contêm todos os requisitos das Instruções Técnicas da ICAO e incluem requisitos adicionais mais restritivos, que são mais rigorosos do que os requisitos da ICAO." }] },
         { id: "1.2", title: "Aplicação Geral", blocks: [{ type: "paragraph", content: "Estes regulamentos são aplicáveis a todos os operadores (companhias aéreas) que são membros da IATA e a todos os expedidores e agentes que oferecem remessas para estes operadores." }, { type: "list", content: { ordered: false, items: ["Expedidores (Shippers)", "Agentes de Carga (Freight Forwarders)", "Operadores (Airlines)", "Agentes de Manuseio (Ground Handling Agents)", "Passageiros e Tripulação"] } }] },
         { id: "1.3", title: "Responsabilidades", blocks: [{ type: "paragraph", content: "O transporte seguro de mercadorias perigosas é uma responsabilidade compartilhada por todas as partes envolvidas na cadeia de transporte." }] },
-        { id: "1.3.1", title: "Responsabilidades do Expedidor", blocks: [{ type: "paragraph", content: "O expedidor (shipper) é a principal parte responsável por garantir que as mercadorias perigosas sejam oferecidas para transporte em total conformidade com estes regulamentos. Esta responsabilidade não pode ser delegada. O expedidor deve garantir que:"}, {type: "list", content: { ordered: true, type: 'alpha', items: ["Os artigos ou substâncias não estão proibidos para transporte aéreo.", "Os artigos ou substâncias estão devidamente identificados, classificados, embalados, marcados, etiquetados e documentados.", "A Declaração do Expedidor para Mercadorias Perigosas (DGD) foi preenchida com precisão e assinada.", "Todo o pessoal envolvido foi devidamente treinado."]}}] },
-        { id: "1.3.2", title: "Responsabilidades do Operador", blocks: [{ type: "paragraph", content: "O operador (companhia aérea) deve garantir que apenas mercadorias perigosas aceitáveis, devidamente documentadas e inspecionadas sejam carregadas a bordo."}] },
+        { id: "1.3.1", title: "Responsabilidades do Expedidor", blocks: [{ type: "paragraph", content: "O expedidor (shipper) é a principal parte responsável por garantir que as mercadorias perigosas sejam oferecidas para transporte em total conformidade com estes regulamentos. Esta responsabilidade não pode ser delegada. O expedidor deve garantir que:"}, {type: "list", content: { ordered: true, type: 'alpha', items: ["Os artigos ou substâncias não estão proibidos para transporte aéreo.", "Os artigos ou substâncias estão devidamente identificados, classificados, embalados, marcados, etiquetados e documentados em conformidade com todas as regulamentações aplicáveis.", "Antes de reutilizar uma embalagem, todos os rótulos e marcações irrelevantes foram removidos ou obliterados.", "A Declaração do Expedidor para Mercadorias Perigosas (DGD) foi preenchida com precisão, em inglês, e assinada.", "Todo o pessoal envolvido na preparação da remessa foi devidamente treinado para cumprir suas funções."]}}] },
+        { id: "1.3.2", title: "Responsabilidades do Operador", blocks: [{ type: "paragraph", content: "O operador (companhia aérea) deve garantir que apenas mercadorias perigosas aceitáveis, devidamente documentadas e inspecionadas sejam carregadas a bordo. As responsabilidades incluem:", }, {type: "list", content: { ordered: true, type: 'alpha', items: ["Aceitar mercadorias perigosas apenas se estiverem em conformidade, usando um checklist de aceitação.", "Inspecionar os volumes quanto a vazamentos ou danos antes do carregamento.", "Garantir a segregação adequada de pacotes incompatíveis.", "Fornecer ao Piloto em Comando a informação necessária (NOTOC).", "Assegurar que avisos aos passageiros sejam exibidos.", "Relatar incidentes e acidentes com mercadorias perigosas."]}}] },
         { id: "1.4", title: "Definição de Mercadorias Perigosas", blocks: [{ type: "paragraph", content: "Mercadorias perigosas são artigos ou substâncias que são capazes de colocar em risco a saúde, a segurança, a propriedade ou o meio ambiente e que estão apresentadas na lista de mercadorias perigosas nestes regulamentos ou que são classificadas de acordo com estes regulamentos." }] },
-        { id: "1.5", title: "Treinamento (CBTA)", blocks: [{ type: "paragraph", content: "O treinamento deve ser baseado em competências (Competency-Based Training and Assessment - CBTA). Todos os funcionários envolvidos no transporte de carga aérea devem receber treinamento adequado à sua função e ser avaliados periodicamente." }, { type: "note", content: { title: "Validade", text: "O treinamento é válido por 24 meses. A reciclagem deve ocorrer dentro dos 3 meses finais do período de validade." } }] },
-        { id: "1.5.1", title: "Requisitos de Treinamento por Função", blocks: [{ type: "paragraph", content: "O escopo do treinamento varia conforme a responsabilidade do funcionário. Por exemplo, o pessoal de aceitação de carga requer treinamento aprofundado, enquanto o pessoal de rampa pode necessitar de treinamento focado em reconhecimento e manuseio." }] },
-        { id: "1.5.2", title: "Manutenção de Registros de Treinamento", blocks: [{ type: "paragraph", content: "Os empregadores devem manter registros do treinamento de mercadorias perigosas de seus funcionários por um período mínimo de 36 meses a partir da data do treinamento mais recente." }] },
+        { id: "1.5", title: "Treinamento (CBTA)", blocks: [{ type: "paragraph", content: "O treinamento deve ser baseado em competências (Competency-Based Training and Assessment - CBTA). Todos os funcionários envolvidos no transporte de carga aérea devem receber treinamento adequado à sua função e ser avaliados periodicamente. O treinamento deve ser projetado para alcançar a proficiência funcional." }, { type: "note", content: { title: "Validade e Reciclagem", text: "O treinamento é válido por 24 meses. A reciclagem deve ocorrer dentro dos 3 meses finais do período de validade para garantir a continuidade da qualificação." } }] },
+        { id: "1.5.1", title: "Requisitos de Treinamento por Função", blocks: [{ type: "paragraph", content: "O escopo do treinamento varia conforme a responsabilidade do funcionário. Por exemplo, o pessoal de aceitação de carga requer treinamento aprofundado em todas as etapas, enquanto o pessoal de rampa pode necessitar de treinamento focado em reconhecimento de etiquetas, manuseio seguro e procedimentos de emergência." }] },
+        { id: "1.5.2", title: "Manutenção de Registros de Treinamento", blocks: [{ type: "paragraph", content: "Os empregadores devem manter registros do treinamento de mercadorias perigosas de seus funcionários por um período mínimo de 36 meses a partir da data do treinamento mais recente, e disponibilizá-los mediante solicitação do funcionário ou da autoridade competente." }] },
         { id: "1.6", title: "Segurança (Security)", blocks: [{ type: "paragraph", content: "Medidas de segurança devem ser implementadas para minimizar o roubo ou uso indevido de mercadorias perigosas que possam ser usadas para fins terroristas."}] },
-        { id: "1.6.1", title: "Plano de Segurança", blocks: [{ type: "paragraph", content: "Expedidores e operadores de mercadorias perigosas de alto risco devem adotar, implementar e cumprir um plano de segurança que aborde elementos como alocação de responsabilidades, registros de treinamento e procedimentos operacionais."}] },
+        { id: "1.6.1", title: "Plano de Segurança", blocks: [{ type: "paragraph", content: "Expedidores e operadores de mercadorias perigosas de alto risco (como certos explosivos, substâncias tóxicas e radioativas) devem adotar, implementar e cumprir um plano de segurança que aborde elementos como alocação de responsabilidades, registros de treinamento, revisão de operações e procedimentos operacionais de segurança."}] },
         { id: "1.7", title: "Relato de Ocorrências", blocks: [{ type: "paragraph", content: "Operadores devem reportar incidentes e acidentes com mercadorias perigosas às autoridades competentes do Estado do Operador e do Estado de Ocorrência. Um incidente ocorre quando há vazamento, derramamento ou qualquer evento que indique falha na integridade da embalagem." }, { type: "warning", content: { text: "O reporte deve ser feito dentro de 72 horas após a descoberta do incidente, salvo exigência local mais estrita." } }] }
     ]
   },
@@ -463,11 +626,11 @@ export const DGR_CHAPTERS: DGRChapter[] = [
     color: "border-red-600",
     icon: Ban,
     sections: [
-        { id: "2.1", title: "Mercadorias Proibidas", blocks: [{ type: "paragraph", content: "Salvo disposição em contrário, o transporte aéreo de mercadorias perigosas é proibido, a menos que preparado de acordo com estes regulamentos." },] },
+        { id: "2.1", title: "Mercadorias Proibidas", blocks: [{ type: "paragraph", content: "Salvo disposição em contrário, o transporte aéreo de mercadorias perigosas é proibido, a menos que preparado de acordo com estes regulamentos." }] },
         { id: "2.1.1", title: "Proibido em Todas as Circunstâncias", blocks: [{ type: "paragraph", content: "Artigos e substâncias que, como apresentados para transporte, são suscetíveis de explodir, reagir perigosamente, produzir uma chama ou evolução perigosa de calor, ou uma emissão perigosa de gases ou vapores tóxicos, corrosivos ou inflamáveis sob condições normais encontradas no transporte aéreo. Exemplos incluem resíduos de aerossóis para descarte e baterias de lítio danificadas." }] },
-        { id: "2.2", title: "Mercadorias Ocultas (Hidden DG)", blocks: [{ type: "paragraph", content: "Muitos itens de aparência inofensiva podem conter mercadorias perigosas não declaradas. O pessoal de aceitação deve ser treinado para identificá-los." }, { type: "list", content: { ordered: false, items: ["Equipamento de Mergulho (Luzes de alta intensidade, Cilindros de ar comprimido)", "Peças Automotivas (Baterias, Amortecedores, Airbags)", "Equipamento Médico (Cilindros de O2, Termômetros de mercúrio)", "Amostras de Diagnóstico"] } }] },
+        { id: "2.2", title: "Mercadorias Ocultas (Hidden DG)", blocks: [{ type: "paragraph", content: "Muitos itens de aparência inofensiva podem conter mercadorias perigosas não declaradas. O pessoal de aceitação deve ser treinado para identificá-los. Exemplos comuns incluem:" }, { type: "list", content: { ordered: false, items: ["Equipamento de Mergulho (pode conter cilindros de ar comprimido ou lâmpadas de alta intensidade)", "Peças Automotivas (podem conter baterias, airbags, amortecedores com gás)", "Equipamento Médico (pode conter cilindros de oxigênio, termômetros de mercúrio)", "Amostras de Diagnóstico (podem ser substâncias infecciosas)", "Equipamento de acampamento (pode conter gás inflamável, líquidos inflamáveis, fósforos)", "Material de perfuração de poços (pode conter explosivos ou ácidos)", "Instrumentos meteorológicos (podem conter mercúrio)"] } }] },
         { id: "2.3", title: "Mercadorias Perigosas em Bagagem", blocks: [{ type: "paragraph", content: "Certos artigos são permitidos para transporte por passageiros ou tripulantes, seja na bagagem de mão, na bagagem despachada ou na pessoa, desde que cumpram restrições estritas de quantidade e embalagem." }, { type: "database", content: { id: "pax-provisions", title: "Tabela 2.3.A - Disposições para Passageiros", type: "variations",  columns: [{ key: "item", label: "Item", width: "w-64" }, { key: "carry_on", label: "Cabine / Pessoa", width: "w-24" }, { key: "checked", label: "Despacho", width: "w-24" }, { key: "operator_approval", label: "Aprov.", width: "w-20" }, { key: "limits", label: "Limites/Condições", width: "w-64" }], data: PAX_PROVISIONS_DATA } }] },
-        { id: "2.4", title: "Transporte pelo Correio", blocks: [{ type: "paragraph", content: "A maioria das mercadorias perigosas é proibida no correio aéreo internacional (air mail). As administrações postais nacionais podem ter exceções para o correio doméstico." },] },
+        { id: "2.4", title: "Transporte pelo Correio", blocks: [{ type: "paragraph", content: "A maioria das mercadorias perigosas é proibida no correio aéreo internacional (air mail). As administrações postais nacionais podem ter exceções para o correio doméstico." }] },
         { id: "2.5", title: "Mercadorias Perigosas do Operador (COMAT)", blocks: [{ type: "paragraph", content: "Mercadorias perigosas transportadas por um operador para seu próprio uso (COMAT - Company Materials) devem cumprir integralmente os regulamentos, a menos que especificamente isentas (ex: peças de aeronave)." }] },
         { id: "2.6", title: "Quantidades Excecionadas (EQ)", blocks: [{ type: "paragraph", content: "Pequenas quantidades de certas mercadorias perigosas podem ser transportadas com requisitos regulatórios bastante reduzidos. A coluna F da Tabela 4.2 indica o código EQ aplicável. O limite máximo por aeronave é de 1.000 pacotes." }, { type: "visual-mark", content: { type: 'eq', data: {class: '3', unNumbers: '1263'}, caption: "Marca de Quantidade Excecionada" } }] },
         { id: "2.7", title: "Quantidades Limitadas (LQ)", blocks: [{ type: "paragraph", content: "Permite o uso de embalagens combinadas de boa qualidade que não precisam ser testadas conforme as especificações da ONU. O peso bruto máximo por volume é 30 kg." }, { type: "note", content: { title: "Identificação", text: "Instruções de embalagem para Quantidades Limitadas começam com a letra 'Y' (ex: Y341)." } }, { type: "visual-mark", content: { type: 'lq-y', caption: "Marca de Quantidade Limitada (Aérea)" } }] },
@@ -546,18 +709,14 @@ export const DGR_CHAPTERS: DGRChapter[] = [
         { id: "4.1.1", title: "Seleção do PSN", blocks:[{type: "paragraph", content: "O nome em negrito na Tabela 4.2, seguido por qualquer texto não em itálico, constitui o PSN."}]},
         { id: "4.1.2", title: "Entradas Genéricas e N.O.S.", blocks:[{type: "paragraph", content: "Entradas 'não especificadas de outra forma' (n.o.s.) devem ser suplementadas com o(s) nome(s) técnico(s) do(s) componente(s) perigoso(s)."}]},
         { id: "4.2", title: "Lista de Mercadorias Perigosas (Blue Pages)", blocks: [{ type: "paragraph", content: "A Tabela 4.2, conhecida como 'Páginas Azuis', é a principal referência para todas as mercadorias perigosas listadas. Ela fornece informações sobre classificação, embalagem, limites e disposições especiais." }, { type: "database", content: { id: "blue-pages", title: "Tabela 4.2 - Lista Azul", type: "blue-pages", columns: [{ key: "un", label: "UN", width: "w-16", filterable: true }, { key: "page", label: "Pág.", width: "w-16" }, { key: "name", label: "Nome Apropriado", width: "w-64", filterable: true }, { key: "class", label: "Cls", width: "w-12" }, { key: "sub", label: "Sub", width: "w-12" }, { key: "pg", label: "PG", width: "w-12" }, { key: "eq", label: "EQ", width: "w-12" }, { key: "lq_pi", label: "Y-PI", width: "w-16" }, { key: "pax_pi", label: "Pax PI", width: "w-16" }, { key: "cao_pi", label: "CAO PI", width: "w-16" }, { key: "sp", label: "SP", width: "w-24" }], data: BLUE_PAGES_DATA } }] },
-        { 
-            id: "4.3", 
-            title: "Nomes Genéricos e N.O.S. (Não Especificados de Outra Forma)",
-            blocks: [
+        { id: "4.3", title: "Nomes Genéricos e N.O.S. (Não Especificados de Outra Forma)", blocks: [
                 { type: "paragraph", content: "Quando uma substância ou mistura não é listada especificamente por nome na Tabela 4.2, uma entrada 'genérica' ou 'não especificada de outra forma' (N.O.S.) deve ser usada. Para garantir a identificação adequada do risco, essas entradas devem ser complementadas com o nome técnico dos componentes perigosos." },
                 { type: "note", content: {
                     title: "Exemplo de Aplicação",
                     text: "Uma mistura de álcool isopropílico e tolueno seria declarada como: UN 1993, Líquido Inflamável, n.o.s. (tolueno, álcool isopropílico), 3, GE II."
                 }},
                 { type: "paragraph", content: "Geralmente, no máximo dois componentes que mais contribuem para o risco da mistura devem ser mostrados entre parênteses. Esta informação é crucial para a resposta a emergências." }
-            ]
-        },
+        ]},
         { id: "4.4", title: "Disposições Especiais", blocks: [{ type: "paragraph", content: "Códigos 'A' (A1, A2, etc.) listados na Coluna M da Tabela 4.2 modificam os requisitos para itens específicos." }, { type: "database", content: { id: "sp-db", title: "Tabela 4.4 - Disposições Especiais", type: "variations", columns: [ { key: "code", label: "Cód" }, { key: "text", label: "Descrição" } ], data: SPECIAL_PROVISIONS_DATA } }] }
     ]
   },
@@ -568,25 +727,34 @@ export const DGR_CHAPTERS: DGRChapter[] = [
     color: "border-yellow-500",
     icon: Package,
     sections: [
-        { id: "5.0", title: "Disposições Gerais", blocks: [
-            {type: "paragraph", content: "O expedidor é responsável por garantir que a embalagem selecionada esteja em conformidade com a Instrução de Embalagem aplicável, que os limites de quantidade não sejam excedidos e que todos os requisitos gerais de embalagem sejam atendidos."}
-        ]},
+        { id: "5.0", title: "Disposições Gerais", blocks: [{type: "paragraph", content: "O expedidor é responsável por garantir que a embalagem selecionada esteja em conformidade com a Instrução de Embalagem aplicável, que os limites de quantidade não sejam excedidos e que todos os requisitos gerais de embalagem sejam atendidos."}] },
         { id: "5.0.1", title: "Responsabilidades do Expedidor", blocks:[{ type: "paragraph", content: "O expedidor é responsável por garantir que a embalagem selecionada esteja em conformidade com a Instrução de Embalagem aplicável e que os limites de quantidade não sejam excedidos."}]},
-        { id: "5.0.2", title: "Requisitos Gerais de Embalagem", blocks:[{ type: "paragraph", content: "Todas as embalagens usadas para mercadorias perigosas devem atender aos seguintes requisitos fundamentais:"}, {type: "list", content: {ordered: false, items: ["As embalagens devem ser de boa qualidade e construídas de forma a prevenir vazamentos sob condições normais de transporte, incluindo mudanças de temperatura, umidade, pressão e vibração.", "As embalagens devem ser compatíveis com o conteúdo. As partes da embalagem que entram em contato direto com mercadorias perigosas não devem ser afetadas ou enfraquecidas significativamente por essa substância.", "Deve ser utilizado material absorvente e de acolchoamento adequado para líquidos em embalagens combinadas.", "As embalagens devem estar devidamente fechadas de acordo com as instruções do fabricante."]}}]},
+        { id: "5.0.2", title: "Requisitos Gerais de Embalagem", blocks:[{ type: "paragraph", content: "Todas as embalagens usadas para mercadorias perigosas devem atender aos seguintes requisitos fundamentais:"}, {type: "list", content: {ordered: true, items: ["As embalagens devem ser de boa qualidade, fabricadas com materiais adequados e devem ser fortes o suficiente para suportar os choques e cargas normalmente encontrados durante o transporte, incluindo transferência entre aeronaves e armazéns.", "As embalagens devem ser construídas e fechadas de forma a prevenir qualquer vazamento que possa ser causado em condições normais de transporte, por mudanças de temperatura, umidade, pressão ou vibração.", "As partes da embalagem que entram em contato direto com mercadorias perigosas não devem ser afetadas ou enfraquecidas significativamente por essa substância e não devem causar um efeito perigoso (ex: catalisar uma reação).", "Para embalagens combinadas, as embalagens internas devem ser acondicionadas de forma segura com material de acolchoamento para evitar que se quebrem ou sejam perfuradas e para controlar qualquer vazamento.", "Para líquidos em embalagens internas, deve haver material absorvente suficiente para absorver todo o conteúdo líquido. O material absorvente não deve reagir perigosamente com o líquido.", "As embalagens devem estar devidamente fechadas de acordo com as instruções do fabricante.", "Nenhuma embalagem deve ter resíduos perigosos aderidos ao seu exterior."]}}]},
         { id: "5.0.3", title: "Overpacks", blocks:[{ type: "paragraph", content: "Um invólucro usado por um expedidor para conter um ou mais volumes. Deve ser marcado com 'OVERPACK' e todas as marcações e etiquetas dos volumes internos devem ser reproduzidas no exterior."}]},
         { id: "5.0.4", title: "Embalagens de Resgate (Salvage)", blocks:[{ type: "paragraph", content: "Embalagens especiais usadas para transportar volumes de mercadorias perigosas que foram danificados, defeituosos ou que vazaram."}]},
-        { id: "5.1", title: "Exemplos de Instruções de Embalagem", blocks: [
-            {type: "packing-instruction", content: {id: "130", title: "Explosivos - Divisão 1.4S", transportMode: "Passenger and Cargo", content: [{type: "paragraph", content: "Esta instrução se aplica a artigos da Divisão 1.4, Grupo de Compatibilidade S."}, {type: "note", content: {title: "Embalagem Externa", text: "As embalagens internas devem ser acondicionadas em embalagens externas resistentes, como caixas de aço (4A), caixas de madeira (4C1) ou caixas de papelão (4G)."}}, {type: "paragraph", content: "A massa bruta máxima por volume é de 25 kg em aeronaves de passageiros e 100 kg em aeronaves de carga."}]}},
-            {type: "packing-instruction", content: {id: "203", title: "Aerossóis e Recipientes Pequenos com Gás", transportMode: "Passenger and Cargo", content: [{type: "paragraph", content: "Esta instrução aplica-se a UN 1950. As embalagens devem estar em conformidade com os requisitos da Seção 5.0.2."}, {type: "note", content: {title: "Limite", text: "A quantidade líquida máxima por embalagem interna é de 1 L para aerossóis. O peso bruto da embalagem completa não deve exceder 30 kg para Quantidade Limitada (Y203)."}},{type: "paragraph", content: "Para transporte em Pax/CAO, o limite por volume é de 75 kg / 150 kg, respectivamente."}]}},
-            {type: "packing-instruction", content: {id: "Y341", title: "Líquidos Inflamáveis, GE II (LQ)", transportMode: "Passenger and Cargo", content: [{type: "paragraph", content: "Esta instrução se aplica a Quantidades Limitadas de líquidos inflamáveis do Grupo de Embalagem II."}, {type: "table", content: {headers: ["Embalagem Interna", "Quantidade Líquida Máxima"], rows: [["Vidro, Plástico, Metal", "1 L"]]}}, {type: "note", content: {title: "Embalagem Externa", text: "As embalagens internas devem ser acondicionadas em embalagens externas resistentes. O peso bruto máximo do volume não deve exceder 30 kg."}}]}},
-            {type: "packing-instruction", content: {id: "364", title: "Líquidos Inflamáveis, GE II", transportMode: "Cargo Aircraft Only", content: [{type: "paragraph", content: "Esta instrução se aplica a líquidos inflamáveis do Grupo de Embalagem II em aeronaves de carga apenas."}, {type: "table", content: {headers: ["Tipo de Embalagem Única", "Quantidade Líquida Máxima"], rows: [["Tambor de Aço (1A1)", "60 L"], ["Jerrican de Plástico (3H1)", "60 L"]]}}, {type: "warning", content: {text: "Embalagens de vidro são proibidas como embalagens únicas."}}]}},
-            {type: "packing-instruction", content: {id: "620", title: "Substância Infectante, Categoria A (UN 2814, UN 2900)", transportMode: "Passenger and Cargo", content: [{type: "paragraph", content: "Requer uma embalagem tríplice testada e certificada UN, consistindo em recipiente primário estanque, embalagem secundária estanque e embalagem externa rígida."}, {type: "warning", content: {text: "Os limites de quantidade são rigorosos: 50 mL ou 50 g em aeronaves de passageiros, e 4 L ou 4 kg em aeronaves de carga."}}, {type: "paragraph", content: "Uma lista do conteúdo deve ser anexada à parte externa do pacote."}]}},
-            {type: "packing-instruction", content: {id: "655", title: "Líquidos Tóxicos, GE III", transportMode: "Passenger and Cargo", content: [{type: "paragraph", content: "Aplica-se a líquidos tóxicos do Grupo de Embalagem III."}, {type: "table", content: {headers: ["Embalagem Interna (Combinação)", "Qtde Máx."], rows: [["Vidro", "10 L"],["Plástico", "10 L"]]}}, {type: "table", content: {headers: ["Embalagem Única", "Qtde Máx."], rows: [["Tambor de Aço", "220 L"],["Jerrican de Plástico", "60 L"]]}}, {type: "paragraph", content: "A quantidade líquida máxima por volume em aeronaves de passageiros é de 60 L."}]}},
-            {type: "packing-instruction", content: {id: "Y841", title: "Líquidos Corrosivos, GE III (LQ)", transportMode: "Passenger and Cargo", content: [{type: "paragraph", content: "Aplica-se a Quantidades Limitadas de líquidos corrosivos do Grupo de Embalagem III."}, {type: "table", content: {headers: ["Embalagem Interna", "Quantidade Líquida Máxima"], rows: [["Vidro, Plástico, Metal", "1 L"]]}}, {type: "note", content: {title: "Embalagem Externa", text: "O peso bruto máximo do volume não deve exceder 30 kg."}}]}},
-            {type: "packing-instruction", content: {id: "856", title: "Líquidos Corrosivos, GE III", transportMode: "Cargo Aircraft Only", content: [{type: "paragraph", content: "Aplica-se a líquidos corrosivos do Grupo de Embalagem III em CAO."}, {type: "table", content: {headers: ["Embalagem Única", "Qtde Máx."], rows: [["Tambor de Alumínio", "220 L"], ["Jerrican de Plástico", "60 L"]]}}, {type: "paragraph", content: "A quantidade máxima por volume é 60 L em Pax e 220 L em CAO."}]}},
-            {type: "packing-instruction", content: {id: "954", title: "Gelo Seco (Dióxido de Carbono, sólido)", transportMode: "Passenger and Cargo", content: [{type: "paragraph", content: "Aplica-se a UN 1845. A embalagem deve ser projetada para permitir a liberação de gás dióxido de carbono para evitar o acúmulo de pressão."}, {type: "warning", content: {text: "A embalagem não deve ser hermeticamente fechada."}}, {type: "paragraph", content: "A quantidade máxima por volume é de 200 kg tanto em Pax quanto em CAO (sujeito a limites específicos da aeronave)."}]}},
-            {type: "packing-instruction", content: {id: "967", title: "Baterias de Íon Lítio contidas em equipamento (UN 3481)", transportMode: "Passenger and Cargo", content: [{type: "paragraph", content: "Esta instrução aplica-se a baterias de íon lítio contidas em equipamentos."}, {type: "note", content: {title: "Seção II", text: "Para baterias de baixa potência (≤ 100 Wh), a embalagem deve ser forte e o equipamento protegido contra ativação acidental. Não é necessária a DGD, mas a Marca de Bateria de Lítio é exigida."}}, {type: "note", content: {title: "Seção I", text: "Para baterias de maior potência (> 100 Wh), é necessária embalagem de especificação UN (PG II) e uma DGD completa."}}, {type: "paragraph", content: "Limite de peso líquido da bateria por volume: 5 kg (Pax), 35 kg (CAO)."}]}}
-        ]}
+        { 
+            id: "5.1", 
+            title: "Lista de Instruções de Embalagem", 
+            blocks: [
+                { type: "paragraph", content: "Esta seção contém uma lista de referência das Instruções de Embalagem (PI) mais comuns. Utilize a ferramenta de busca para encontrar uma PI específica ou navegue pelos dados. A designação correta da PI é encontrada na Tabela 4.2 (Páginas Azuis) com base no Número UN e Grupo de Embalagem." },
+                { 
+                    type: "database", 
+                    content: { 
+                        id: "pi-database", 
+                        title: "Base de Dados de Instruções de Embalagem", 
+                        type: 'pi-list',
+                        columns: [ 
+                            { key: "id", label: "PI Nº", width: "w-24", filterable: true }, 
+                            { key: "title", label: "Título", width: "w-48", filterable: true }, 
+                            { key: "description", label: "Descrição Resumida", width: "w-96", filterable: true },
+                            { key: "applies_to", label: "Aplicação Comum", width: "w-48", filterable: true },
+                            { key: "type", label: "Tipo", width: "w-32" }
+                        ], 
+                        data: PACKING_INSTRUCTIONS_DATA 
+                    } 
+                }
+            ]
+        }
     ]
   },
   {
@@ -601,16 +769,16 @@ export const DGR_CHAPTERS: DGRChapter[] = [
           { id: "6.2", title: "Marcação de Embalagens de Especificação UN", blocks: [{ type: "paragraph", content: "Cada embalagem testada e certificada deve exibir uma marca durável e legível. A marca indica que a embalagem corresponde a um design-tipo testado com sucesso. Exemplo:" }, { type: 'paragraph', content: "u\n/n 4G/Y145/S/23/USA/M1234" }, {type: 'definition-list', content: [
               {term: 'u\n/n', definition: 'Símbolo das Nações Unidas para embalagens.'},
               {term: '4G', definition: 'Código do tipo de embalagem (neste caso, Caixa de Papelão).'},
-              {term: 'Y', definition: 'Nível de performance. Y indica que a embalagem foi testada para Grupo de Embalagem II e III.'},
-              {term: '145', definition: 'Para embalagens de sólidos, indica a massa bruta máxima permitida em kg.'},
-              {term: 'S', definition: 'Indica que a embalagem é para Sólidos ou para embalagens internas.'},
+              {term: 'Y', definition: 'Nível de performance. X para PG I, II, III; Y para PG II, III; Z para PG III.'},
+              {term: '145', definition: 'Para embalagens de sólidos ou combinadas, indica a massa bruta máxima permitida em kg. Para embalagens únicas de líquidos, indica a densidade relativa máxima permitida.'},
+              {term: 'S', definition: 'Indica que a embalagem é para Sólidos ou para embalagens internas. Para líquidos, a pressão do teste hidráulico em kPa seria mostrada aqui.'},
               {term: '23', definition: 'Os dois últimos dígitos do ano de fabricação.'},
               {term: 'USA', definition: 'O código do país que autorizou a marcação.'},
               {term: 'M1234', definition: 'Código de identificação da agência de testes ou do fabricante.'}
           ]}] },
           { id: "6.3", title: "Requisitos para Embalagens", blocks: [{ type: "paragraph", content: "As embalagens devem ser fabricadas sob um programa de garantia de qualidade. Os materiais devem ser compatíveis com o conteúdo, e os fechos devem ser projetados para resistir às condições de transporte sem vazar. Para caixas de papelão (4G), é crucial que sejam protegidas da umidade, pois a água pode comprometer sua integridade estrutural." }] },
           { id: "6.4", title: "Requisitos de Teste de Performance", blocks: [{ type: "paragraph", content: "Protótipos de cada design de embalagem devem passar por testes rigorosos antes de serem autorizados. Os testes são projetados para simular as tensões do transporte." }] },
-          { id: "6.4.1", title: "Teste de Queda (Drop Test)", blocks:[{ type: "paragraph", content: "As embalagens são enchidas e derrubadas em várias orientações para testar sua resistência ao impacto. A altura da queda depende do Grupo de Embalagem:" }, {type: 'table', content: { headers: ["Grupo de Embalagem", "Altura de Queda"], rows: [["I (Alto Risco)", "1.2 m"], ["II (Médio Risco)", "1.2 m"], ["III (Baixo Risco)", "1.2 m"]]}}, {type: 'note', content: {title: "Nota para Transporte Aéreo", text: "Note que, para transporte aéreo, a altura de queda para os Grupos de Embalagem II e III é harmonizada em 1.2 m para a maioria das substâncias, refletindo condições de manuseio mais severas, ao contrário de outros modais que podem usar 0.8 m."}}] }, 
+          { id: "6.4.1", title: "Teste de Queda (Drop Test)", blocks:[{ type: "paragraph", content: "As embalagens são enchidas com um substituto (água para líquidos, areia para sólidos) e derrubadas sobre uma superfície rígida e não resiliente. A altura da queda depende do Grupo de Embalagem:" }, {type: 'table', content: { headers: ["Grupo de Embalagem", "Altura de Queda"], rows: [["I (Alto Risco)", "1.2 m"], ["II (Médio Risco)", "1.2 m"], ["III (Baixo Risco)", "1.2 m"]]}}, {type: 'note', content: {title: "Nota para Transporte Aéreo", text: "A altura de queda para os Grupos de Embalagem II e III é harmonizada em 1.2 m para a maioria das substâncias no transporte aéreo, refletindo condições de manuseio mais severas, ao contrário de outros modais que podem usar 0.8 m."}}] }, 
           { id: "6.4.2", title: "Teste de Empilhamento (Stacking Test)", blocks:[{ type: "paragraph", content: "A embalagem deve suportar o peso de uma pilha de embalagens idênticas até uma altura de 3 metros por 24 horas, sem vazar ou deformar a ponto de reduzir sua eficácia." }] },
           { id: "6.4.3", title: "Teste de Pressão Hidráulica (Hydrostatic Pressure)", blocks:[{ type: "paragraph", content: "Embalagens para líquidos devem ser capazes de suportar uma pressão interna mínima (geralmente 95 kPa para transporte aéreo) sem vazar. Este teste simula as diferenças de pressão em altitude." }] },
           { id: "6.4.4", title: "Teste de Estanqueidade (Leakproofness Test)", blocks:[{ type: "paragraph", content: "Todas as embalagens para líquidos devem ser testadas com uma baixa pressão de ar para garantir que não haja vazamentos nos fechos ou no corpo da embalagem."}] }
@@ -625,16 +793,16 @@ export const DGR_CHAPTERS: DGRChapter[] = [
       sections: [
           { id: "7.0", title: "Responsabilidade do Expedidor", blocks: [{ type: "paragraph", content: "O expedidor é responsável por todas as marcas e etiquetas necessárias em cada volume." }] },
           { id: "7.1", title: "Marcação", blocks: [{ type: "paragraph", content: "Cada volume contendo mercadorias perigosas deve ser marcado de forma durável e legível com informações essenciais. As marcações devem resistir à exposição ao clima sem redução substancial de sua eficácia." }] },
-          { id: "7.1.1", title: "Número UN e Nome Apropriado", blocks:[{type: "paragraph", content:"O UN Number e o Proper Shipping Name devem ser marcados em cada volume."}]},
+          { id: "7.1.1", title: "Número UN e Nome Apropriado", blocks:[{type: "paragraph", content:"O UN Number e o Proper Shipping Name devem ser marcados em cada volume. O tamanho mínimo da marcação é de 12 mm de altura, a menos que o pacote seja muito pequeno."}]},
           { id: "7.1.2", title: "Endereços", blocks:[{type: "paragraph", content:"Nome e endereço completo do expedidor e do destinatário."}]},
           { id: "7.1.3", title: "Marcas de Especificação de Embalagem", blocks:[{ type: "paragraph", content: "A marca de especificação UN deve ser durável, legível e visível." }]},
           { id: "7.1.4", title: "Requisitos de Idioma", blocks: [{ type: "paragraph", content: "Salvo disposição em contrário, todas as marcações devem estar em inglês." }] },
           { id: "7.1.5", title: "Marcas de Quantidade Limitada e Excepcionada", blocks: [{ type: "paragraph", content: "Requisitos específicos de marcação para volumes preparados sob as provisões de LQ e EQ." }] },
-          { id: "7.1.6", title: "Outras Marcas", blocks: [{ type: "paragraph", content: "Cobre marcas para Baterias de Lítio, Substâncias Perigosas ao Meio Ambiente, Material Magnetizado, etc." }] },
+          { id: "7.1.6", title: "Outras Marcas", blocks: [{ type: "paragraph", content: "Cobre marcas para Baterias de Lítio, Substâncias Perigosas ao Meio Ambiente, Material Magnetizado, etc." }, {type: "visual-mark", content: {type: 'lithium-battery', data: {unNumbers: '3480', phone: '+1 555-123-4567'}, caption: 'Marca de Bateria de Lítio'}}]},
           { id: "7.2", title: "Etiquetagem", blocks: [{ type: "paragraph", content: "Etiquetas de risco (Losangos 100x100mm) devem ser afixadas para indicar o risco primário e, se aplicável, os riscos secundários." }] },
           { id: "7.2.1", title: "Aplicabilidade das Etiquetas", blocks:[{ type: "paragraph", content: "Descreve quando as etiquetas de risco primário e secundário são necessárias." }]},
-          { id: "7.2.2", title: "Especificações das Etiquetas", blocks:[{ type: "paragraph", content: "As etiquetas devem ter dimensões, cores e símbolos específicos." }]},
-          { id: "7.2.3", title: "Posicionamento das Etiquetas", blocks:[{ type: "paragraph", content: "As etiquetas devem ser afixadas em uma superfície do volume, perto da marca do Nome Apropriado, e não devem ser cobertas ou obscurecidas." }]},
+          { id: "7.2.2", title: "Especificações das Etiquetas", blocks:[{ type: "paragraph", content: "As etiquetas devem ter dimensões, cores e símbolos específicos. O tamanho padrão é um losango de 100 mm x 100 mm." }]},
+          { id: "7.2.3", title: "Posicionamento das Etiquetas", blocks:[{ type: "paragraph", content: "As etiquetas devem ser afixadas em uma superfície do volume, perto da marca do Nome Apropriado, e não devem ser cobertas ou obscurecidas. Para cilindros, a etiqueta pode ser fixada no ombro." }]},
           { id: "7.3", title: "Etiquetas de Manuseio", blocks: [{ type: "paragraph", content: "Além das etiquetas de risco, etiquetas de manuseio são necessárias para fornecer instruções sobre como o volume deve ser manuseado e estivado." }, { type: "visual-mark", content: { type: 'cargo-only', caption: 'Cargo Aircraft Only' } }, { type: "visual-mark", content: { type: 'orientation', caption: 'Setas de Orientação' } } ] }
       ]
   },
@@ -647,13 +815,13 @@ export const DGR_CHAPTERS: DGRChapter[] = [
       sections: [
           { id: "8.0", title: "Aplicabilidade", blocks: [{ type: "paragraph", content: "Salvo exceções (como Quantidades Limitadas Seção II, Gelo Seco como refrigerante, etc.), uma Shipper's Declaration for Dangerous Goods (DGD) preenchida e assinada é necessária para cada remessa de mercadorias perigosas." }] },
           { id: "8.1", title: "Shipper's Declaration (DGD)", blocks: [{ type: "paragraph", content: "A DGD é um documento legal onde o expedidor certifica que a remessa está em total conformidade com os regulamentos da IATA. Deve ser apresentada em duas cópias (uma para o operador de origem, outra para acompanhar a carga)." }] },
-          { id: "8.1.1", title: "Preenchimento da DGD", blocks:[{ type: "paragraph", content: "A DGD deve ser preenchida com precisão. A seção de identificação da mercadoria perigosa deve seguir uma sequência estrita:" }, {type: 'definition-list', content: [
+          { id: "8.1.1", title: "Preenchimento da DGD", blocks:[{ type: "paragraph", content: "A DGD deve ser preenchida com precisão e sem erros. As correções devem ser feitas de forma que a alteração original permaneça legível. A seção de identificação da mercadoria perigosa deve seguir uma sequência estrita:" }, {type: 'definition-list', content: [
               {term: 'UN Number', definition: 'O número de 4 dígitos precedido por "UN".'},
               {term: 'Proper Shipping Name (PSN)', definition: 'O nome em negrito da Tabela 4.2. Para entradas N.O.S., o nome técnico deve ser adicionado entre parênteses.'},
               {term: 'Class or Division', definition: 'A classe de risco primária, seguida pelo risco subsidiário entre parênteses, se houver.'},
               {term: 'Packing Group', definition: 'O grupo de embalagem (I, II ou III), se aplicável.'}
           ]}, { type: "note", content: { title: "Exemplo de Sequência", text: "UN 1263, Paint, 3, PG II" } }] },
-          { id: "8.1.2", title: "Quantidade e Tipo de Embalagem", blocks:[{ type: "paragraph", content: "Esta coluna deve detalhar o número de volumes, o tipo de embalagem e a quantidade líquida por volume. Exemplo: '1 Fibreboard Box x 5 L'. Para overpacks, a declaração 'Overpack Used' é obrigatória." }] },
+          { id: "8.1.2", title: "Quantidade e Tipo de Embalagem", blocks:[{ type: "paragraph", content: "Esta coluna deve detalhar o número de volumes, o tipo de embalagem (usando códigos UN ou descrição completa, ex: '1 Fibreboard Box') e a quantidade líquida por volume. Para overpacks, a declaração 'Overpack Used' é obrigatória." }] },
           { id: "8.1.3", title: "Packing Instruction & Autorização", blocks:[{ type: "paragraph", content: "O número da Instrução de Embalagem (ex: 965) deve ser declarado. A coluna 'Autorização' é usada para Disposições Especiais, aprovações de autoridades competentes ou outras informações relevantes." }] },
           { id: "8.1.4", title: "Declaração e Assinatura", blocks:[{ type: "paragraph", content: "O expedidor (ou seu agente designado) deve assinar, datar e indicar o local da assinatura, certificando a conformidade da remessa." }] },
           { id: "8.1.5", title: "Exemplo de DGD Preenchida", blocks:[{ type: "note", content: { title: "Exemplo de Declaração para UN 1263", text: `
@@ -694,14 +862,16 @@ Signature: (Assinatura de J. da Silva)
       icon: Plane,
       sections: [
           { id: "9.1", title: "Aceitação", blocks: [ { type: "paragraph", content: "O operador não deve aceitar uma remessa de mercadorias perigosas a menos que tenha sido inspecionada por pessoal treinado, usando um checklist, para garantir que a documentação e os volumes estejam em total conformidade." } ] },
-          { id: "9.1.1", title: "Checklist de Aceitação", blocks:[{ type: "paragraph", content: "O checklist é uma ferramenta sistemática para verificar cada requisito regulatório. A falha em qualquer item resulta na recusa da remessa." }, {type: 'checklist', content: {id: 'acceptance-checklist', title: 'Checklist de Aceitação (Exemplo Simplificado)', items: [
+          { id: "9.1.1", title: "Checklist de Aceitação", blocks:[{ type: "paragraph", content: "O checklist é uma ferramenta sistemática para verificar cada requisito regulatório. A falha em qualquer item resulta na recusa da remessa." }, {type: 'checklist', content: {id: 'acceptance-checklist', title: 'Checklist de Aceitação Detalhado', items: [
               {id: 'c1', text: 'Documentação: DGD e AWB estão consistentes e corretamente preenchidos?', reference: '8.1, 8.2'},
               {id: 'c2', text: 'Idioma: Documentos e marcações estão em inglês?', reference: '8.1.1'},
-              {id: 'c3', text: 'Marcações: Todos os volumes possuem UN Number, PSN e endereços completos?', reference: '7.1'},
-              {id: 'c4', text: 'Etiquetas: Etiquetas de risco primário/subsidiário e de manuseio estão corretas e visíveis?', reference: '7.2, 7.3'},
-              {id: 'c5', text: 'Embalagem: O tipo de embalagem corresponde ao declarado e está em boas condições (sem vazamentos ou danos)?', reference: '5.0.2'},
-              {id: 'c6', text: 'Quantidade: A quantidade por volume está dentro dos limites da Instrução de Embalagem aplicável?', reference: '4.2'},
-              {id: 'c7', text: 'Variações: Todas as variações de Estado e Operador aplicáveis foram cumpridas?', reference: '2.8'}
+              {id: 'c3', text: 'Tipo de Embarque: A remessa está limitada a "Cargo Aircraft Only" se necessário?', reference: 'Colunas J/L Tabela 4.2'},
+              {id: 'c4', text: 'Marcações: Todos os volumes possuem UN Number, PSN, endereços completos e marca de especificação UN (se aplicável)?', reference: '7.1'},
+              {id: 'c5', text: 'Etiquetas: Etiquetas de risco primário/subsidiário e de manuseio estão corretas, visíveis e afixadas adequadamente?', reference: '7.2, 7.3'},
+              {id: 'c6', text: 'Embalagem: O tipo de embalagem corresponde ao declarado e está em boas condições (sem vazamentos ou danos)?', reference: '5.0.2'},
+              {id: 'c7', text: 'Quantidade: A quantidade por volume está dentro dos limites da Instrução de Embalagem aplicável?', reference: '4.2'},
+              {id: 'c8', text: 'Variações: Todas as variações de Estado e Operador aplicáveis foram cumpridas?', reference: '2.8'},
+              {id: 'c9', text: 'Overpack: Se usado, está corretamente marcado com "OVERPACK" e todas as marcações internas estão reproduzidas?', reference: '5.0.3'}
           ]}}] }, 
           { id: "9.2", title: "Armazenamento", blocks: [ { type: "paragraph", content: "Volumes de mercadorias perigosas devem ser armazenados em locais seguros, protegidos do clima e de danos, e segregados de materiais incompatíveis e de áreas de alto tráfego." } ] },
           { id: "9.3", title: "Segregação", blocks: [ { type: "paragraph", content: "Mercadorias perigosas incompatíveis não devem ser carregadas na aeronave de forma que possam vazar e se misturar perigosamente. A segregação também se aplica ao armazenamento." } ] },
@@ -759,34 +929,10 @@ Signature: (Assinatura de J. da Silva)
               "Para Classe 7: Índice de Transporte (TI), Categoria e Dimensões",
               "Confirmação de que nenhum pacote danificado foi carregado."
           ]}}] },
-          { 
-              id: "9.6", 
-              title: "Fornecimento de Informações",
-              blocks: [
-                  { type: "paragraph", content: "Informações cruciais sobre mercadorias perigosas devem ser comunicadas a várias partes para garantir a segurança em todas as fases do transporte." }
-              ]
-          },
-          { 
-              id: "9.6.1", 
-              title: "Informação aos Passageiros", 
-              blocks: [
-                  { type: "paragraph", content: "Os operadores aéreos devem garantir que avisos sejam exibidos de forma clara e proeminente nos aeroportos (em áreas de check-in, venda de passagens, portões de embarque) e em seus websites. Esses avisos informam aos passageiros sobre os tipos de mercadorias perigosas que são estritamente proibidas em sua bagagem de mão e despachada." }
-              ]
-          },
-          { 
-              id: "9.6.2", 
-              title: "Informação a Funcionários", 
-              blocks: [
-                  { type: "paragraph", content: "Manuais operacionais e instruções de emergência devem estar prontamente disponíveis para todos os funcionários envolvidos no manuseio de carga. O NOTOC (Notification to Pilot-in-Command) é a principal fonte de informação para a tripulação de voo e para o pessoal de terra responsável pelo carregamento." }
-              ]
-          },
-          { 
-              id: "9.6.3", 
-              title: "Informação em Emergência em Voo", 
-              blocks: [
-                  { type: "paragraph", content: "No evento de uma emergência em voo, o piloto-em-comando deve, assim que a situação permitir, informar a unidade de controle de tráfego aéreo (ATC) apropriada sobre as mercadorias perigosas a bordo. A informação deve ser clara e concisa, incluindo, se possível, o Nome Apropriado para Embarque, Classe, Número UN, quantidade e localização na aeronave." }
-              ]
-          },
+          { id: "9.6", title: "Fornecimento de Informações", blocks: [ { type: "paragraph", content: "Informações cruciais sobre mercadorias perigosas devem ser comunicadas a várias partes para garantir a segurança em todas as fases do transporte." } ] },
+          { id: "9.6.1", title: "Informação aos Passageiros", blocks: [{ type: "paragraph", content: "Os operadores aéreos devem garantir que avisos sejam exibidos de forma clara e proeminente nos aeroportos (em áreas de check-in, venda de passagens, portões de embarque) e em seus websites. Esses avisos informam aos passageiros sobre os tipos de mercadorias perigosas que são estritamente proibidas em sua bagagem de mão e despachada." }] },
+          { id: "9.6.2", title: "Informação a Funcionários", blocks: [{ type: "paragraph", content: "Manuais operacionais e instruções de emergência devem estar prontamente disponíveis para todos os funcionários envolvidos no manuseio de carga. O NOTOC (Notification to Pilot-in-Command) é a principal fonte de informação para a tripulação de voo e para o pessoal de terra responsável pelo carregamento." }] },
+          { id: "9.6.3", title: "Informação em Emergência em Voo", blocks: [{ type: "paragraph", content: "No evento de uma emergência em voo, o piloto-em-comando deve, assim que a situação permitir, informar a unidade de controle de tráfego aéreo (ATC) apropriada sobre as mercadorias perigosas a bordo. A informação deve ser clara e concisa, incluindo, se possível, o Nome Apropriado para Embarque, Classe, Número UN, quantidade e localização na aeronave." }] },
           { id: "9.7", title: "Retenção de Documentos", blocks: [{ type: "paragraph", content: "O operador deve reter uma cópia da DGD, do checklist de aceitação e do NOTOC por um período mínimo de três meses após o voo." }] }
       ]
   },
