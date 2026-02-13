@@ -1,6 +1,5 @@
-
 import React, { useState, useRef, useEffect } from 'react';
-import { X, Sparkles, Send, Loader2, Bot, User, Globe, ExternalLink, ShieldCheck, Box, Plane, AlertTriangle, FileCheck, Scale, MapPin } from 'lucide-react';
+import { X, Sparkles, Send, Loader2, Bot, User, Globe, ExternalLink, ShieldCheck, Box, Plane, AlertTriangle, FileCheck, Scale, MapPin, Copy, Check } from 'lucide-react';
 import { queryGemini, analyzeShipment, GroundingSource } from '../services/geminiService';
 
 interface AISearchModalProps {
@@ -56,6 +55,7 @@ const AISearchModal: React.FC<AISearchModalProps> = ({ isOpen, onClose }) => {
   const [query, setQuery] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [copiedId, setCopiedId] = useState<number | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -126,9 +126,50 @@ const AISearchModal: React.FC<AISearchModalProps> = ({ isOpen, onClose }) => {
       }]);
   };
 
+  const copyToClipboard = (text: string, id: number) => {
+      navigator.clipboard.writeText(text);
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  const renderAnalysisContent = (content: string, msgIndex: number) => {
+      // Split content to find "Ação Requerida" or "Passo-a-passo"
+      const parts = content.split(/###\s*🛠️?\s*AÇÃO\s*(?:REQUERIDA|CORRETIVA).*/i);
+      const mainContent = parts[0];
+      const actionContent = parts[1];
+
+      return (
+          <div className="space-y-4">
+              <div className="prose prose-sm max-w-none text-gray-700 whitespace-pre-wrap">
+                  {mainContent}
+              </div>
+              
+              {actionContent && (
+                  <div className="bg-amber-50 border-2 border-amber-200 rounded-xl p-4 shadow-sm animate-fade-in relative group">
+                      <div className="flex items-center mb-2 text-amber-800">
+                          <AlertTriangle className="w-5 h-5 mr-2" />
+                          <h4 className="font-bold uppercase tracking-tight text-sm">Plano de Ação Corretiva</h4>
+                      </div>
+                      <div className="text-sm text-amber-900 font-medium">
+                          {actionContent.trim()}
+                      </div>
+                  </div>
+              )}
+
+              <button 
+                onClick={() => copyToClipboard(content, msgIndex)}
+                className="flex items-center text-[10px] font-bold text-gray-400 hover:text-latam-indigo transition-colors uppercase tracking-widest mt-2"
+              >
+                  {copiedId === msgIndex ? <Check className="w-3 h-3 mr-1" /> : <Copy className="w-3 h-3 mr-1" />}
+                  {copiedId === msgIndex ? 'Copiado para o Clipboard' : 'Copiar Relatório de Auditoria'}
+              </button>
+          </div>
+      );
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-latam-indigo/60 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl overflow-hidden flex flex-col h-[90vh] border border-white/20">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl overflow-hidden flex flex-col h-[90vh] border border-white/20">
         
         {/* Header with Tabs */}
         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-white shrink-0">
@@ -169,7 +210,7 @@ const AISearchModal: React.FC<AISearchModalProps> = ({ isOpen, onClose }) => {
             
             {/* Sidebar for Operations Mode */}
             {mode === 'OPERATIONS' && (
-                <div className="w-1/3 bg-gray-50 border-r border-gray-200 p-6 flex flex-col overflow-y-auto shrink-0 shadow-inner">
+                <div className="w-[380px] bg-gray-50 border-r border-gray-200 p-6 flex flex-col overflow-y-auto shrink-0 shadow-inner">
                     <h3 className="font-bold text-gray-700 mb-4 flex items-center">
                         <Box className="w-4 h-4 mr-2 text-latam-indigo" />
                         Dados do Embarque
@@ -180,7 +221,7 @@ const AISearchModal: React.FC<AISearchModalProps> = ({ isOpen, onClose }) => {
                             <label className="block text-xs font-bold text-gray-600 mb-1.5">Itens (UN, Qtd, Tipo)</label>
                             <div className="relative">
                                 <textarea 
-                                    className="w-full p-3 pr-8 border border-gray-300 rounded-lg text-sm bg-white text-gray-900 focus:ring-2 focus:ring-latam-indigo/20 focus:border-latam-indigo min-h-[120px] shadow-sm placeholder-gray-400"
+                                    className="w-full p-3 pr-8 border border-gray-300 rounded-lg text-sm bg-white text-gray-900 focus:ring-2 focus:ring-latam-indigo/20 focus:border-latam-indigo min-h-[140px] shadow-sm placeholder-gray-400"
                                     placeholder="Ex: 5L de UN 1263 Paint e 2kg de UN 3480 Lithium Batteries..."
                                     value={scenarioData.unNumbers}
                                     onChange={(e) => setScenarioData(prev => ({...prev, unNumbers: e.target.value}))}
@@ -254,6 +295,7 @@ const AISearchModal: React.FC<AISearchModalProps> = ({ isOpen, onClose }) => {
                             <FileCheck className="w-5 h-5 mr-3" />
                             Auditar Embarque
                         </button>
+                        <p className="text-[10px] text-center text-gray-400 mt-3 font-medium uppercase tracking-widest">Verificação em tempo real via Grounding</p>
                     </div>
                 </div>
             )}
@@ -261,6 +303,12 @@ const AISearchModal: React.FC<AISearchModalProps> = ({ isOpen, onClose }) => {
             {/* Main Chat/Results Area */}
             <div className="flex-1 flex flex-col bg-white overflow-hidden">
                 <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                    {messages.length === 0 && mode === 'CONSULTANT' && (
+                        <div className="h-full flex flex-col items-center justify-center text-center opacity-40">
+                            <Sparkles className="w-12 h-12 mb-4 text-latam-indigo" />
+                            <p className="text-gray-500 font-medium max-w-xs">Faça perguntas complexas sobre o IATA DGR 2026. A IA verificará fontes em tempo real.</p>
+                        </div>
+                    )}
                     {messages.map((msg, index) => (
                         <div key={index} className={`flex items-start gap-4 ${msg.role === 'user' ? 'justify-end' : ''}`}>
                             {msg.role === 'assistant' && (
@@ -268,10 +316,16 @@ const AISearchModal: React.FC<AISearchModalProps> = ({ isOpen, onClose }) => {
                                     <Bot className="w-5 h-5" />
                                 </div>
                             )}
-                            <div className={`max-w-xl p-4 rounded-2xl ${msg.role === 'user' ? 'bg-gray-100 text-gray-800 rounded-br-none' : 'bg-white border border-gray-100 text-gray-700 rounded-bl-none shadow-sm'}`}>
-                                <div className="prose prose-sm max-w-none text-gray-700">
-                                    <div className="whitespace-pre-wrap">{msg.content}</div>
-                                </div>
+                            <div className={`max-w-2xl p-4 rounded-2xl ${msg.role === 'user' ? 'bg-gray-100 text-gray-800 rounded-br-none' : 'bg-white border border-gray-100 text-gray-700 rounded-bl-none shadow-sm'}`}>
+                                
+                                {msg.type === 'analysis' && msg.role === 'assistant' ? (
+                                    renderAnalysisContent(msg.content, index)
+                                ) : (
+                                    <div className="prose prose-sm max-w-none text-gray-700">
+                                        <div className="whitespace-pre-wrap">{msg.content}</div>
+                                    </div>
+                                )}
+
                                 {msg.sources && msg.sources.length > 0 && (
                                     <div className="mt-4 pt-3 border-t border-gray-100">
                                         <h4 className="text-xs font-bold text-gray-400 uppercase mb-2 flex items-center">
@@ -302,7 +356,7 @@ const AISearchModal: React.FC<AISearchModalProps> = ({ isOpen, onClose }) => {
                             </div>
                             <div className="p-4 rounded-2xl bg-white border border-gray-100 rounded-bl-none shadow-sm flex items-center space-x-2">
                                 <Loader2 className="w-4 h-4 animate-spin text-gray-500" />
-                                <span className="text-sm text-gray-500">Analisando...</span>
+                                <span className="text-sm text-gray-500">Executando Auditoria Live...</span>
                             </div>
                         </div>
                     )}
