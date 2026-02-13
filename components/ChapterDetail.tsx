@@ -137,17 +137,85 @@ const ChapterDetail: React.FC<ChapterDetailProps> = ({
   };
 
   const openTableInNewWindow = (tableData: DGRTable) => {
-    const headerRow = tableData.headers.map((h, i) => `<th class="p-2 border" onclick="sortTable(${i})">${h}</th>`).join('');
-    
-    const filterRow = tableData.headers.map((h, i) => 
-        `<th class="p-1 border bg-white"><input type="text" class="w-full p-1 text-xs border rounded col-filter" data-col="${i}" oninput="filterTable()" placeholder="Filtrar ${h}..."></th>`
-    ).join('');
+    const isMatrix = tableData.type === 'matrix';
+    const isFilterable = !isMatrix;
 
-    const bodyRows = tableData.rows.map((row, i) => 
-        `<tr class="${i % 2 === 0 ? '' : 'bg-gray-50'} hover:bg-yellow-50">
-            ${row.map(c => `<td class="p-2 border">${c === true ? 'SIM' : c === false ? 'NÃO' : c}</td>`).join('')}
-        </tr>`
+    const headerRow = tableData.headers.map((h, i) => 
+        `<th class="p-2 border bg-gray-200" onclick="sortTable(${i})">${h}</th>`
     ).join('');
+    
+    const filterRow = isFilterable ? `<tr>${tableData.headers.map((h, i) => 
+        `<th class="p-1 border bg-white"><input type="text" class="w-full p-1 text-xs border rounded col-filter" data-col="${i}" oninput="filterTable()" placeholder="Filtrar ${h}..."></th>`
+    ).join('')}</tr>` : '';
+
+    let bodyRows = tableData.rows.map((row, i) => {
+        const rowContent = row.map((cell, cellIndex) => {
+            const content = cell === true ? 'SIM' : cell === false ? 'NÃO' : cell;
+            
+            if (isMatrix && cellIndex === 0) {
+                return `<th class="p-2 border font-bold bg-gray-100">${content}</th>`;
+            }
+            
+            const cellClasses = `p-2 border text-center ${cell === true ? 'font-bold text-red-600' : ''}`;
+            return `<td class="${cellClasses}">${content}</td>`;
+        }).join('');
+
+        return `<tr class="${i % 2 === 0 ? '' : 'bg-gray-50'} hover:bg-yellow-50">${rowContent}</tr>`;
+    }).join('');
+
+    let scriptContent = `
+        let sortState = {};
+        function sortTable(colIndex) {
+            const tbody = document.getElementById('tbody');
+            const rows = Array.from(tbody.rows);
+            const dir = sortState[colIndex] === 'asc' ? 'desc' : 'asc';
+            sortState = { [colIndex]: dir };
+            rows.sort((a, b) => {
+                const valA = a.cells[colIndex].textContent.trim();
+                const valB = b.cells[colIndex].textContent.trim();
+                
+                const boolA = valA === 'SIM' ? 1 : (valA === 'NÃO' ? 0 : -1);
+                const boolB = valB === 'SIM' ? 1 : (valB === 'NÃO' ? 0 : -1);
+                if (boolA !== -1 && boolB !== -1) {
+                    return (boolA - boolB) * (dir === 'asc' ? 1 : -1);
+                }
+                
+                return valA.localeCompare(valB, undefined, { numeric: true }) * (dir === 'asc' ? 1 : -1);
+            });
+            rows.forEach(row => tbody.appendChild(row));
+        }
+    `;
+
+    if (isFilterable) {
+        scriptContent = `
+            const filterInputs = document.querySelectorAll('.col-filter');
+            function clearFilters() {
+                filterInputs.forEach(input => input.value = '');
+                filterTable();
+            }
+            function filterTable() {
+                const filters = Array.from(filterInputs).map(input => ({
+                    col: parseInt(input.dataset.col),
+                    value: input.value.toLowerCase()
+                }));
+                const tbody = document.getElementById('tbody');
+                const rows = tbody.getElementsByTagName('tr');
+                for (let r of rows) {
+                    let isVisible = true;
+                    for (const filter of filters) {
+                        if (filter.value) {
+                            const cell = r.cells[filter.col];
+                            if (cell && !cell.textContent.toLowerCase().includes(filter.value)) {
+                                isVisible = false;
+                                break;
+                            }
+                        }
+                    }
+                    r.style.display = isVisible ? '' : 'none';
+                }
+            }
+        ` + scriptContent;
+    }
 
     const htmlContent = `
         <!DOCTYPE html>
@@ -163,66 +231,21 @@ const ChapterDetail: React.FC<ChapterDetailProps> = ({
             </style>
         </head>
         <body class="bg-gray-100 p-6 flex flex-col h-screen">
-            <div class="bg-white p-4 shadow rounded-t flex justify-between items-center shrink-0">
+            <div class="bg-white p-4 shadow rounded-t flex justify-between items-center shrink-0 z-20">
                 <h1 class="font-bold text-lg">${tableData.caption || 'Tabela'}</h1>
-                <button onclick="clearFilters()" class="text-xs font-medium text-blue-600 hover:underline">Limpar Filtros</button>
+                ${isFilterable ? `<button onclick="clearFilters()" class="text-xs font-medium text-blue-600 hover:underline">Limpar Filtros</button>` : ''}
             </div>
             <div class="flex-grow overflow-auto bg-white shadow rounded-b min-h-0">
                 <table id="dgr-table" class="w-full text-left border-collapse text-sm">
-                    <thead class="bg-gray-200">
+                    <thead class="bg-gray-300">
                         <tr>${headerRow}</tr>
-                        <tr>${filterRow}</tr>
+                        ${filterRow}
                     </thead>
                     <tbody id="tbody">${bodyRows}</tbody>
                 </table>
+                ${tableData.footnotes ? `<div class="p-4 text-xs text-gray-500 bg-gray-50 border-t">${tableData.footnotes.join('<br>')}</div>` : ''}
             </div>
-            <script>
-                const filterInputs = document.querySelectorAll('.col-filter');
-                function clearFilters() {
-                    filterInputs.forEach(input => input.value = '');
-                    filterTable();
-                }
-                function filterTable() {
-                    const filters = Array.from(filterInputs).map(input => ({
-                        col: parseInt(input.dataset.col),
-                        value: input.value.toLowerCase()
-                    }));
-                    const tbody = document.getElementById('tbody');
-                    const rows = tbody.getElementsByTagName('tr');
-                    for (let r of rows) {
-                        let isVisible = true;
-                        for (const filter of filters) {
-                            if (filter.value) {
-                                const cell = r.cells[filter.col];
-                                if (cell && !cell.textContent.toLowerCase().includes(filter.value)) {
-                                    isVisible = false;
-                                    break;
-                                }
-                            }
-                        }
-                        r.style.display = isVisible ? '' : 'none';
-                    }
-                }
-                let sortState = {};
-                function sortTable(colIndex) {
-                    const tbody = document.getElementById('tbody');
-                    const rows = Array.from(tbody.rows);
-                    const dir = sortState[colIndex] === 'asc' ? 'desc' : 'asc';
-                    sortState = { [colIndex]: dir };
-                    rows.sort((a, b) => {
-                        const valA = a.cells[colIndex].textContent.trim();
-                        const valB = b.cells[colIndex].textContent.trim();
-                        // Special handling for SIM/NÃO
-                        const boolA = valA === 'SIM' ? 1 : (valA === 'NÃO' ? 0 : -1);
-                        const boolB = valB === 'SIM' ? 1 : (valB === 'NÃO' ? 0 : -1);
-                        if (boolA !== -1 && boolB !== -1) {
-                            return (boolA - boolB) * (dir === 'asc' ? 1 : -1);
-                        }
-                        return valA.localeCompare(valB, undefined, { numeric: true }) * (dir === 'asc' ? 1 : -1);
-                    });
-                    rows.forEach(row => tbody.appendChild(row));
-                }
-            </script>
+            <script>${scriptContent}</script>
         </body>
         </html>
     `;
