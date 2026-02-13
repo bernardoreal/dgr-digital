@@ -7,7 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script>
-      // Shim básico para evitar erros de referência antes do build injetar os valores
       window.process = window.process || { env: {} };
       
       tailwind.config = {
@@ -47,37 +46,15 @@
       }
     </script>
     <style>
-      body {
-        background-color: #F8FAFC;
-        color: #0F172A;
-      }
-      ::-webkit-scrollbar {
-        width: 8px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #94a3b8;
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #64748b;
-      }
-      .parallax-bg {
-        background-attachment: fixed;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover
-      }
-      /* Disable parallax on mobile to prevent rendering issues and improve performance */
-      @media (max-width: 768px) {
-        .parallax-bg {
-          background-attachment: scroll;
-        }
-      }
+      body { background-color: #F8FAFC; color: #0F172A; }
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-track { background: #f1f1f1; }
+      ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+      .parallax-bg { background-attachment: fixed; background-position: center; background-repeat: no-repeat; background-size: cover; }
+      @media (max-width: 768px) { .parallax-bg { background-attachment: scroll; } }
     </style>
-  <script type="importmap">
+    <script type="importmap">
 {
   "imports": {
     "react/": "https://esm.sh/react@^19.2.4/",
@@ -90,7 +67,7 @@
   }
 }
 </script>
-</head>
+  </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
