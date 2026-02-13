@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { X, Sparkles, Send, Loader2, Bot, User, Globe, ExternalLink, ShieldCheck, Box, Plane, AlertTriangle, FileCheck, Scale, MapPin } from 'lucide-react';
 import { queryGemini, analyzeShipment, GroundingSource } from '../services/geminiService';
@@ -198,25 +199,21 @@ const AISearchModal: React.FC<AISearchModalProps> = ({ isOpen, onClose }) => {
                         </div>
 
                         <div>
-                            <label className="block text-xs font-bold text-gray-600 mb-1.5">Companhia Aérea (Carrier)</label>
-                            <div className="relative">
-                                <Plane className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                                <input 
-                                    type="text"
-                                    readOnly
-                                    className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg text-sm bg-gray-100 text-gray-500 font-semibold cursor-not-allowed select-none shadow-sm"
-                                    value="LATAM Airlines Group"
-                                />
-                            </div>
-                            <p className="text-[10px] text-gray-400 mt-1 pl-1">Variações do operador LA aplicadas automaticamente.</p>
+                            <label className="block text-xs font-bold text-gray-600 mb-1.5">Companhia Aérea</label>
+                            <input 
+                                type="text"
+                                readOnly
+                                value={scenarioData.airline}
+                                className="w-full p-3 border border-gray-300 rounded-lg text-sm bg-gray-100 text-gray-500 cursor-not-allowed shadow-sm"
+                            />
                         </div>
 
                         <div>
-                            <label className="block text-xs font-bold text-gray-600 mb-1.5">Destino (Rede LATAM)</label>
+                            <label className="block text-xs font-bold text-gray-600 mb-1.5">Aeroporto de Destino</label>
                             <div className="relative">
-                                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                                <select 
-                                    className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg text-sm bg-white text-gray-900 focus:ring-2 focus:ring-latam-indigo/20 focus:border-latam-indigo shadow-sm appearance-none cursor-pointer"
+                                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                <select
+                                    className="w-full appearance-none p-3 pl-10 border border-gray-300 rounded-lg text-sm bg-white text-gray-900 focus:ring-2 focus:ring-latam-indigo/20 focus:border-latam-indigo shadow-sm"
                                     value={scenarioData.destination}
                                     onChange={(e) => setScenarioData(prev => ({...prev, destination: e.target.value}))}
                                 >
@@ -226,174 +223,113 @@ const AISearchModal: React.FC<AISearchModalProps> = ({ isOpen, onClose }) => {
                                 </select>
                             </div>
                         </div>
-
+                        
                         <div>
-                            <label className="block text-xs font-bold text-gray-600 mb-1.5">Aeronave</label>
-                            <div className="grid grid-cols-2 gap-3">
-                                <button 
+                            <label className="block text-xs font-bold text-gray-600 mb-1.5">Tipo de Aeronave</label>
+                            <div className="flex space-x-2">
+                                <button
                                     onClick={() => setScenarioData(prev => ({...prev, type: 'PASSENGER'}))}
-                                    className={`p-3 rounded-lg border text-xs font-bold flex flex-col items-center justify-center transition-all ${scenarioData.type === 'PASSENGER' ? 'bg-latam-indigo text-white border-latam-indigo shadow-md ring-2 ring-indigo-200' : 'bg-white border-gray-200 text-gray-500 hover:bg-gray-50'}`}
+                                    className={`flex-1 p-3 rounded-lg text-sm font-bold border-2 transition-all flex items-center justify-center ${scenarioData.type === 'PASSENGER' ? 'bg-blue-100 border-blue-400 text-blue-800' : 'bg-white border-gray-300 text-gray-600 hover:border-gray-400'}`}
                                 >
-                                    <User className="w-5 h-5 mb-1.5" />
-                                    Passageiros (PAX)
+                                    <Plane className="w-4 h-4 mr-2" />
+                                    Passageiro
                                 </button>
-                                <button 
+                                <button
                                     onClick={() => setScenarioData(prev => ({...prev, type: 'CARGO'}))}
-                                    className={`p-3 rounded-lg border text-xs font-bold flex flex-col items-center justify-center transition-all ${scenarioData.type === 'CARGO' ? 'bg-orange-600 text-white border-orange-600 shadow-md ring-2 ring-orange-200' : 'bg-white border-gray-200 text-gray-500 hover:bg-gray-50'}`}
+                                    className={`flex-1 p-3 rounded-lg text-sm font-bold border-2 transition-all flex items-center justify-center ${scenarioData.type === 'CARGO' ? 'bg-orange-100 border-orange-400 text-orange-800' : 'bg-white border-gray-300 text-gray-600 hover:border-gray-400'}`}
                                 >
-                                    <Plane className="w-5 h-5 mb-1.5" />
-                                    Cargueiro (CAO)
+                                    <AlertTriangle className="w-4 h-4 mr-2" />
+                                    Cargueiro
                                 </button>
                             </div>
                         </div>
-
-                        <button 
+                    </div>
+                    
+                    <div className="mt-auto pt-6 border-t border-gray-200">
+                        <button
                             onClick={handleShipmentAudit}
-                            disabled={isLoading || !scenarioData.unNumbers || !scenarioData.destination}
-                            className="w-full py-4 bg-latam-coral text-white rounded-lg font-bold shadow-lg shadow-red-200 hover:bg-latam-coralHover transition-transform hover:scale-[1.02] disabled:opacity-50 disabled:scale-100 disabled:cursor-not-allowed mt-6 flex items-center justify-center text-sm"
+                            disabled={!scenarioData.unNumbers || !scenarioData.destination || isLoading}
+                            className="w-full bg-latam-indigo hover:bg-latam-indigoLight text-white px-6 py-4 rounded-xl font-bold text-lg shadow-lg shadow-indigo-200 disabled:bg-gray-300 disabled:shadow-none transition-all flex items-center justify-center"
                         >
-                            {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <ShieldCheck className="w-5 h-5 mr-2" />}
-                            Auditar Embarque LATAM
+                            <FileCheck className="w-5 h-5 mr-3" />
+                            Auditar Embarque
                         </button>
                     </div>
                 </div>
             )}
 
-            {/* Chat/Results Area */}
-            <div className={`flex-grow flex flex-col bg-gray-50/50 ${mode === 'OPERATIONS' ? 'w-2/3' : 'w-full'}`}>
-                <div className="flex-grow overflow-y-auto p-6 space-y-6">
-                    {messages.length === 0 && (
-                        <div className="flex flex-col items-center justify-center h-full text-center p-8 opacity-60">
-                        <div className="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-4 border border-gray-100">
-                            {mode === 'CONSULTANT' ? <Sparkles className="w-8 h-8 text-latam-indigo" /> : <FileCheck className="w-8 h-8 text-green-600" />}
-                        </div>
-                        <h3 className="text-lg font-bold text-gray-800 mb-2">
-                            {mode === 'CONSULTANT' ? 'Consultor Regulatório' : 'Validador de Embarque LATAM'}
-                        </h3>
-                        <p className="text-sm text-gray-500 max-w-xs leading-relaxed">
-                            {mode === 'CONSULTANT' 
-                                ? 'Faça perguntas sobre regras gerais, códigos UN ou embale. Conectado ao Google Search.'
-                                : 'Preencha os dados do embarque à esquerda para que a IA verifique variações LATAM, segregação e limites.'}
-                        </p>
-                        </div>
-                    )}
-
-                    {messages.map((msg, idx) => (
-                        <div key={idx} className={`flex items-start ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                        {msg.role === 'assistant' && (
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1 mr-3 shadow-sm border ${msg.type === 'analysis' ? 'bg-green-600 border-green-700' : 'bg-latam-indigo border-latam-indigoLight'} text-white`}>
-                                {msg.type === 'analysis' ? <ShieldCheck className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
-                            </div>
-                        )}
-                        
-                        <div className="max-w-[90%] flex flex-col">
-                            <div className={`
-                                p-4 rounded-2xl shadow-sm text-sm leading-relaxed
-                                ${msg.role === 'user' 
-                                ? 'bg-latam-indigo text-white rounded-br-none' 
-                                : 'bg-white text-gray-800 border border-gray-100 rounded-bl-none'}
-                            `}>
-                                <div className="prose prose-sm max-w-none">
-                                    <div className="whitespace-pre-line">{msg.content}</div>
+            {/* Main Chat/Results Area */}
+            <div className="flex-1 flex flex-col bg-white overflow-hidden">
+                <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                    {messages.map((msg, index) => (
+                        <div key={index} className={`flex items-start gap-4 ${msg.role === 'user' ? 'justify-end' : ''}`}>
+                            {msg.role === 'assistant' && (
+                                <div className="w-8 h-8 rounded-full bg-latam-indigo text-white flex items-center justify-center flex-shrink-0">
+                                    <Bot className="w-5 h-5" />
                                 </div>
+                            )}
+                            <div className={`max-w-xl p-4 rounded-2xl ${msg.role === 'user' ? 'bg-gray-100 text-gray-800 rounded-br-none' : 'bg-white border border-gray-100 text-gray-700 rounded-bl-none shadow-sm'}`}>
+                                <div className="prose prose-sm max-w-none text-gray-700">
+                                    <div className="whitespace-pre-wrap">{msg.content}</div>
+                                </div>
+                                {msg.sources && msg.sources.length > 0 && (
+                                    <div className="mt-4 pt-3 border-t border-gray-100">
+                                        <h4 className="text-xs font-bold text-gray-400 uppercase mb-2 flex items-center">
+                                            <Globe className="w-3 h-3 mr-1.5" /> Fontes Verificadas
+                                        </h4>
+                                        <div className="space-y-1.5">
+                                            {msg.sources.map((s, i) => (
+                                                <a key={i} href={s.uri} target="_blank" rel="noreferrer" className="flex items-start text-xs text-blue-600 hover:text-blue-800 bg-blue-50/50 hover:bg-blue-100 p-2 rounded-md transition-colors group">
+                                                    <ExternalLink className="w-3 h-3 mr-2 mt-0.5 flex-shrink-0" />
+                                                    <span className="truncate group-hover:underline">{s.title}</span>
+                                                </a>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
-
-                            {/* Grounding Sources (Citations) */}
-                            {msg.sources && msg.sources.length > 0 && (
-                                <div className="mt-2 ml-1 bg-white border border-gray-200 p-3 rounded-xl shadow-sm max-w-full animate-fade-in">
-                                    <div className="flex items-center justify-between text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 border-b border-gray-100 pb-1">
-                                        <span className="flex items-center"><Globe className="w-3 h-3 mr-1" /> Fontes Verificadas</span>
-                                    </div>
-                                    <div className="space-y-2">
-                                        {msg.sources.map((source, sIdx) => (
-                                            <a 
-                                                key={sIdx} 
-                                                href={source.uri} 
-                                                target="_blank" 
-                                                rel="noopener noreferrer"
-                                                className="flex items-start group p-1.5 hover:bg-gray-50 rounded transition-colors"
-                                            >
-                                                <ExternalLink className="w-3 h-3 text-latam-coral mr-2 mt-0.5 flex-shrink-0" />
-                                                <div className="flex flex-col overflow-hidden">
-                                                    <span className="text-xs font-semibold text-gray-700 group-hover:text-latam-indigo truncate">
-                                                        {source.title}
-                                                    </span>
-                                                    <span className="text-[10px] text-gray-400 truncate">
-                                                        {source.uri}
-                                                    </span>
-                                                </div>
-                                            </a>
-                                        ))}
-                                    </div>
+                            {msg.role === 'user' && (
+                                <div className="w-8 h-8 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center flex-shrink-0">
+                                    <User className="w-5 h-5" />
                                 </div>
                             )}
                         </div>
-
-                        {msg.role === 'user' && (
-                            <div className="w-8 h-8 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center flex-shrink-0 mt-1 ml-3 border border-gray-200">
-                            <User className="w-4 h-4" />
-                            </div>
-                        )}
-                        </div>
                     ))}
-
                     {isLoading && (
-                        <div className="flex items-start justify-start">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1 mr-3 shadow-sm ${mode === 'OPERATIONS' ? 'bg-green-600' : 'bg-latam-indigo'} text-white`}>
-                            {mode === 'OPERATIONS' ? <ShieldCheck className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
+                        <div className="flex items-start gap-4">
+                            <div className="w-8 h-8 rounded-full bg-latam-indigo text-white flex items-center justify-center flex-shrink-0">
+                                <Bot className="w-5 h-5" />
                             </div>
-                            <div className="bg-white p-4 rounded-2xl rounded-bl-none border border-gray-100 shadow-sm flex flex-col space-y-2">
-                                <div className="flex items-center space-x-3 text-gray-800 font-medium text-xs">
-                                    <Loader2 className="w-4 h-4 text-latam-coral animate-spin" />
-                                    <span>
-                                        {mode === 'OPERATIONS' ? 'Auditando Variações LATAM (Web)...' : 'Analisando...'}
-                                    </span>
-                                </div>
-                                {mode === 'OPERATIONS' && (
-                                    <div className="text-[10px] text-gray-400 pl-7 space-y-1">
-                                        <div>• Verificando Segregação (Tabela 9.3.A)</div>
-                                        <div>• Buscando Restrições da LATAM (LA)</div>
-                                        <div>• Validando Limites PAX/CAO</div>
-                                    </div>
-                                )}
+                            <div className="p-4 rounded-2xl bg-white border border-gray-100 rounded-bl-none shadow-sm flex items-center space-x-2">
+                                <Loader2 className="w-4 h-4 animate-spin text-gray-500" />
+                                <span className="text-sm text-gray-500">Analisando...</span>
                             </div>
                         </div>
                     )}
                     <div ref={messagesEndRef} />
                 </div>
 
-                {/* Footer Input - Only for Consultant Mode */}
+                {/* Input Area */}
                 {mode === 'CONSULTANT' && (
-                    <div className="p-4 bg-white border-t border-gray-100 shrink-0">
-                    <form onSubmit={handleSearch} className="relative flex items-center">
-                        <input
-                        ref={inputRef}
-                        type="text"
-                        value={query}
-                        onChange={(e) => setQuery(e.target.value)}
-                        placeholder="Digite o UN Number ou dúvida regulatória..."
-                        className="flex-grow pl-4 pr-24 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-latam-indigo/20 focus:border-latam-indigo focus:bg-white transition-all text-gray-800 placeholder-gray-400 shadow-inner"
-                        />
-                        <div className="absolute right-2 flex items-center space-x-1">
-                            {query && !isLoading && (
-                                <button
-                                    type="button"
-                                    onClick={() => setQuery('')}
-                                    className="p-2 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-lg"
-                                    title="Limpar"
-                                >
-                                    <X className="w-4 h-4" />
-                                </button>
-                            )}
-                            <button 
+                    <div className="p-4 border-t border-gray-100 bg-white shrink-0">
+                        <form onSubmit={handleSearch} className="relative">
+                            <input
+                                ref={inputRef}
+                                type="text"
+                                value={query}
+                                onChange={(e) => setQuery(e.target.value)}
+                                placeholder="Pergunte sobre regulamentação, UN numbers, ou variações..."
+                                className="w-full pl-5 pr-14 py-4 border border-gray-200 rounded-xl text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-latam-indigo/30 focus:border-latam-indigo"
+                                disabled={isLoading}
+                            />
+                            <button
                                 type="submit"
                                 disabled={isLoading || !query.trim()}
-                                className="p-2 bg-latam-indigo text-white rounded-lg hover:bg-latam-indigoLight disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg active:scale-95"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 bg-latam-indigo text-white p-2.5 rounded-lg shadow-md hover:bg-latam-indigoLight transition-all disabled:bg-gray-300 disabled:shadow-none"
                             >
-                                <Send className="w-4 h-4" />
+                                {isLoading ? <Loader2 className="w-5 h-5 animate-spin"/> : <Send className="w-5 h-5" />}
                             </button>
-                        </div>
-                    </form>
+                        </form>
                     </div>
                 )}
             </div>

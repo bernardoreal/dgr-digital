@@ -1,5 +1,5 @@
 
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, Type } from "@google/genai";
 
 export interface GroundingSource {
   title: string;
@@ -11,9 +11,13 @@ export interface AIResponse {
   sources: GroundingSource[];
 }
 
-const getClient = () => { if (!process.env.API_KEY) return null;
-    return new GoogleGenAI({ apiKey: process.env.API_KEY });
-};
+// Refactored to a standard function declaration to prevent potential parsing issues.
+function getClient() {
+  if (!process.env.API_KEY) {
+    return null;
+  }
+  return new GoogleGenAI({ apiKey: process.env.API_KEY });
+}
 
 export const queryGemini = async (userQuery: string): Promise<AIResponse> => {
   const ai = getClient();
@@ -57,7 +61,7 @@ export const queryGemini = async (userQuery: string): Promise<AIResponse> => {
       sources: []
     };
   }
-};
+}
 
 export const analyzeShipment = async (scenario: string): Promise<AIResponse> => {
     const ai = getClient();
@@ -78,19 +82,20 @@ export const analyzeShipment = async (scenario: string): Promise<AIResponse> => 
                 1. UN Number & Proper Shipping Name accuracy.
                 2. Packing Group & Quantity Limits (Is it allowed on Passenger Aircraft? Cargo Only?).
                 3. OPERATOR VARIATIONS: Search specifically for the Airline's current variation (e.g., "Lufthansa variation UN 3480", "Emirates restrictions Class 1").
-                4. SEGREGATION: If multiple items are listed, check Table 9.3.A.
+                4. SEGREGATION: If multiple UN numbers/Classes are listed, you MUST cross-reference their classes using IATA DGR Table 9.3.A and state if they are compatible or require segregation. An 'X' in the table means segregation is required. This is a critical safety check.
+                5. Q-VALUE CALCULATION: If applicable for multiple LQ items, briefly state if a Q-Value calculation is necessary.
                 
                 OUTPUT FORMAT (Markdown):
                 ## 🚦 VERDICT: [ACCEPTED / REJECTED / CONDITIONAL]
                 
                 ### 📋 Análise dos Itens
-                [List each item and its status]
+                [List each item and its individual compliance status]
                 
                 ### ⚠️ Restrições Críticas Encontradas
                 [List specific State/Operator variations found via Search, e.g., "LH-04 prohibits this..."]
                 
-                ### 📐 Cálculo de Segregação & Q-Value
-                [Brief check on compatibility and quantity limits]
+                ### 📐 Análise de Segregação
+                [State the result of the Table 9.3.A check. E.g., "UN 1263 (Classe 3) e UN 1760 (Classe 8) são compatíveis e não requerem segregação." OR "ALERTA: UN XXXX (Classe 5.1) e UN YYYY (Classe 3) requerem segregação."]
                 
                 ### 📝 Ação Requerida
                 [What must the shipper do to fix this? e.g., "Re-pack separately", "Add labels", "Use Cargo Aircraft Only"]
@@ -125,28 +130,31 @@ export const fetchOfficialUNData = async (unNumber: string): Promise<any | null>
             config: {
                 tools: [{ googleSearch: {} }],
                 responseMimeType: "application/json",
+                responseSchema: {
+                    type: Type.OBJECT,
+                    properties: {
+                        un: { type: Type.STRING, description: "UN Number" },
+                        name: { type: Type.STRING, description: "Official Proper Shipping Name (English)" },
+                        class: { type: Type.STRING, description: "Hazard Class" },
+                        sub: { type: Type.STRING, description: "Subrisk (or empty string)" },
+                        pg: { type: Type.STRING, description: "Packing Group (I, II, III or empty)" },
+                        eq: { type: Type.STRING, description: "E-Code (E0, E1, etc)" },
+                        lq_pi: { type: Type.STRING, description: "Limited Quantity Packing Instruction" },
+                        lq_max: { type: Type.STRING, description: "Limited Quantity Max quantity" },
+                        pax_pi: { type: Type.STRING, description: "Passenger Aircraft Packing Instruction" },
+                        pax_max: { type: Type.STRING, description: "Passenger Aircraft Max quantity" },
+                        cao_pi: { type: Type.STRING, description: "Cargo Aircraft Only Packing Instruction" },
+                        cao_max: { type: Type.STRING, description: "Cargo Aircraft Only Max quantity" },
+                        sp: { type: Type.STRING, description: "Space separated Special Provision codes" },
+                        erg: { type: Type.STRING, description: "Emergency Response Guidebook code" },
+                    },
+                },
                 systemInstruction: `
                 You are a data extractor for the IATA Dangerous Goods Regulations (Blue Pages).
                 
                 TASK: Search the web for the official specifications of UN ${unNumber}.
                 
-                RETURN JSON FORMAT ONLY:
-                {
-                    "un": "${unNumber}",
-                    "name": "Official Proper Shipping Name (English)",
-                    "class": "Hazard Class",
-                    "sub": "Subrisk (or empty string)",
-                    "pg": "Packing Group (I, II, III or empty)",
-                    "eq": "E-Code (E0, E1, etc)",
-                    "lq_pi": "Y...",
-                    "lq_max": "Qty (e.g. 1 L)",
-                    "pax_pi": "Number (e.g. 353)",
-                    "pax_max": "Qty (e.g. 5 L)",
-                    "cao_pi": "Number (e.g. 364)",
-                    "cao_max": "Qty (e.g. 60 L)",
-                    "sp": "Space separated codes (e.g. A3 A72)",
-                    "erg": "Code (e.g. 3L)"
-                }
+                RETURN JSON FORMAT ONLY based on the provided schema.
                 
                 If exact data is ambiguous, find the most common configuration for this UN.
                 Values like "Forbidden" are valid.
@@ -158,7 +166,7 @@ export const fetchOfficialUNData = async (unNumber: string): Promise<any | null>
         if (!text) return null;
         
         try {
-            return JSON.parse(text);
+            return JSON.parse(text.trim());
         } catch (e) {
             console.error("Failed to parse JSON", e);
             return null;
@@ -168,4 +176,4 @@ export const fetchOfficialUNData = async (unNumber: string): Promise<any | null>
         console.error("UN Hydration Error", error);
         return null;
     }
-};
+}

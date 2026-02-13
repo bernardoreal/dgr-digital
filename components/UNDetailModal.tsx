@@ -26,7 +26,7 @@ const UNDetailModal: React.FC<UNDetailModalProps> = ({ data, onClose }) => {
     if (cls.startsWith('2.3') || cls.startsWith('6')) return 'bg-white text-black border-b-2 border-black';
     if (cls.startsWith('8')) return 'bg-gray-800';
     if (cls.startsWith('7')) return 'bg-yellow-400 text-black';
-    if (cls.startsWith('9')) return 'bg-white text-black border-t-4 border-black border-b-0 relative'; 
+    if (cls.startsWith('9')) return 'bg-white text-black'; 
     return 'bg-latam-indigo';
   };
 
@@ -41,26 +41,15 @@ const UNDetailModal: React.FC<UNDetailModalProps> = ({ data, onClose }) => {
   // 1. Find Packing Instructions (Chapter 5)
   const relatedPackingInstructions = useMemo(() => {
     const chapter5 = DGR_CHAPTERS.find(c => c.id === 5);
-    if (!chapter5) return [];
-    
-    // Look for PI IDs mentioned in the UN entry
-    const targets = [data.pax_pi, data.cao_pi, data.lq_pi?.replace('Y', '')].filter(t => t && t !== 'Forbidden' && t !== 'See 10.5');
-    
-    // Flatten Chapter 5 blocks to find PI blocks
-    const foundPIs: DGRPackingInstruction[] = [];
-    
-    chapter5.sections.forEach(sec => {
-        sec.blocks.forEach(block => {
-            if (block.type === 'packing-instruction') {
-                const pi = block.content as DGRPackingInstruction;
-                if (targets.includes(pi.id)) {
-                    foundPIs.push(pi);
-                }
-            }
-        });
-    });
-    
-    return foundPIs;
+    const piDatabase = chapter5?.sections.flatMap(s => s.blocks).find(b => b.type === 'database');
+    if (!piDatabase || piDatabase.type !== 'database') return [];
+
+    const piData = (piDatabase.content as any).data as any[];
+
+    const targets = [data.pax_pi, data.cao_pi, data.lq_pi].filter(t => t && t !== 'Forbidden' && t !== 'See 10.5');
+
+    return piData.filter(pi => targets.includes(pi.id));
+
   }, [data]);
 
   // 2. Find Applicable Variations
@@ -69,7 +58,7 @@ const UNDetailModal: React.FC<UNDetailModalProps> = ({ data, onClose }) => {
           return v.text.includes(`UN ${data.un}`) || 
                  v.text.includes(`UN${data.un}`) ||
                  v.text.includes(`Class ${data.class}`) ||
-                 (data.class === '9' && v.text.includes('Lithium'))
+                 (data.class === '9' && (v.text.toLowerCase().includes('lithium') || v.text.toLowerCase().includes('baterias')))
       });
       return relevant;
   }, [data]);
@@ -145,11 +134,15 @@ const UNDetailModal: React.FC<UNDetailModalProps> = ({ data, onClose }) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col h-[90vh] md:h-auto md:max-h-[90vh] animate-fade-in-up">
         
-        {/* Header - Hazard Style */}
         <div className={`${headerBg} p-6 flex justify-between items-start relative overflow-hidden flex-shrink-0`}>
-           {/* Striped overlay for Class 9 simulation */}
            {String(data.class).startsWith('9') && (
-             <div className="absolute top-0 inset-x-0 h-1/2 bg-[linear-gradient(180deg,black_10%,transparent_10%,transparent_20%,black_20%,black_30%,transparent_30%,transparent_40%,black_40%,black_50%,transparent_50%,transparent_60%,black_60%,black_70%,transparent_70%)] opacity-10"></div>
+                <div 
+                    className="absolute inset-0" 
+                    style={{
+                        backgroundImage: 'repeating-linear-gradient(-45deg, white, white 10px, black 10px, black 20px)',
+                        opacity: 0.08
+                    }}>
+                </div>
            )}
 
            <div className={`relative z-10 ${isLightHeader ? 'text-gray-900' : 'text-white'}`}>
@@ -164,13 +157,12 @@ const UNDetailModal: React.FC<UNDetailModalProps> = ({ data, onClose }) => {
            
            <button 
              onClick={onClose}
-             className={`p-2 rounded-full bg-black/10 hover:bg-black/20 transition-colors ${isLightHeader ? 'text-black' : 'text-white'}`}
+             className={`p-2 rounded-full bg-black/10 hover:bg-black/20 transition-colors relative z-10 ${isLightHeader ? 'text-black' : 'text-white'}`}
            >
              <X className="w-6 h-6" />
            </button>
         </div>
 
-        {/* Navigation Tabs */}
         <div className="flex border-b border-gray-200 bg-gray-50/50">
             <button 
                 onClick={() => setActiveTab('overview')}
@@ -204,13 +196,10 @@ const UNDetailModal: React.FC<UNDetailModalProps> = ({ data, onClose }) => {
             </button>
         </div>
 
-        {/* Content Body */}
         <div className="overflow-y-auto p-6 space-y-8 bg-gray-50/50 flex-grow">
             
-            {/* TAB: OVERVIEW */}
             {activeTab === 'overview' && (
                 <div className="space-y-8 animate-fade-in">
-                    {/* 1. General Info Cards */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
                             <div className="text-xs text-gray-500 uppercase font-bold mb-1">Grupo de Emb.</div>
@@ -236,7 +225,6 @@ const UNDetailModal: React.FC<UNDetailModalProps> = ({ data, onClose }) => {
                                             <div className="absolute bottom-full right-0 mb-2 w-64 bg-gray-900 text-white text-xs p-3 rounded shadow-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50">
                                             <div className="font-bold mb-1 text-indigo-300">{def.code}</div>
                                             {def.text}
-                                            {/* Tiny triangle pointer */}
                                             <div className="absolute top-full right-2 -mt-1 w-2 h-2 bg-gray-900 transform rotate-45"></div>
                                             </div>
                                         )}
@@ -247,14 +235,12 @@ const UNDetailModal: React.FC<UNDetailModalProps> = ({ data, onClose }) => {
                         </div>
                     </div>
 
-                    {/* 2. Passenger Aircraft Section */}
                     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                         <div className="bg-blue-50/50 px-4 py-3 border-b border-blue-100 flex items-center">
                             <Plane className="w-5 h-5 text-blue-600 mr-2" />
                             <h3 className="font-bold text-gray-800 text-sm uppercase tracking-wide">Aeronave de Passageiros</h3>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-100">
-                            {/* Limited Quantity */}
                             <div className="p-5">
                                 <div className="flex items-center mb-3">
                                     <Box className="w-4 h-4 text-gray-400 mr-2" />
@@ -271,7 +257,6 @@ const UNDetailModal: React.FC<UNDetailModalProps> = ({ data, onClose }) => {
                                     </div>
                                 </div>
                             </div>
-                            {/* Passenger Standard */}
                             <div className="p-5">
                                 <div className="flex items-center mb-3">
                                     <Box className="w-4 h-4 text-gray-400 mr-2" />
@@ -291,7 +276,6 @@ const UNDetailModal: React.FC<UNDetailModalProps> = ({ data, onClose }) => {
                         </div>
                     </div>
 
-                    {/* 3. Cargo Aircraft Only Section */}
                     <div className="bg-white rounded-xl shadow-sm border border-orange-200 overflow-hidden relative">
                         <div className="bg-orange-50 px-4 py-3 border-b border-orange-100 flex items-center justify-between">
                             <div className="flex items-center">
@@ -316,12 +300,11 @@ const UNDetailModal: React.FC<UNDetailModalProps> = ({ data, onClose }) => {
                 </div>
             )}
 
-            {/* TAB: PACKING INSTRUCTIONS */}
             {activeTab === 'packing' && (
                 <div className="animate-fade-in">
                     {relatedPackingInstructions.length > 0 ? (
                         <div className="space-y-8">
-                             {relatedPackingInstructions.map((pi, idx) => (
+                             {relatedPackingInstructions.map((pi: any, idx: number) => (
                                  <div key={idx} className="bg-white border-2 border-gray-800 rounded-lg overflow-hidden">
                                      <div className="bg-gray-800 text-white p-4 flex justify-between items-center sticky top-0 z-10">
                                         <div className="flex items-center">
@@ -329,8 +312,8 @@ const UNDetailModal: React.FC<UNDetailModalProps> = ({ data, onClose }) => {
                                             <span className="text-xs opacity-70 border-l border-white/30 pl-3">{pi.title}</span>
                                         </div>
                                      </div>
-                                     <div className="p-5">
-                                         {pi.content.map((block, bIdx) => renderSimpleBlock(block, `pi-${idx}-${bIdx}`))}
+                                     <div className="p-5 text-sm text-gray-700">
+                                         {pi.description}
                                      </div>
                                  </div>
                              ))}
@@ -349,7 +332,6 @@ const UNDetailModal: React.FC<UNDetailModalProps> = ({ data, onClose }) => {
                 </div>
             )}
 
-            {/* TAB: VARIATIONS */}
             {activeTab === 'variations' && (
                 <div className="animate-fade-in">
                      <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg flex items-start">
@@ -388,7 +370,6 @@ const UNDetailModal: React.FC<UNDetailModalProps> = ({ data, onClose }) => {
                 </div>
             )}
 
-            {/* TAB: LIVE AUDIT (NEW FEATURE) */}
             {activeTab === 'audit' && (
                 <div className="animate-fade-in flex flex-col h-full">
                     {!auditResult && !isAuditing ? (
@@ -449,7 +430,6 @@ const UNDetailModal: React.FC<UNDetailModalProps> = ({ data, onClose }) => {
                 </div>
             )}
 
-            {/* Disclaimer Footer (All Tabs) */}
             {activeTab !== 'overview' && activeTab !== 'audit' && (
                 <div className="flex items-start text-xs text-gray-400 bg-gray-100/50 p-3 rounded-lg mt-auto">
                     <Info className="w-3 h-3 mr-2 flex-shrink-0 mt-0.5" />

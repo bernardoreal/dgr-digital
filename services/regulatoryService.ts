@@ -1,6 +1,6 @@
 
-import { BLUE_PAGES_DATA, SPECIAL_PROVISIONS_DATA, VARIATIONS_DATA } from '../constants';
-import { RegulatoryConfig } from '../types';
+import { BLUE_PAGES_DATA, SPECIAL_PROVISIONS_DATA, VARIATIONS_DATA } from '../constants.ts';
+import { RegulatoryConfig } from '../types.ts';
 
 // Default "Production" Configuration
 // activeVariationsCount is dynamic based on loaded data
@@ -15,12 +15,12 @@ let currentConfig: RegulatoryConfig = {
 
 export const getRegulatoryConfig = (): RegulatoryConfig => {
     return { ...currentConfig };
-};
+}
 
 export const updateRegulatoryConfig = (updates: Partial<RegulatoryConfig>) => {
     currentConfig = { ...currentConfig, ...updates };
     return currentConfig;
-};
+}
 
 // This function would eventually connect to the IATA e-DGR API
 export const validateDataSource = async (apiKey: string): Promise<boolean> => {
@@ -34,7 +34,7 @@ export const validateDataSource = async (apiKey: string): Promise<boolean> => {
             }
         }, 1500);
     });
-};
+}
 
 export const getStats = () => {
     return {
@@ -43,4 +43,4 @@ export const getStats = () => {
         variations: VARIATIONS_DATA.length,
         simulatedPercentage: currentConfig.dataSource === 'OFFICIAL_API' ? 0 : 92 // Estimated
     };
-};
+}

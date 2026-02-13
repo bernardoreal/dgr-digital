@@ -1,14 +1,127 @@
 
-
-import React, { useState, useEffect } from 'react';
-import { Plane, Search, ShieldCheck, ArrowRight, Sparkles, Bot, AlertTriangle, X, Settings, CheckCircle } from 'lucide-react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
+import { Plane, Search, ShieldCheck, ArrowRight, Sparkles, Bot, AlertTriangle, X, Settings, CheckCircle, Loader2 } from 'lucide-react';
 import { DGR_CHAPTERS, APP_VERSION } from './constants';
-import { DGRChapter, ViewState, DGRTable } from './types';
+import { DGRChapter, ViewState, DGRTable, DGRDatabase } from './types';
 import ChapterCard from './components/ChapterCard';
-import ChapterDetail from './components/ChapterDetail';
 import AISearchModal from './components/AISearchModal';
 import ComplianceDashboard from './components/ComplianceDashboard';
 import { getRegulatoryConfig } from './services/regulatoryService';
+
+const ChapterDetail = lazy(() => import('./components/ChapterDetail'));
+
+const openPIWindow = (piFilter: string) => {
+    const piChapter = DGR_CHAPTERS.find(c => c.id === 5);
+    const piDBBlock = piChapter?.sections.find(s => s.id === '5.1')?.blocks.find(b => b.type === 'database');
+    if (!piDBBlock || piDBBlock.type !== 'database') return;
+
+    const db = piDBBlock.content as DGRDatabase;
+
+    const newWindow = window.open('', '_blank');
+
+    if (!newWindow) {
+        alert('Pop-up bloqueado. Por favor, permita pop-ups para ver a base de dados.');
+        return;
+    }
+
+    const headerRow = db.columns.map((c, i) => `<th class="p-2 border" onclick="sortTable(${i})">${c.label}</th>`).join('');
+    
+    const filterRow = db.columns.map((c, i) => {
+        if (c.filterable) {
+            return `<th class="p-1 border"><input type="text" class="w-full p-1 text-xs border rounded col-filter" data-col="${i}" oninput="filterTable()" placeholder="Filtrar ${c.label}..."></th>`;
+        }
+        return `<th class="p-1 border"></th>`;
+    }).join('');
+
+    const bodyRows = db.data.map((row, i) => 
+        `<tr class="${i % 2 === 0 ? '' : 'bg-gray-50'} hover:bg-yellow-50">
+            ${db.columns.map(c => `<td class="p-2 border">${row[c.key] || ''}</td>`).join('')}
+        </tr>`
+    ).join('');
+
+    const htmlContent = `
+        <!DOCTYPE html>
+        <html lang="pt-BR">
+        <head>
+            <meta charset="UTF-8">
+            <title>${db.title}</title>
+            <script src="https://cdn.tailwindcss.com"></script>
+            <style>
+                body { font-family: sans-serif; }
+                th { cursor: pointer; user-select: none; }
+                #dgr-table thead { position: sticky; top: 0; z-index: 10; }
+            </style>
+        </head>
+        <body class="bg-gray-100 p-6 flex flex-col h-screen">
+            <div class="bg-white p-4 shadow rounded-t flex justify-between items-center shrink-0">
+                <h1 class="font-bold text-lg">${db.title}</h1>
+                <button onclick="clearFilters()" class="text-xs font-medium text-blue-600 hover:underline">Limpar Filtros</button>
+            </div>
+            <div class="flex-grow overflow-auto bg-white shadow rounded-b min-h-0">
+                <table id="dgr-table" class="w-full text-left border-collapse text-sm">
+                    <thead class="bg-gray-300">
+                        <tr>${headerRow}</tr>
+                        <tr class="bg-gray-100">${filterRow}</tr>
+                    </thead>
+                    <tbody id="tbody">${bodyRows}</tbody>
+                </table>
+            </div>
+            <script>
+                const filterInputs = document.querySelectorAll('.col-filter');
+                function clearFilters() {
+                    filterInputs.forEach(input => input.value = '');
+                    filterTable();
+                }
+                function filterTable() {
+                    const filters = Array.from(filterInputs).map(input => ({
+                        col: parseInt(input.dataset.col),
+                        value: input.value.toLowerCase()
+                    }));
+                    const tbody = document.getElementById('tbody');
+                    const rows = tbody.getElementsByTagName('tr');
+
+                    for (let r of rows) {
+                        let isVisible = true;
+                        for (const filter of filters) {
+                            const cell = r.cells[filter.col];
+                            if (cell && filter.value) {
+                                if (!cell.textContent.toLowerCase().includes(filter.value)) {
+                                    isVisible = false;
+                                    break;
+                                }
+                            }
+                        }
+                        r.style.display = isVisible ? '' : 'none';
+                    }
+                }
+                let sortState = {};
+                function sortTable(colIndex) {
+                    const tbody = document.getElementById('tbody');
+                    const rows = Array.from(tbody.rows);
+                    const dir = sortState[colIndex] === 'asc' ? 'desc' : 'asc';
+                    sortState = { [colIndex]: dir };
+                    rows.sort((a, b) => {
+                        const valA = a.cells[colIndex].textContent.trim();
+                        const valB = b.cells[colIndex].textContent.trim();
+                        return valA.localeCompare(valB, undefined, { numeric: true }) * (dir === 'asc' ? 1 : -1);
+                    });
+                    rows.forEach(row => tbody.appendChild(row));
+                }
+                 window.onload = function() {
+                    const piFilterInput = document.querySelector('.col-filter[data-col="0"]');
+                    if (piFilterInput && '${piFilter}') {
+                        piFilterInput.value = '${piFilter}';
+                        setTimeout(filterTable, 50);
+                    }
+                };
+            </script>
+        </body>
+        </html>
+    `;
+    newWindow.document.write(htmlContent);
+    newWindow.document.close();
+};
+
 
 const App: React.FC = () => {
   const [viewState, setViewState] = useState<ViewState>(ViewState.DASHBOARD);
@@ -38,15 +151,13 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
+      // Handle navigation from database popups
       if (event.data && event.data.type === 'navigateToPI') {
-        const { chapterId, sectionId } = event.data;
-        const chapter = DGR_CHAPTERS.find(c => c.id === chapterId);
-        if (chapter) {
-          setSelectedChapter(chapter);
-          setViewState(ViewState.CHAPTER_DETAIL);
-          setInitialScrollId(sectionId);
-          setIsAiModalOpen(false); // Close any open modals
-        }
+          const { pi } = event.data;
+          if (pi) {
+              // Open a new window with the filtered PI table as requested
+              openPIWindow(pi);
+          }
       }
     };
 
@@ -104,10 +215,11 @@ const App: React.FC = () => {
             if (block.type === 'paragraph' && (block.content as string).toLowerCase().includes(lowerTerm)) return true;
             
             // Deep Table Search (Crucial for Table 4.2)
-            if (block.type === 'table') {
-                const table = block.content as DGRTable;
-                return table.rows.some(row => 
-                    row.some(cell => String(cell).toLowerCase().includes(lowerTerm))
+            if (block.type === 'table' || block.type === 'database') {
+                const table = block.content as DGRTable | DGRDatabase;
+                const rows = 'rows' in table ? table.rows : table.data;
+                return rows.some(row => 
+                    Object.values(row).some(cell => String(cell).toLowerCase().includes(lowerTerm))
                 );
             }
             
@@ -117,6 +229,15 @@ const App: React.FC = () => {
   });
 
   const isHeaderActive = scrolled || viewState !== ViewState.DASHBOARD;
+
+  const FullPageLoader = () => (
+    <div className="fixed inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center z-50">
+        <div className="flex flex-col items-center">
+            <Loader2 className="w-10 h-10 text-latam-indigo animate-spin" />
+            <p className="mt-4 text-lg font-semibold text-latam-indigo">Carregando Seção...</p>
+        </div>
+    </div>
+  );
 
   if (viewState === ViewState.COMPLIANCE_ADMIN) {
       return <ComplianceDashboard 
@@ -323,15 +444,17 @@ const App: React.FC = () => {
       ) : (
         <div className={`bg-gray-50 min-h-screen transition-all duration-300 ${showDisclaimer && regConfig.validationStatus !== 'VERIFIED_OPERATIONAL' ? 'pt-32' : 'pt-20'}`}>
           <main className="container mx-auto px-4 py-6 min-h-[calc(100vh-80px)]">
-            {selectedChapter && (
-              <ChapterDetail 
-                chapter={selectedChapter} 
-                onBack={handleBackToDashboard} 
-                initialSearchTerm={searchTerm}
-                initialScrollId={initialScrollId}
-                onClearInitialScroll={() => setInitialScrollId(null)}
-              />
-            )}
+            <Suspense fallback={<FullPageLoader />}>
+                {selectedChapter && (
+                <ChapterDetail 
+                    chapter={selectedChapter} 
+                    onBack={handleBackToDashboard} 
+                    initialSearchTerm={searchTerm}
+                    initialScrollId={initialScrollId}
+                    onClearInitialScroll={() => setInitialScrollId(null)}
+                />
+                )}
+            </Suspense>
           </main>
         </div>
       )}

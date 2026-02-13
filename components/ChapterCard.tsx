@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { ArrowUpRight } from 'lucide-react';
-import { DGRChapter } from '../types';
+import { DGRChapter } from '../types.ts';
 
 interface ChapterCardProps {
   chapter: DGRChapter;
