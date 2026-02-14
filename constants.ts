@@ -100,7 +100,9 @@ const REAL_BLUE_PAGES = [
 
 const generateFillerData = () => {
     const existingUNs = new Set(REAL_BLUE_PAGES.map(i => parseInt(i.un)));
-    const filler: Record<string, any>[] = [];
+    // FIX: Changed type from Record<string, any>[] to a more specific type to ensure type safety.
+    // This resolves an error in ChapterDetail.tsx where `d.un` was not found on the type.
+    const filler: (typeof REAL_BLUE_PAGES[0] & { isSimulated: boolean })[] = [];
     
     // Mapping UN ranges to likely classes
     const getProbableClass = (un: number): {cls: string, sub?: string, name: string} => {
