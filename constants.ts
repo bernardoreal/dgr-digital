@@ -1,4 +1,3 @@
-
 import { DGRChapter, DGRVariation } from './types.ts';
 import { Package, Plane, AlertTriangle, Box, ShieldCheck, FileText, Globe, Layers, Search, Check, Zap, Truck, Anchor, Info, BookOpen, FlaskConical, ListFilter, Ban, Radiation, Library, Scale, FileQuestion, Building2, Tag } from 'lucide-react';
 
@@ -1063,3 +1062,4 @@ Signature: (Assinatura de J. da Silva)
           { id: "H.3", title: "Funções Bem Definidas", blocks: [{ type: "paragraph", content: "O treinamento deve ser focado nas tarefas específicas executadas pelo funcionário (ex: 7.1 Classificar, 7.3 Processar/Aceitar Carga)." }] }
       ]
   }
+];
