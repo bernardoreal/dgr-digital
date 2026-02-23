@@ -1,6 +1,5 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import ReactDOM from 'react-dom/client';
 import { 
     ArrowLeft, Bookmark, AlertTriangle, ArrowRightLeft, 
     Search, ExternalLink, Box, Info, FilterX, CheckSquare, Square 
@@ -13,35 +12,6 @@ import UNDetailModal from './UNDetailModal';
 import DatabasePopup from './DatabasePopup';
 
 let popupWindow: Window | null = null;
-
-const getPopupHead = (title: string) => `
-    <head>
-        <meta charset="UTF-8" />
-        <title>${title}</title>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-        <script>
-          tailwind.config = {
-            theme: {
-              extend: {
-                fontFamily: { sans: ['Inter', 'sans-serif'] },
-                colors: {
-                  latam: {
-                    indigo: '#1E1B4B',
-                    indigoLight: '#312E81',
-                    coral: '#E11D48',
-                    bg: '#F8FAFC',
-                    text: '#0F172A',
-                    textMuted: '#64748B'
-                  }
-                }
-              }
-            }
-          }
-        </script>
-        <style>body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }</style>
-    </head>
-`;
 
 interface ChapterDetailProps {
   chapter: DGRChapter;
@@ -81,28 +51,17 @@ const ChapterDetail: React.FC<ChapterDetailProps> = ({
   const openDB = (db: DGRDatabase) => {
     if (popupWindow && !popupWindow.closed) {
         popupWindow.focus();
-        return;
+        // If it's already open, we could change its location, but let's just focus it
+        // or we could just open a new window anyway to be safe.
+        // Actually, let's just open the new URL.
     }
 
-    const newWindow = window.open('', '_blank');
+    const newWindow = window.open(`/?table=${db.id}`, '_blank');
     if (!newWindow) {
         alert('Pop-up bloqueado. Por favor, permita a abertura de novas abas.');
         return;
     }
     popupWindow = newWindow;
-
-    newWindow.document.write(`
-        <!DOCTYPE html><html lang="pt-BR">
-        ${getPopupHead(db.title)}
-        <body><div id="popup-root"></div></body></html>
-    `);
-    newWindow.document.close();
-
-    const popupRootEl = newWindow.document.getElementById('popup-root');
-    if (popupRootEl) {
-        const root = ReactDOM.createRoot(popupRootEl);
-        root.render(<React.StrictMode><DatabasePopup initialDb={db} /></React.StrictMode>);
-    }
   };
   
   const HighlightText = ({ text, highlight }: { text: string; highlight: string }) => {

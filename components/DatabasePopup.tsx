@@ -1,6 +1,5 @@
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import ReactDOM from 'react-dom/client';
 import { Search, FilterX, X } from 'lucide-react';
 import { DGRDatabase } from '../types';
 import { BLUE_PAGES_DATA, PACKING_INSTRUCTIONS_DATA } from '../constants';
@@ -56,69 +55,13 @@ const DatabasePopup: React.FC<DatabasePopupProps> = ({ initialDb, initialFilter:
         setSortConfig({ key, direction });
     };
 
-    const getPopupHead = (title: string) => `
-        <head>
-            <meta charset="UTF-8" />
-            <title>${title}</title>
-            <script src="https://cdn.tailwindcss.com"></script>
-            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-            <script>
-              tailwind.config = {
-                theme: {
-                  extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: {
-                      latam: {
-                        indigo: '#1E1B4B',
-                        indigoLight: '#312E81',
-                        coral: '#E11D48',
-                        bg: '#F8FAFC',
-                        text: '#0F172A',
-                        textMuted: '#64748B'
-                      }
-                    }
-                  }
-                }
-              }
-            </script>
-            <style>body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }</style>
-        </head>
-    `;
-
     const handlePiClick = (pi: string) => {
         if (!pi || pi === 'Forbidden' || String(pi).toLowerCase().includes('see')) return;
         
-        const piDb: DGRDatabase = {
-            id: "pi-database",
-            title: "Base de Dados de Instruções de Embalagem",
-            type: 'pi-list',
-            columns: [ 
-                { key: "id", label: "PI Nº", width: "w-24", filterable: true }, 
-                { key: "title", label: "Título", width: "w-48", filterable: true }, 
-                { key: "description", label: "Descrição Resumida", width: "w-96", filterable: true },
-                { key: "applies_to", label: "Aplicação Comum", width: "w-48", filterable: true },
-                { key: "type", label: "Tipo", width: "w-32" }
-            ],
-            data: PACKING_INSTRUCTIONS_DATA
-        };
-
-        const newWindow = window.open('', '_blank');
+        const newWindow = window.open(`/?table=pi-database&filter_id=${pi}`, '_blank');
         if (!newWindow) {
             alert('Pop-up bloqueado. Por favor, permita a abertura de novas abas.');
             return;
-        }
-
-        newWindow.document.write(`
-            <!DOCTYPE html><html lang="pt-BR">
-            ${getPopupHead(piDb.title)}
-            <body><div id="popup-root"></div></body></html>
-        `);
-        newWindow.document.close();
-
-        const popupRootEl = newWindow.document.getElementById('popup-root');
-        if (popupRootEl) {
-            const root = ReactDOM.createRoot(popupRootEl);
-            root.render(<React.StrictMode><DatabasePopup initialDb={piDb} initialFilter={{ id: pi }} /></React.StrictMode>);
         }
     };
 

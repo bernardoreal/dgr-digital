@@ -5,11 +5,47 @@ import { DGRChapter, ViewState, DGRTable, DGRDatabase } from './types';
 import ChapterCard from './components/ChapterCard';
 import AISearchModal from './components/AISearchModal';
 import ComplianceDashboard from './components/ComplianceDashboard';
+import DatabasePopup from './components/DatabasePopup';
 import { getRegulatoryConfig } from './services/regulatoryService';
 
 const ChapterDetail = lazy(() => import('./components/ChapterDetail'));
 
+const findDatabaseById = (id: string): DGRDatabase | null => {
+  for (const chapter of DGR_CHAPTERS) {
+    for (const section of chapter.sections) {
+      for (const block of section.blocks) {
+        if (block.type === 'database') {
+          const db = block.content as DGRDatabase;
+          if (db.id === id) {
+            return db;
+          }
+        }
+      }
+    }
+  }
+  return null;
+};
+
 const App: React.FC = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const tableId = urlParams.get('table');
+
+  if (tableId) {
+    const db = findDatabaseById(tableId);
+    if (db) {
+      const initialFilter: Record<string, string> = {};
+      urlParams.forEach((value, key) => {
+        if (key.startsWith('filter_')) {
+          const filterKey = key.replace('filter_', '');
+          initialFilter[filterKey] = value;
+        }
+      });
+      return <DatabasePopup initialDb={db} initialFilter={Object.keys(initialFilter).length > 0 ? initialFilter : undefined} />;
+    } else {
+      return <div className="p-8 text-center text-red-500 font-bold">Tabela não encontrada.</div>;
+    }
+  }
+
   const [viewState, setViewState] = useState<ViewState>(ViewState.DASHBOARD);
   const [selectedChapter, setSelectedChapter] = useState<DGRChapter | null>(null);
   const [isAiModalOpen, setIsAiModalOpen] = useState(false);
