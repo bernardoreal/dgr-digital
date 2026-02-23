@@ -1,3 +1,4 @@
+
 import { DGRChapter, DGRVariation } from './types.ts';
 import { Package, Plane, AlertTriangle, Box, ShieldCheck, FileText, Globe, Layers, Search, Check, Zap, Truck, Anchor, Info, BookOpen, FlaskConical, ListFilter, Ban, Radiation, Library, Scale, FileQuestion, Building2, Tag } from 'lucide-react';
 
@@ -99,8 +100,6 @@ const REAL_BLUE_PAGES = [
 
 const generateFillerData = () => {
     const existingUNs = new Set(REAL_BLUE_PAGES.map(i => parseInt(i.un)));
-    // FIX: Changed type from Record<string, any>[] to a more specific type to ensure type safety.
-    // This resolves an error in ChapterDetail.tsx where `d.un` was not found on the type.
     const filler: (typeof REAL_BLUE_PAGES[0] & { isSimulated: boolean })[] = [];
     
     // Mapping UN ranges to likely classes
@@ -171,7 +170,7 @@ const generateFillerData = () => {
     return filler;
 };
 
-// Generate ~800 Special Provisions
+// Generate Special Provisions
 const generateSpecialProvisions = () => {
     const core = [
         { code: "A1", text: "Este artigo ou substância pode ser transportado em aeronaves de passageiros apenas com a aprovação prévia da autoridade apropriada do Estado de Origem e com a aprovação do operador." },
@@ -180,13 +179,22 @@ const generateSpecialProvisions = () => {
         { code: "A4", text: "Líquidos com alto teor de viscosidade e inflamabilidade podem ser isentos de certos requisitos de embalagem se passarem em testes específicos." },
         { code: "A5", text: "Sólidos contendo líquidos corrosivos ou tóxicos não estão sujeitos a estes regulamentos se não houver líquido livre visível." },
         { code: "A6", text: "Para fins de classificação, misturas com um ponto de fulgor acima de 60°C não são consideradas Classe 3." },
+        { code: "A7", text: "Misturas de substâncias, não especificamente nomeadas na lista de mercadorias perigosas, devem ser classificadas de acordo com os riscos apresentados pelos componentes perigosos." },
+        { code: "A8", text: "Dispositivos de salvamento, como botes ou coletes salva-vidas, não estão sujeitos a estes regulamentos se estiverem equipados de tal forma que não possam ser ativados acidentalmente." },
         { code: "A9", text: "Bebidas alcoólicas contendo mais de 70% de álcool por volume devem ser transportadas sob UN 3065. As que contêm 24% ou menos não estão sujeitas a estes regulamentos." },
+        { code: "A14", text: "Esta entrada aplica-se a artigos que contêm pequenos cartuchos de gás destinados a inflar o artigo (ex: coletes salva-vidas)." },
         { code: "A19", text: "Extintores de incêndio que contêm gases comprimidos ou liquefeitos devem ser embalados de acordo com a Instrução de Embalagem 213." },
+        { code: "A20", text: "Dispositivos salva-vidas auto-infláveis, se embalados de forma que não possam ser ativados acidentalmente, estão sujeitos apenas aos requisitos da Seção 1." },
         { code: "A21", text: "Esta entrada aplica-se a veículos movidos a gás inflamável ou líquido inflamável. Motores de combustão interna ou células de combustível." },
+        { code: "A31", text: "Certas substâncias corrosivas sólidas, quando embaladas em recipientes internos selados, podem ser isentas dos requisitos de embalagem de especificação UN se a embalagem externa for forte e segura." },
         { code: "A32", text: "Airbags ou pré-tensores de cinto de segurança contendo explosivos da classe 1.4G ou 1.4S devem ser transportados como UN 3268." },
+        { code: "A41", text: "Uma embalagem combinada contendo uma embalagem interna ventilada, e não contendo outra mercadoria perigosa, deve ser embalada de acordo com PI 207." },
         { code: "A44", text: "A designação de Kit Químico ou Kit de Primeiros Socorros destina-se a caixas, estojos etc. contendo pequenas quantidades de várias mercadorias perigosas." },
+        { code: "A46", text: "Kits químicos ou de primeiros socorros contendo mercadorias perigosas em embalagens internas que não excedam os limites de quantidade limitada (LQ) podem ser transportados sob UN 3316." },
         { code: "A48", text: "A embalagem deve ser marcada com o texto 'Lithium ion batteries in compliance with Section II of PI 966' ou similar, conforme aplicável." },
         { code: "A51", text: "Baterias úmidas com eletrólito devem ser embaladas de forma a prevenir vazamentos e curtos-circuitos." },
+        { code: "A54", text: "Unidades de transporte de carga fumigadas (CTUs) contendo gases asfixiantes são proibidas no transporte aéreo." },
+        { code: "A56", text: "Gases não tóxicos e não inflamáveis em recipientes com capacidade de água não superior a 120 mL são isentos, exceto para aprovação do operador." },
         { code: "A57", text: "A autoridade competente pode autorizar o transporte de quantidades superiores às limitadas na Tabela 4.2." },
         { code: "A58", text: "Soluções aquosas contendo 24% ou menos de álcool por volume não estão sujeitas a estes regulamentos." },
         { code: "A67", text: "Baterias úmidas não derramáveis não estão sujeitas a estes regulamentos se os terminais estiverem protegidos contra curto-circuito." },
@@ -194,62 +202,57 @@ const generateSpecialProvisions = () => {
         { code: "A70", text: "Motores de combustão interna movidos a combustível líquido inflamável devem ter o tanque drenado e as baterias desconectadas." },
         { code: "A72", text: "Kits de resina de poliéster contendo base e ativador devem ser transportados sob a entrada 'Polyester resin kit'." },
         { code: "A75", text: "Artigos contendo peróxidos orgânicos ou substâncias auto-reativas não devem ser transportados sob esta entrada sem aprovação." },
+        { code: "A78", text: "Aerossóis não estão sujeitos a estes regulamentos se estiverem em conformidade com as disposições de quantidades limitadas." },
         { code: "A81", text: "A quantidade de material radioativo na embalagem não deve exceder os limites especificados na Tabela 10.3.A." },
+        { code: "A82", text: "A documentação para unidades fumigadas deve incluir a data da fumigação e o tipo e quantidade de fumigante usado." },
         { code: "A87", text: "Veículos movidos apenas a bateria elétrica (BEV) devem ser transportados sob UN 3171." },
         { code: "A88", text: "Protótipos de baterias de lítio pré-produção podem ser transportados em aeronaves de carga com aprovação da autoridade competente do Estado de Origem." },
         { code: "A97", text: "Substâncias perigosas para o meio ambiente (aquático) não sujeitas a outras classes devem ser classificadas como UN 3077 ou UN 3082." },
+        { code: "A98", text: "Baterias de lítio são proibidas no correio aéreo internacional." },
         { code: "A99", text: "Baterias de lítio com peso superior a 35 kg podem ser transportadas em aeronaves de carga com aprovação da autoridade competente." },
+        { code: "A101", text: "Equipamentos movidos a bateria, com baterias úmidas ou de lítio, devem ser protegidos contra ativação acidental e curto-circuito." },
         { code: "A112", text: "Bens de consumo (ID 8000) devem ser materiais embalados para venda a varejo ou uso pessoal/doméstico." },
         { code: "A113", text: "Esta entrada pode ser utilizada para misturas contendo metanol." },
         { code: "A123", text: "Esta entrada aplica-se a baterias, elétricas, contendo líquido ou sólido corrosivo ou material alcalino." },
+        { code: "A130", text: "Substâncias classificadas como perigosas para o meio ambiente, mas que não atendem aos critérios de nenhuma outra classe, devem ser transportadas sob UN 3077 ou UN 3082." },
         { code: "A132", text: "Esta entrada deve ser usada para artigos que contenham mercadorias perigosas em quantidades que excedam os limites de exceção." },
         { code: "A144", text: "Equipamentos contendo baterias de lítio devem ser embalados em embalagens externas resistentes." },
         { code: "A145", text: "Resíduos de aerossóis transportados para descarte ou reciclagem são proibidos, a menos que transportados sob aprovação especial." },
+        { code: "A146", text: "Cartuchos de gás (UN 2037) que são projetados para inflar coletes salva-vidas ou outros dispositivos podem ser transportados sem restrições se forem parte de um dispositivo salva-vidas ou como sobressalentes." },
+        { code: "A147", text: "Geradores químicos de oxigênio que expiraram ou foram usados não são aceitáveis para transporte." },
         { code: "A150", text: "Um pacote contendo mercadorias perigosas em quantidades limitadas (LQ) não precisa de etiqueta de orientação se for visível." },
         { code: "A151", text: "Se o gelo seco for usado como refrigerante para mercadorias não perigosas, a marcação e rotulagem de Gelo Seco e a DGD não são necessárias, mas o AWB deve indicar." },
         { code: "A154", text: "Baterias de lítio identificadas como defeituosas ou danificadas, com potencial de evolução perigosa de calor, fogo ou curto-circuito são PROIBIDAS." },
         { code: "A158", text: "Misturas de sólidos não sujeitos a estes regulamentos e líquidos perigosos para o meio ambiente devem ser classificadas como UN 3077." },
+        { code: "A159", text: "Maquinaria ou aparelhos contendo mercadorias perigosas da Classe 3 a 9 como resíduo ou parte integrante, que excedam os limites de LQ, devem ser transportados sob a entrada apropriada para o líquido/sólido ou como UN 3363." },
         { code: "A163", text: "Esta entrada aplica-se apenas a fogos de artifício classificados como 1.4G." },
         { code: "A164", text: "Baterias elétricas para veículos, contendo eletrólito líquido ácido." },
         { code: "A180", text: "Não radioativo. Aplica-se apenas a marcadores de urânio empobrecido." },
         { code: "A181", text: "Pacotes contendo baterias de lítio devem ter a etiqueta de bateria de lítio, a menos que as baterias estejam contidas no equipamento." },
         { code: "A182", text: "Equipamentos contendo baterias de lítio devem ser protegidos contra movimento e ativação acidental." },
         { code: "A183", text: "Baterias de lítio usadas para reciclagem ou descarte são proibidas no transporte aéreo, a menos que aprovadas." },
+        { code: "A185", text: "Dispositivos médicos ou clínicos, como nebulizadores, que contêm pequenas quantidades de líquidos perigosos, podem ser isentos se embalados em embalagens internas seladas." },
+        { code: "A190", text: "Esta entrada aplica-se a máquinas ou aparelhos que contenham mercadorias perigosas como resíduo ou como parte integrante da máquina ou aparelho." },
+        { code: "A191", text: "Uma embalagem contendo uma única peça de maquinaria ou aparelho com mercadorias perigosas como resíduo, em quantidades que não excedam os limites de quantidade limitada, pode ser isenta se o invólucro for forte e seguro." },
+        { code: "A199", text: "Artigos como amortecedores ou molas a gás, contendo gás não-inflamável e não-tóxico, não estão sujeitos a estes regulamentos se a pressão não exceder 280 kPa a 20°C." },
+        { code: "A201", text: "Esta entrada aplica-se a dispositivos de rastreamento de carga, registradores de dados e outros dispositivos eletrônicos alimentados por baterias de lítio, que são destinados a serem afixados em embalagens, overpacks, contêineres ou ULDs." },
         { code: "A202", text: "Esta entrada aplica-se a dióxido de carbono liquefeito em cilindros." },
+        { code: "A214", text: "Baterias de lítio danificadas ou defeituosas, proibidas para transporte aéreo, podem ser transportadas em aeronaves de carga sob condições estritas e com aprovação prévia da autoridade competente do Estado de Origem e do Operador." },
         { code: "A224", text: "Esta entrada aplica-se a artigos contendo baterias de lítio metálico ou iônico como fonte primária de energia." },
         { code: "A302", text: "Cilindros contendo gases oxidantes devem ter válvulas protegidas e não podem ser embalados com materiais inflamáveis." },
+        { code: "A331", text: "Esta disposição especial aplica-se a baterias de lítio com um Estado de Carga (SoC) superior a 30%, que devem ser transportadas apenas em aeronaves de carga, com aprovação prévia do Estado de Origem e do operador." },
         { code: "A801", text: "Operador deve garantir que o passageiro foi informado sobre a proibição de transporte de mercadorias perigosas." },
         { code: "A802", text: "Não obstante a ausência de um grupo de embalagem na coluna E, as substâncias devem ser embaladas no Grupo de Embalagem II." },
         { code: "A803", text: "Não obstante a ausência de um grupo de embalagem na coluna E, as substâncias devem ser embaladas no Grupo de Embalagem III." },
-        { code: "A804", text: "As baterias devem ser protegidas contra curto-circuito e devem ser embaladas de forma segura." }
+        { code: "A804", text: "As baterias devem ser protegidas contra curto-circuito e devem ser embaladas de forma segura." },
+        { code: "A805", text: "Peróxidos orgânicos específicos são proibidos para transporte, a menos que uma aprovação da autoridade competente seja concedida." },
+        { code: "A806", text: "Substâncias auto-reativas específicas são proibidas para transporte, a menos que uma aprovação da autoridade competente seja concedida." }
     ];
 
-    const templates = [
-        "A aprovação prévia do Estado de Origem é necessária para o transporte desta substância.",
-        "Embalagens devem ser testadas e aprovadas de acordo com o Grupo de Embalagem II.",
-        "Esta substância é proibida em bagagem de mão, mas permitida em bagagem despachada.",
-        "Os recipientes devem ser hermeticamente fechados e rotulados com 'Keep Upright'.",
-        "A quantidade líquida por embalagem não deve exceder 5 litros ou 5 kg.",
-        "Para transporte aéreo, o limite técnico de pressão não deve exceder 200 kPa.",
-        "Artigos contendo mercúrio devem ser embalados de forma a prevenir vazamento.",
-        "O transporte desta substância requer segregação de explosivos da Classe 1.",
-        "Permitido apenas em aeronaves de carga (Cargo Aircraft Only) se a quantidade exceder 1L.",
-        "Esta entrada pode ser usada para misturas contendo até 10% desta substância.",
-    ];
-
-    for (let i = 1; i <= 800; i++) {
-        const code = `A${i}`;
-        if (!core.find(c => c.code === code)) {
-            core.push({
-                code: code,
-                text: `${templates[i % templates.length]} (Provision A${i} - Simulated text for regulatory volume).`
-            });
-        }
-    }
     return core.sort((a,b) => parseInt(a.code.substring(1)) - parseInt(b.code.substring(1)));
 };
 
-// Generate ~500 Variations
+// Generate Variations
 const generateVariations = () => {
     const airlines = [
         { code: "AA", name: "American Airlines" }, { code: "AC", name: "Air Canada" }, { code: "AF", name: "Air France" },
@@ -344,6 +347,7 @@ export const BLUE_PAGES_DATA = allBluePagesEntries.map((entry, index) => ({
     page: STARTING_PAGE + Math.floor(index / ITEMS_PER_PAGE)
 }));
 
+// The list now contains only the explicitly defined real special provisions.
 export const SPECIAL_PROVISIONS_DATA = generateSpecialProvisions();
 export const VARIATIONS_DATA = generateVariations();
 
@@ -397,7 +401,7 @@ const GLOSSARY_DATA = [
     { term: "Competent Authority", definition: "Uma autoridade nacional ou internacional designada ou reconhecida por um Estado para qualquer finalidade em relação a estes Regulamentos." },
     { term: "Consignee", definition: "A pessoa ou organização a quem a remessa é destinada (destinatário)." },
     { term: "Consignment", definition: "Um ou mais pacotes de mercadorias perigosas aceitos por um operador de um expedidor de uma só vez e em um só endereço." },
-    { term: "Dangerous Goods", definition: "Artigos ou substâncias capazes de colocar em risco a saúde, segurança, propriedade ou meio ambiente e que constam na lista de mercadorias perigosas." },
+    { term: "Dangerous Goods", definition: "Artigos ou substâncias capazes de colocar em risco a saúde, segurança, propriedade ou meio ambiente e que constam na lista de mercadorias perigosas nestes regulamentos ou que são classificadas de acordo com estes regulamentos." },
     { term: "Dangerous Goods Accident", definition: "Uma ocorrência associada e relacionada ao transporte de mercadorias perigosas que resulta em lesão fatal ou grave a uma pessoa ou dano maior à propriedade." },
     { term: "Dangerous Goods Incident", definition: "Uma ocorrência, que não seja um acidente, associada e relacionada ao transporte de mercadorias perigosas, não necessariamente ocorrendo a bordo de uma aeronave, que resulta em lesão, dano, fogo, quebra, derramamento, vazamento, etc." },
     { term: "Exception", definition: "Uma provisão nestes regulamentos que exclui um item específico dos requisitos gerais." },
@@ -423,7 +427,7 @@ const GLOSSARY_DATA = [
     { term: "Proper Shipping Name", definition: "O nome a ser utilizado para descrever um artigo ou substância no documento de transporte e na embalagem." },
     { term: "Radioactive Material", definition: "Qualquer material contendo radionuclídeos onde a concentração de atividade e a atividade total na remessa excedem os valores especificados." },
     { term: "Segregation", definition: "A separação de mercadorias perigosas incompatíveis durante o armazenamento ou transporte." },
-    { term: "Self-Reactive Substances", definition: "Substâncias termicamente instáveis que podem sofrer decomposição fortemente exotérmica, even sem oxigênio." },
+    { term: "Self-Reactive Substances", definition: "Substâncias termicamente instáveis que podem sofrer decomposição fortemente exotérmica, mesmo sem oxigênio." },
     { term: "Shipper", definition: "A pessoa ou organização que oferece a mercadoria perigosa para transporte aéreo (Expedidor)." },
     { term: "State of Origin", definition: "O país no território do qual a carga foi embarcada inicialmente." },
     { term: "State of the Operator", definition: "O país no qual o operador tem seu principal local de negócios." },
@@ -516,6 +520,32 @@ export const PACKING_INSTRUCTIONS_DATA = [
 });
 
 
+export const PRECEDENCE_OF_HAZARDS_COLUMNS = [
+    { key: "col0", label: "Classe/Divisão e PG" }, { key: "col1", label: "4.2" }, { key: "col2", label: "4.3" }, { key: "col3", label: "5.1 I" }, { key: "col4", label: "5.1 II" }, { key: "col5", label: "5.1 III" }, { key: "col6", label: "6.1 I" }, { key: "col7", label: "6.1 II" }, { key: "col8", label: "6.1 III" }, { key: "col9", label: "8 I Líq." }, { key: "col10", label: "8 I Sól." }, { key: "col11", label: "8 II Líq." }, { key: "col12", label: "8 II Sól." }, { key: "col13", label: "8 III Líq." }, { key: "col14", label: "8 III Sól." },
+];
+
+export const PRECEDENCE_OF_HAZARDS_DATA = [
+    { "col0": "3 I", "col1": "4.2", "col2": "4.3", "col3": "5.1", "col4": "5.1", "col5": "5.1", "col6": "6.1", "col7": "3", "col8": "3", "col9": "8", "col10": "3", "col11": "3", "col12": "3", "col13": "3", "col14": "3" },
+    { "col0": "3 II", "col1": "4.2", "col2": "4.3", "col3": "5.1", "col4": "5.1", "col5": "5.1", "col6": "6.1", "col7": "3", "col8": "3", "col9": "8", "col10": "8", "col11": "3", "col12": "3", "col13": "3", "col14": "3" },
+    { "col0": "3 III", "col1": "4.2", "col2": "4.3", "col3": "5.1", "col4": "5.1", "col5": "5.1", "col6": "6.1", "col7": "6.1", "col8": "6.1", "col9": "8", "col10": "8", "col11": "8", "col12": "8", "col13": "3", "col14": "3" },
+    { "col0": "4.1 II", "col1": "4.2", "col2": "4.3", "col3": "5.1", "col4": "4.1", "col5": "4.1", "col6": "6.1", "col7": "4.1", "col8": "4.1", "col9": "8", "col10": "8", "col11": "4.1", "col12": "4.1", "col13": "4.1", "col14": "4.1" },
+    { "col0": "4.1 III", "col1": "4.2", "col2": "4.3", "col3": "5.1", "col4": "4.1", "col5": "4.1", "col6": "6.1", "col7": "6.1", "col8": "6.1", "col9": "8", "col10": "8", "col11": "8", "col12": "8", "col13": "4.1", "col14": "4.1" },
+    { "col0": "4.2 II", "col1": "-", "col2": "4.3", "col3": "5.1", "col4": "4.2", "col5": "4.2", "col6": "6.1", "col7": "4.2", "col8": "4.2", "col9": "8", "col10": "8", "col11": "4.2", "col12": "4.2", "col13": "4.2", "col14": "4.2" },
+    { "col0": "4.2 III", "col1": "-", "col2": "4.3", "col3": "5.1", "col4": "5.1", "col5": "4.2", "col6": "6.1", "col7": "6.1", "col8": "6.1", "col9": "8", "col10": "8", "col11": "8", "col12": "8", "col13": "4.2", "col14": "4.2" },
+    { "col0": "4.3 I", "col1": "-", "col2": "-", "col3": "5.1", "col4": "4.3", "col5": "4.3", "col6": "6.1", "col7": "4.3", "col8": "4.3", "col9": "8", "col10": "4.3", "col11": "4.3", "col12": "4.3", "col13": "4.3", "col14": "4.3" },
+    { "col0": "4.3 II", "col1": "-", "col2": "-", "col3": "5.1", "col4": "4.3", "col5": "4.3", "col6": "6.1", "col7": "4.3", "col8": "4.3", "col9": "8", "col10": "8", "col11": "4.3", "col12": "4.3", "col13": "4.3", "col14": "4.3" },
+    { "col0": "4.3 III", "col1": "-", "col2": "-", "col3": "5.1", "col4": "5.1", "col5": "4.3", "col6": "6.1", "col7": "6.1", "col8": "6.1", "col9": "8", "col10": "8", "col11": "8", "col12": "8", "col13": "4.3", "col14": "4.3" },
+    { "col0": "5.1 I", "col1": "5.1", "col2": "5.1", "col3": "-", "col4": "-", "col5": "-", "col6": "5.1", "col7": "5.1", "col8": "5.1", "col9": "5.1", "col10": "5.1", "col11": "5.1", "col12": "5.1", "col13": "5.1", "col14": "5.1" },
+    { "col0": "5.1 II", "col1": "5.1", "col2": "4.3", "col3": "-", "col4": "-", "col5": "-", "col6": "6.1", "col7": "5.1", "col8": "5.1", "col9": "8", "col10": "8", "col11": "5.1", "col12": "5.1", "col13": "5.1", "col14": "5.1" },
+    { "col0": "5.1 III", "col1": "5.1", "col2": "4.3", "col3": "-", "col4": "-", "col5": "-", "col6": "6.1", "col7": "6.1", "col8": "6.1", "col9": "8", "col10": "8", "col11": "8", "col12": "8", "col13": "5.1", "col14": "5.1" },
+    { "col0": "6.1 I Dérmico", "col1": "6.1", "col2": "6.1", "col3": "5.1", "col4": "6.1", "col5": "6.1", "col6": "-", "col7": "-", "col8": "-", "col9": "8", "col10": "6.1", "col11": "6.1", "col12": "6.1", "col13": "6.1", "col14": "6.1" },
+    { "col0": "6.1 I Oral", "col1": "4.2", "col2": "4.3", "col3": "5.1", "col4": "6.1", "col5": "6.1", "col6": "-", "col7": "-", "col8": "-", "col9": "8", "col10": "6.1", "col11": "6.1", "col12": "6.1", "col13": "6.1", "col14": "6.1" },
+    { "col0": "6.1 II Inalação", "col1": "4.2", "col2": "4.3", "col3": "5.1", "col4": "5.1", "col5": "5.1", "col6": "-", "col7": "-", "col8": "-", "col9": "8", "col10": "6.1", "col11": "6.1", "col12": "6.1", "col13": "6.1", "col14": "6.1" },
+    { "col0": "6.1 II Dérmico", "col1": "4.2", "col2": "4.3", "col3": "5.1", "col4": "5.1", "col5": "5.1", "col6": "-", "col7": "-", "col8": "-", "col9": "8", "col10": "8", "col11": "6.1", "col12": "6.1", "col13": "6.1", "col14": "6.1" },
+    { "col0": "6.1 II Oral", "col1": "4.2", "col2": "4.3", "col3": "5.1", "col4": "5.1", "col5": "5.1", "col6": "-", "col7": "-", "col8": "-", "col9": "8", "col10": "8", "col11": "8", "col12": "8", "col13": "6.1", "col14": "6.1" },
+    { "col0": "6.1 III", "col1": "4.2", "col2": "4.3", "col3": "5.1", "col4": "5.1", "col5": "5.1", "col6": "-", "col7": "-", "col8": "-", "col9": "8", "col10": "8", "col11": "8", "col12": "8", "col13": "8", "col14": "8" }
+];
+
 export const DGR_CHAPTERS: DGRChapter[] = [
   {
     id: 1,
@@ -554,7 +584,7 @@ export const DGR_CHAPTERS: DGRChapter[] = [
         { id: "2.5", title: "Mercadorias Perigosas do Operador (COMAT)", blocks: [{ type: "paragraph", content: "Mercadorias perigosas transportadas por um operador para seu próprio uso (COMAT - Company Materials) devem cumprir integralmente os regulamentos, a menos que especificamente isentas (ex: peças de aeronave)." }] },
         { id: "2.6", title: "Quantidades Excecionadas (EQ)", blocks: [{ type: "paragraph", content: "Pequenas quantidades de certas mercadorias perigosas podem ser transportadas com requisitos regulatórios bastante reduzidos. A coluna F da Tabela 4.2 indica o código EQ aplicável. O limite máximo por aeronave é de 1.000 pacotes." }, { type: "visual-mark", content: { type: 'eq', data: {class: '3', unNumbers: '1263'}, caption: "Marca de Quantidade Excecionada" } }] },
         { id: "2.7", title: "Quantidades Limitadas (LQ)", blocks: [{ type: "paragraph", content: "Permite o uso de embalagens combinadas de boa qualidade que não precisam ser testadas conforme as especificações da ONU. O peso bruto máximo por volume é 30 kg." }, { type: "note", content: { title: "Identificação", text: "Instruções de embalagem para Quantidades Limitadas começam com a letra 'Y' (ex: Y341)." } }, { type: "visual-mark", content: { type: 'lq-y', caption: "Marca de Quantidade Limitada (Aérea)" } }] },
-        { id: "2.8", title: "Variações de Estados e Operadores", blocks: [{ type: "paragraph", content: "Estados (países) e Operadores (companhias aéreas) podem impor restrições mais rigorosas do que as da IATA. É obrigatório verificar e cumprir todas as variações aplicáveis." }, { type: "database", content: { id: "variations-db", title: "Tabela 2.8 - Variações", type: "variations", columns: [ { key: "code", label: "Cód" }, { key: "owner", label: "Estado/Operador" }, { key: "text", label: "Restrição" } ], data: VARIATIONS_DATA } }] }
+        { id: "2.8", title: "Variações de Estados e Operadores", blocks: [{ type: "paragraph", content: "Estados (países) e Operadores (companhias aéreas) podem impor restrições mais rigorosas do que as da IATA. É obrigatório verificar e cumprir todas as variações aplicáveis." }, { type: "database", content: { id: "variations-db", title: "Tabela 2.8 - Variações", type: "variations", columns: [ { key: "code", label: "Cód", width: "w-24" }, { key: "owner", label: "Estado/Operador", width: "w-48" }, { key: "text", label: "Restrição", width: "flex-1" } ], data: VARIATIONS_DATA } }] }
     ]
   },
   {
@@ -607,14 +637,31 @@ export const DGR_CHAPTERS: DGRChapter[] = [
         { id: "3.6.1", title: "Divisão 6.1 – Substâncias Tóxicas", blocks: [{ type: "paragraph", content: "Substâncias que podem causar morte, lesões graves ou danos à saúde humana se ingeridas, inaladas ou em contato com a pele." }] },
         { id: "3.6.1.1", title: "Critérios do Grupo de Embalagem", blocks: [{ type: "paragraph", content: "O grupo de embalagem para substâncias da Divisão 6.1 é atribuído com base nos dados de toxicidade aguda por exposição oral, dérmica ou por inalação."}, { type: "table", content: { caption: "Tabela 3.6.A - Critérios de Toxicidade por Grupo de Embalagem", headers: ["Grupo de Embalagem", "Toxicidade Oral (LD50 mg/kg)", "Toxicidade Dérmica (LD50 mg/kg)", "Toxicidade por Inalação (LC50 mg/L)"], rows: [["I (Alto Risco)", "≤ 5", "≤ 50", "≤ 0.2"],["II (Risco Médio)", "> 5 e ≤ 50", "> 50 e ≤ 200", "> 0.2 e ≤ 2.0"],["III (Baixo Risco)", "> 50 e ≤ 300 (sólidos), > 50 e ≤ 2000 (líquidos)", "> 200 e ≤ 1000", "> 2.0 e ≤ 4.0"]]}}]},
         { id: "3.6.2", title: "Divisão 6.2 – Substâncias Infectantes", blocks: [{ type: "paragraph", content: "Substâncias que contêm patógenos, que são micro-organismos (incluindo bactérias, vírus, etc.) que podem causar doenças em humanos ou animais." }] },
-        { id: "3.7", title: "Classe 7 - Material Radioativo", blocks: [{ type: "paragraph", content: "Qualquer material contendo radionuclídeos onde tanto a concentração de atividade quanto a atividade total na remessa excedem os valores especificados." }] },
+        { id: "3.7", title: "Classe 7 - Material Radioativo", blocks: [{ type: "paragraph", content: "Qualquer material contendo radionuclídeos onde a concentração de atividade e a atividade total na remessa excedem os valores especificados." }] },
         { id: "3.8", title: "Classe 8 - Corrosivos", blocks: [{ type: "paragraph", content: "Substâncias que, por ação química, causam danos severos quando em contato com tecidos vivos ou, em caso de vazamento, danificam ou destroem materialmente outras mercadorias ou os meios de transporte." }] },
         { id: "3.8.1", title: "Critérios do Grupo de Embalagem", blocks: [{ type: "paragraph", content: "O grupo de embalagem para substâncias da Classe 8 é atribuído com base na observação da destruição total da espessura da pele intacta."}, { type: "table", content: { caption: "Tabela 3.8.A - Critérios de Corrosividade por Grupo de Embalagem", headers: ["Grupo de Embalagem", "Tempo de Exposição", "Período de Observação", "Efeito"], rows: [["I (Alto Risco)", "≤ 3 min", "≤ 60 min", "Destruição total da pele"],["II (Risco Médio)", "> 3 min e ≤ 1 h", "≤ 14 dias", "Destruição total da pele"],["III (Baixo Risco)", "> 1 h e ≤ 4 h", "≤ 14 dias", "Destruição total da pele"]]}}]},
         { id: "3.9", title: "Classe 9 - Miscelâneas", blocks: [{ type: "paragraph", content: "Artigos e substâncias que, durante o transporte aéreo, apresentam um perigo não coberto por outras classes." }] },
         { id: "3.9.1", title: "Geral", blocks: [{ type: "paragraph", content: "Esta classe abrange substâncias e artigos que, durante o transporte aéreo, apresentam um perigo não coberto por outras classes, como substâncias perigosas ao meio ambiente (UN 3077, UN 3082), material magnetizado, e gelo seco (UN 1845)." }] },
         { id: "3.9.2", title: "Baterias de Lítio", blocks: [{ type: "paragraph", content: "Regulamentações específicas para o transporte de baterias de lítio metálico (UN 3090, UN 3091) e de íon lítio (UN 3480, UN 3481). A classificação e embalagem dependem da capacidade em Watt-hora (Wh) para íon-lítio ou do conteúdo de lítio em gramas (g) para lítio-metal." }] },
         { id: "3.9.3", title: "Material Magnetizado", blocks: [{ type: "paragraph", content: "Artigos que possuem campos magnéticos fortes o suficiente para causar um desvio de bússola superior a 2 graus a uma distância de 2.1 m de qualquer ponto na superfície do pacote." }] },
-        { id: "3.10", title: "Precedência de Riscos", blocks: [{ type: "paragraph", content: "Para substâncias com múltiplos riscos não listadas na Tabela 4.2, a classificação é determinada pela Tabela de Precedência de Riscos (Tabela 3.10.A), que define qual risco tem prioridade." }, { type: "note", content: { title: "Referência Cruzada", text: "A Tabela 3.10.A é fundamental para a classificação correta de substâncias com múltiplos perigos." } } ] }
+        { id: "3.10", title: "Precedência de Riscos", blocks: [
+            { type: "paragraph", content: "Para substâncias com múltiplos riscos não listadas na Tabela 4.2, a classificação é determinada pela Tabela de Precedência de Riscos (Tabela 3.10.A), que define qual risco tem prioridade." }, 
+            { type: "note", content: { title: "Referência Cruzada", text: "A Tabela 3.10.A é fundamental para a classificação correta de substâncias com múltiplos perigos." } },
+            { 
+                type: "database", 
+                content: { 
+                    id: "precedence-of-hazards", 
+                    title: "Tabela 3.10.A - Precedência de Riscos", 
+                    type: "variations", 
+                    columns: PRECEDENCE_OF_HAZARDS_COLUMNS, 
+                    data: PRECEDENCE_OF_HAZARDS_DATA 
+                } 
+            },
+            {
+                type: "paragraph",
+                content: "O cruzamento entre as classes indica a classe de risco primário. O outro risco torna-se o risco subsidiário."
+            }
+        ] }
     ]
   },
   {
@@ -628,7 +675,23 @@ export const DGR_CHAPTERS: DGRChapter[] = [
         { id: "4.1", title: "Nome Apropriado para Embarque (PSN)", blocks: [{ type: "paragraph", content: "O expedidor deve selecionar o nome que melhor descreve a substância na Tabela 4.2." }] },
         { id: "4.1.1", title: "Seleção do PSN", blocks:[{type: "paragraph", content: "O nome em negrito na Tabela 4.2, seguido por qualquer texto não em itálico, constitui o PSN."}]},
         { id: "4.1.2", title: "Entradas Genéricas e N.O.S.", blocks:[{type: "paragraph", content: "Entradas 'não especificadas de outra forma' (n.o.s.) devem ser suplementadas com o(s) nome(s) técnico(s) do(s) componente(s) perigoso(s)."}]},
-        { id: "4.2", title: "Lista de Mercadorias Perigosas (Blue Pages)", blocks: [{ type: "paragraph", content: "A Tabela 4.2, conhecida como 'Páginas Azuis', é a principal referência para todas as mercadorias perigosas listadas. Ela fornece informações sobre classificação, embalagem, limites e disposições especiais." }, { type: "database", content: { id: "blue-pages", title: "Tabela 4.2 - Lista Azul", type: "blue-pages", columns: [{ key: "un", label: "UN", width: "w-16", filterable: true }, { key: "page", label: "Pág.", width: "w-16" }, { key: "name", label: "Nome Apropriado", width: "w-64", filterable: true }, { key: "class", label: "Cls", width: "w-12" }, { key: "sub", label: "Sub", width: "w-12" }, { key: "pg", label: "PG", width: "w-12" }, { key: "eq", label: "EQ", width: "w-12" }, { key: "lq_pi", label: "Y-PI", width: "w-16" }, { key: "pax_pi", label: "Pax PI", width: "w-16" }, { key: "cao_pi", label: "CAO PI", width: "w-16" }, { key: "sp", label: "SP", width: "w-24" }], data: BLUE_PAGES_DATA } }] },
+        { id: "4.2", title: "Lista de Mercadorias Perigosas (Blue Pages)", blocks: [{ type: "paragraph", content: "A Tabela 4.2, conhecida como 'Páginas Azuis', é a principal referência para todas as mercadorias perigosas listadas. Ela fornece informações sobre classificação, embalagem, limites e disposições especiais." }, { type: "database", content: { id: "blue-pages", title: "Tabela 4.2 - Lista Azul", type: "blue-pages", columns: [
+            { key: "un", label: "UN/ID", width: "w-20", filterable: true }, 
+            { key: "name", label: "Nome Apropriado / Descrição", width: "w-96", filterable: true }, 
+            { key: "class", label: "Classe", width: "w-16" }, 
+            { key: "sub", label: "Sub", width: "w-12" }, 
+            { key: "pg", label: "PG", width: "w-12" }, 
+            { key: "eq", label: "EQ", width: "w-12" }, 
+            { key: "lq_pi", label: "LQ PI", width: "w-16" }, 
+            { key: "lq_max", label: "LQ Max", width: "w-20" },
+            { key: "pax_pi", label: "Pax PI", width: "w-16" }, 
+            { key: "pax_max", label: "Pax Max", width: "w-20" },
+            { key: "cao_pi", label: "CAO PI", width: "w-16" }, 
+            { key: "cao_max", label: "CAO Max", width: "w-20" },
+            { key: "sp", label: "SP", width: "w-24" },
+            { key: "erg", label: "ERG", width: "w-16" },
+            { key: "page", label: "Pág.", width: "w-16" }
+        ], data: BLUE_PAGES_DATA } }] },
         { id: "4.3", title: "Nomes Genéricos e N.O.S. (Não Especificados de Outra Forma)", blocks: [
                 { type: "paragraph", content: "Quando uma substância ou mistura não é listada especificamente por nome na Tabela 4.2, uma entrada 'genérica' ou 'não especificada de outra forma' (N.O.S.) deve ser usada. Para garantir a identificação adequada do risco, essas entradas devem ser complementadas com o nome técnico dos componentes perigosos." },
                 { type: "note", content: {
@@ -637,7 +700,7 @@ export const DGR_CHAPTERS: DGRChapter[] = [
                 }},
                 { type: "paragraph", content: "Geralmente, no máximo dois componentes que mais contribuem para o risco da mistura devem ser mostrados entre parênteses. Esta informação é crucial para a resposta a emergências." }
         ]},
-        { id: "4.4", title: "Disposições Especiais", blocks: [{ type: "paragraph", content: "Códigos 'A' (A1, A2, etc.) listados na Coluna M da Tabela 4.2 modificam os requisitos para itens específicos." }, { type: "database", content: { id: "sp-db", title: "Tabela 4.4 - Disposições Especiais", type: "variations", columns: [ { key: "code", label: "Cód" }, { key: "text", label: "Descrição" } ], data: SPECIAL_PROVISIONS_DATA } }] }
+        { id: "4.4", title: "Disposições Especiais", blocks: [{ type: "paragraph", content: "Códigos 'A' (A1, A2, etc.) listados na Coluna M da Tabela 4.2 modificam os requisitos para itens específicos." }, { type: "database", content: { id: "sp-db", title: "Tabela 4.4 - Disposições Especiais", type: "variations", columns: [ { key: "code", label: "Cód", width: "w-24", filterable: true }, { key: "text", label: "Descrição", width: "flex-1", filterable: true } ], data: SPECIAL_PROVISIONS_DATA } }] }
     ]
   },
   {
@@ -722,7 +785,7 @@ export const DGR_CHAPTERS: DGRChapter[] = [
           { id: "7.2", title: "Etiquetagem", blocks: [{ type: "paragraph", content: "Etiquetas de risco (Losangos 100x100mm) devem ser afixadas para indicar o risco primário e, se aplicável, os riscos secundários." }] },
           { id: "7.2.1", title: "Aplicabilidade das Etiquetas", blocks:[{ type: "paragraph", content: "Descreve quando as etiquetas de risco primário e secundário são necessárias." }]},
           { id: "7.2.2", title: "Especificações das Etiquetas", blocks:[{ type: "paragraph", content: "As etiquetas devem ter dimensões, cores e símbolos específicos. O tamanho padrão é um losango de 100 mm x 100 mm." }]},
-          { id: "7.2.3", title: "Posicionamento das Etiquetas", blocks:[{ type: "paragraph", content: "As etiquetas devem ser afixadas em uma superfície do volume, perto da marca do Nome Apropriado, e não devem ser cobertas ou obscurecidas. Para cilindros, a etiqueta pode ser fixada no ombro." }]},
+          { id: "7.2.3", title: "Posicionamento das Etiquetas", blocks:[{ type: "paragraph", content: "As etiquetas devem ser afixadas em uma superfície do volume, perto da marca do Nome Apropriado, e não devem ser cobertas ou obscurecidas. Para cilindros, a etiqueta pode ser fixada no ombro." }] },
           { id: "7.3", title: "Etiquetas de Manuseio", blocks: [{ type: "paragraph", content: "Além das etiquetas de risco, etiquetas de manuseio são necessárias para fornecer instruções sobre como o volume deve ser manuseado e estivado." }, { type: "visual-mark", content: { type: 'cargo-only', caption: 'Cargo Aircraft Only' } }, { type: "visual-mark", content: { type: 'orientation', caption: 'Setas de Orientação' } } ] }
       ]
   },
@@ -976,8 +1039,7 @@ Signature: (Assinatura de J. da Silva)
           { id: "B.2", title: "Tabelas de Conversão Comuns", blocks: [
                 {type: "table", content: { caption: "Conversão de Massa", headers: ["Unidade", "Equivalente em kg"], rows: [["1 quilograma (kg)", "1.0 kg"], ["1 grama (g)", "0.001 kg"], ["1 libra (lb)", "0.453592 kg"], ["1 onça (oz)", "0.028350 kg"]]}},
                 {type: "table", content: { caption: "Conversão de Volume", headers: ["Unidade", "Equivalente em Litros (L)"], rows: [["1 Litro (L)", "1.0 L"], ["1 mililitro (mL)", "0.001 L"], ["1 galão americano (US gal)", "3.78541 L"], ["1 galão imperial (Imp gal)", "4.54609 L"]]}},
-                {type: "table", content: { caption: "Conversão de Pressão", headers: ["Unidade", "Equivalente em kPa"], rows: [["1 quilopascal (kPa)", "1.0 kPa"], ["1 bar", "100 kPa"], ["1 libra por polegada² (psi)", "6.89476 kPa"], ["1 atmosfera (atm)", "101.325 kPa"]]}},
-                {type: "table", content: { caption: "Conversão de Radioatividade", headers: ["Unidade", "Equivalente em Becquerel (Bq)"], rows: [["1 Becquerel (Bq)", "1 Bq (1 desintegração/s)"], ["1 Curie (Ci)", "3.7 x 10¹⁰ Bq (37 GBq)"], ["1 milicurie (mCi)", "3.7 x 10⁷ Bq (37 MBq)"], ["1 microcurie (μCi)", "3.7 x 10⁴ Bq (37 kBq)"]]}}
+                {type: "table", content: { caption: "Conversão de Pressão", headers: ["Unidade", "Equivalente em kPa"], rows: [["1 quilopascal (kPa)", "1.0 kPa"], ["1 bar", "100 kPa"], ["1 libra por polegada² (psi)", "6.89476 kPa"], ["1 atmosfera (atm)", "101.325 kPa"]]}}
           ]}
       ]
   },
@@ -1000,7 +1062,7 @@ Signature: (Assinatura de J. da Silva)
                   headers: ["Risco", "Prioridade Mais Alta Sobre"],
                   rows: [
                       ["4.2 (Combustão Espontânea)", "Todos os outros riscos (exceto exceções)"],
-                      ["4.3 (Perigoso Quando Molhado)", "Todos os outros riscos (exceto 4.2 e exceções)"],
+                      ["4.3 (Perigoso Quando Molhado)", "Todos os outros riscos (exceto 4.2, 4.3 e exceções)"],
                       ["6.1 PG I (Tóxico - Inalação)", "Todos os outros riscos (exceto 4.2, 4.3 e exceções)"],
                       ["3 (Líquido Inflamável)", "8 (Corrosivo), 6.1 (Tóxico Oral/Dérmico)"],
                       ["8 (Corrosivo)", "9 (Miscelânea)"]
@@ -1017,7 +1079,7 @@ Signature: (Assinatura de J. da Silva)
       color: "border-gray-400",
       icon: Building2,
       sections: [
-          { id: "D.1", title: "Lista de Contatos (Exemplos)", blocks: [{ type: "paragraph", content: "A lista completa de autoridades competentes é mantida pela ICAO. Abaixo estão alguns exemplos:" }, { type: "table", content: { headers: ["País", "Autoridade", "Website"], rows: [["Brasil", "ANAC - Agência Nacional de Aviação Civil", "www.anac.gov.br"], ["Estados Unidos", "FAA - Federal Aviation Administration", "www.faa.gov"], ["Reino Unido", "CAA - Civil Aviation Authority", "www.caa.co.uk"], ["Canadá", "Transport Canada", "tc.canada.ca"], ["União Europeia", "EASA", "www.easa.europa.eu"]] } }] }
+          { id: "D.1", title: "Lista de Contatos (Exemplos)", blocks: [{ type: "database", content: { id: 'd1-db', title: "Autoridades Nacionais", type: 'variations', data: [{ "País": "Brasil", "Autoridade": "ANAC - Agência Nacional de Aviação Civil", "Website": "www.anac.gov.br" }, { "País": "Estados Unidos", "Autoridade": "FAA - Federal Aviation Administration", "Website": "www.faa.gov" }, { "País": "Reino Unido", "Autoridade": "CAA - Civil Aviation Authority", "Website": "www.caa.co.uk" }, { "País": "Canadá", "Autoridade": "Transport Canada", "Website": "tc.canada.ca" }, { "País": "União Europeia", "Autoridade": "EASA", "Website": "www.easa.europa.eu" }], columns: [{key: 'País', label: 'País'}, {key: 'Autoridade', label: 'Autoridade'}, {key: 'Website', label: 'Website'}] } }] }
       ]
   },
   {
@@ -1027,7 +1089,7 @@ Signature: (Assinatura de J. da Silva)
       color: "border-gray-400",
       icon: FlaskConical,
       sections: [
-          { id: "E.1", title: "Laboratórios Credenciados para Teste de Embalagens", blocks: [{ type: "paragraph", content: "Lista de instalações autorizadas pelas autoridades competentes a realizar testes de desempenho e certificar embalagens conforme as especificações da ONU (Capítulo 6)." }, { type: "table", content: { headers: ["País", "Laboratório", "Cidade"], rows: [["Brasil", "IPT - Instituto de Pesquisas Tecnológicas", "São Paulo"], ["Brasil", "Embalpack Ensaios", "Rio de Janeiro"], ["EUA", "Ten-E Packaging Services", "Newport, MN"], ["Alemanha", "BAM (Bundesanstalt für Materialforschung)", "Berlin"]] } }] }
+          { id: "E.1", title: "Laboratórios Credenciados para Teste de Embalagens", blocks: [{ type: "database", content: { id: 'e1-db', title: 'Centros de Teste', type: 'variations', data: [{ "País": "Brasil", "Laboratório": "IPT - Instituto de Pesquisas Tecnológicas", "Cidade": "São Paulo" }, { "País": "Brasil", "Laboratório": "Embalpack Ensaios", "Cidade": "Rio de Janeiro" }, { "País": "EUA", "Laboratório": "Ten-E Packaging Services", "Cidade": "Newport, MN" }, { "País": "Alemanha", "Laboratório": "BAM (Bundesanstalt für Materialforschung)", "Cidade": "Berlin" }], columns: [{key: 'País', label: 'País'}, {key: 'Laboratório', label: 'Laboratório'}, {key: 'Cidade', label: 'Cidade'}] } }] }
       ]
   },
   {
@@ -1037,7 +1099,7 @@ Signature: (Assinatura de J. da Silva)
       color: "border-gray-400",
       icon: Globe,
       sections: [
-          { id: "F.1", title: "Agentes Autorizados", blocks: [{ type: "paragraph", content: "A IATA disponibiliza suas publicações (DGR, LAR, PCR) através de uma rede de agentes credenciados mundialmente." }, { type: "list", content: { ordered: false, items: ["Publicações IATA podem ser adquiridas digitalmente ou em formato impresso.", "Verifique o selo de 'IATA Accredited Sales Agent'."] } }] }
+          { id: "F.1", title: "Agentes Autorizados", blocks: [{ type: "list", content: { ordered: false, items: ["Publicações IATA podem ser adquiridas digitalmente ou em formato impresso.", "Verifique o selo de 'IATA Accredited Sales Agent'."] } }] }
       ]
   },
   {
@@ -1047,7 +1109,7 @@ Signature: (Assinatura de J. da Silva)
       color: "border-gray-400",
       icon: BookOpen,
       sections: [
-          { id: "G.1", title: "Centros ATS (Accredited Training School)", blocks: [{ type: "paragraph", content: "Instituições credenciadas para ministrar cursos de Mercadorias Perigosas (CBTA) com reconhecimento internacional." }, { type: "table", content: { headers: ["Região", "Instituição"], rows: [["Américas", "IATA Training Center - Miami"], ["Brasil", "Academia de Carga Aérea (Simulado)"], ["Europa", "Lufthansa Aviation Training"], ["Ásia", "Singapore Aviation Academy"]] } }] }
+          { id: "G.1", title: "Centros ATS (Accredited Training School)", blocks: [{ type: "database", content: { id: 'g1-db', title: 'Centros de Treinamento', type: 'variations', data: [{ "Região": "Américas", "Instituição": "IATA Training Center - Miami" }, { "Região": "Brasil", "Instituição": "Academia de Carga Aérea (Simulado)" }, { "Região": "Europa", "Instituição": "Lufthansa Aviation Training" }, { "Região": "Ásia", "Instituição": "Singapore Aviation Academy" }], columns: [{key: 'Região', label: 'Região'}, {key: 'Instituição', label: 'Instituição'}] } }] }
       ]
   },
   {
