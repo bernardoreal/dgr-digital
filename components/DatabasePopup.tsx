@@ -19,7 +19,7 @@ const DatabasePopup: React.FC<DatabasePopupProps> = ({ initialDb, initialFilter:
     const [scrollTop, setScrollTop] = useState(0);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-    const ROW_HEIGHT = 45;
+    const ROW_HEIGHT = currentDb.id === 'sp-db' ? 120 : 45;
     const OVERSCAN_COUNT = 10;
 
     useEffect(() => {
@@ -186,7 +186,7 @@ const DatabasePopup: React.FC<DatabasePopupProps> = ({ initialDb, initialFilter:
                                             const isClickable = isPiCol && cellValue && cellValue !== 'Forbidden' && !String(cellValue).toLowerCase().includes('see');
 
                                             return (
-                                                <div key={c.key} className={`p-3 border-r border-gray-100 text-xs font-medium text-gray-700 truncate flex items-center ${c.width === 'flex-1' ? 'flex-1 min-w-[200px]' : `flex-shrink-0 ${c.width || 'w-32'}`}`}>
+                                                <div key={c.key} className={`p-3 border-r border-gray-100 text-xs font-medium text-gray-700 flex items-center ${c.width === 'flex-1' ? 'flex-1 min-w-[200px] whitespace-normal overflow-y-auto' : `truncate flex-shrink-0 ${c.width || 'w-32'}`}`}>
                                                     {isClickable ? (
                                                         <span className="text-blue-600 hover:underline font-semibold" onClick={(e) => { e.stopPropagation(); handlePiClick(String(cellValue)); }}>
                                                             {cellValue}
