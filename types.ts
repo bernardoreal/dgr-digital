@@ -1,5 +1,5 @@
 
-export type ContentType = 'paragraph' | 'list' | 'table' | 'note' | 'warning' | 'figure' | 'packing-instruction' | 'variation' | 'definition-list' | 'visual-mark' | 'checklist' | 'tool' | 'wizard' | 'database';
+export type ContentType = 'paragraph' | 'list' | 'table' | 'note' | 'warning' | 'figure' | 'packing-instruction' | 'variation' | 'definition-list' | 'visual-mark' | 'checklist' | 'tool' | 'wizard' | 'database' | 'visual-gallery';
 
 export interface DGRTable {
   headers: string[];
@@ -56,6 +56,13 @@ export interface DGRVariation {
   text: string;
 }
 
+export interface DGRVisualGallery {
+    items: {
+        type: string;
+        caption: string;
+    }[];
+}
+
 export interface DGRChecklist {
     id: string;
     title: string;
@@ -104,7 +111,7 @@ export interface DGRPackingInstruction {
 
 export interface DGRContentBlock {
   type: ContentType;
-  content: string | string[] | DGRTable | DGRList | DGRNote | DGRFigure | DGRPackingInstruction | DGRVariation | DGRDefinition[] | DGRMark | DGRChecklist | DGRTool | DGRWizard | DGRDatabase;
+  content: string | string[] | DGRTable | DGRList | DGRNote | DGRFigure | DGRPackingInstruction | DGRVariation | DGRDefinition[] | DGRMark | DGRChecklist | DGRTool | DGRWizard | DGRDatabase | DGRVisualGallery;
 }
 
 export interface DGRSection {

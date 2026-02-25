@@ -2355,7 +2355,7 @@ export const DGR_CHAPTERS: DGRChapter[] = [
         { id: "2.4", title: "Transporte pelo Correio", blocks: [{ type: "paragraph", content: "A maioria das mercadorias perigosas é proibida no correio aéreo internacional (air mail). As administrações postais nacionais podem ter exceções para o correio doméstico." }] },
         { id: "2.5", title: "Mercadorias Perigosas do Operador (COMAT)", blocks: [{ type: "paragraph", content: "Mercadorias perigosas transportadas por um operador para seu próprio uso (COMAT - Company Materials) devem cumprir integralmente os regulamentos, a menos que especificamente isentas (ex: peças de aeronave)." }] },
         { id: "2.6", title: "Quantidades Excecionadas (EQ)", blocks: [{ type: "paragraph", content: "Pequenas quantidades de certas mercadorias perigosas podem ser transportadas com requisitos regulatórios bastante reduzidos. A coluna F da Tabela 4.2 indica o código EQ aplicável. O limite máximo por aeronave é de 1.000 pacotes." }, { type: 'table', content: { caption: 'Tabela 2.6.A - Limites de Quantidades Excecionadas', headers: ['Código', 'Qtd Máx por Embalagem Interna', 'Qtd Máx por Embalagem Externa'], rows: [['E0', 'Não permitido como Quantidade Excecionada', 'Não permitido como Quantidade Excecionada'],['E1', '30 g / 30 mL', '1 kg / 1 L'],['E2', '30 g / 30 mL', '500 g / 500 mL'],['E3', '30 g / 30 mL', '300 g / 300 mL'],['E4', '1 g / 1 mL', '500 g / 500 mL'],['E5', '1 g / 1 mL', '300 g / 300 mL']] } }, { type: "visual-mark", content: { type: 'eq', data: {class: '3', unNumbers: '1263'}, caption: "Marca de Quantidade Excecionada" } }] },
-        { id: "2.7", title: "Quantidades Limitadas (LQ)", blocks: [{ type: "paragraph", content: "Permite o uso de embalagens combinadas de boa qualidade que não precisam ser testadas conforme as especificações da ONU. O peso bruto máximo por volume é 30 kg." }, { type: 'table', content: { caption: 'Tabela 2.7.A - Exemplos de Limites para Quantidades Limitadas', headers: ['Classe/Divisão de Exemplo', 'Instrução de Embalagem (PI)', 'Limite Máx. por Embalagem Interna'], rows: [['Divisão 2.2 (Gases não-inflamáveis)', 'Y203', '120 mL'],['Classe 3, GE II (Líquidos Inflamáveis)', 'Y341', '1 L'],['Classe 3, GE III (Líquidos Inflamáveis)', 'Y344', '10 L'],['Divisão 6.1, GE II (Tóxicos)', 'Y641', '1 L'],['Classe 8, GE II (Corrosivos)', 'Y840', '0.5 L'],['Classe 9 (Miscelâneas)', 'Y963', '5 kg']] } }, { type: "note", content: { title: "Identificação", text: "Instruções de embalagem para Quantidades Limitadas começam com a letra 'Y' (ex: Y341)." } }, { type: "visual-mark", content: { type: 'lq-y', caption: "Marca de Quantidade Limitada (Aérea)" } }] },
+        { id: "2.7", title: "Quantidades Limitadas (LQ)", blocks: [{ type: "paragraph", content: "Permite o uso de embalagens combinadas de boa qualidade que não precisam ser testadas conforme as especificações da ONU. O peso bruto máximo por volume é 30 kg." }, { type: 'table', content: { caption: 'Tabela 2.7.A - Limites para Quantidades Limitadas', headers: ['Classe ou Divisão', 'Grupo de Embalagem', 'Instrução de Embalagem (PI)', 'Quantidade Máxima Líquida por Embalagem Interna'], rows: [['2.1', '-', 'Y203', '120 mL'], ['2.2', '-', 'Y203', '120 mL'], ['3', 'II', 'Y341', '0.5 L'], ['3', 'III', 'Y344', '5 L'], ['4.1', 'II', 'Y443', '0.5 kg'], ['4.1', 'III', 'Y443', '3 kg'], ['4.3', 'II', 'Y475', '0.5 kg'], ['4.3', 'III', 'Y476', '1 kg'], ['5.1', 'II', 'Y544', '0.5 kg ou 0.5 L'], ['5.1', 'III', 'Y546', '1 kg ou 1 L'], ['5.2', '-', 'Y527', '25 mL ou 100 g'], ['6.1', 'II', 'Y641', '0.1 L ou 0.5 kg'], ['6.1', 'III', 'Y642', '2 L ou 2 kg'], ['8', 'II', 'Y840', '0.1 L ou 0.5 kg'], ['8', 'III', 'Y841', '1 L ou 1 kg'], ['9', '-', 'Y963', '5 L ou 5 kg']] } }, { type: "note", content: { title: "Identificação", text: "Instruções de embalagem para Quantidades Limitadas começam com a letra 'Y' (ex: Y341)." } }, { type: "visual-mark", content: { type: 'lq-y', caption: "Marca de Quantidade Limitada (Aérea)" } }] },
         {
             id: "2.7.1",
             title: "Disposições De Minimis",
@@ -2657,6 +2657,43 @@ export const DGR_CHAPTERS: DGRChapter[] = [
           { id: "7.2.1", title: "Aplicabilidade das Etiquetas", blocks:[{ type: "paragraph", content: "Descreve quando as etiquetas de risco primário e secundário são necessárias." }]},
           { id: "7.2.2", title: "Especificações das Etiquetas", blocks:[{ type: "paragraph", content: "As etiquetas devem ter dimensões, cores e símbolos específicos. O tamanho padrão é um losango de 100 mm x 100 mm." }]},
           { id: "7.2.3", title: "Posicionamento das Etiquetas", blocks:[{ type: "paragraph", content: "As etiquetas devem ser afixadas em uma superfície do volume, perto da marca do Nome Apropriado, e não devem ser cobertas ou obscurecidas. Para cilindros, a etiqueta pode ser fixada no ombro." }] },
+          {
+            id: "7.2.4",
+            title: "Galeria de Etiquetas de Risco e Manuseio",
+            blocks: [
+                { type: "paragraph", content: "A seguir, uma galeria de referência visual para as etiquetas de risco primário e de manuseio mais comuns. A identificação correta e imediata destas etiquetas é fundamental para a segurança." },
+                { type: 'visual-gallery', content: {
+                    items: [
+                        { type: 'explosive-1.1', caption: 'Classe 1.1, 1.2, 1.3' },
+                        { type: 'explosive-1.4', caption: 'Classe 1.4' },
+                        { type: 'explosive-1.5', caption: 'Classe 1.5' },
+                        { type: 'explosive-1.6', caption: 'Classe 1.6' },
+                        { type: 'flammable-gas', caption: 'Classe 2.1' },
+                        { type: 'non-flammable-gas', caption: 'Classe 2.2' },
+                        { type: 'toxic-gas', caption: 'Classe 2.3' },
+                        { type: 'flammable-liquid', caption: 'Classe 3' },
+                        { type: 'flammable-solid', caption: 'Classe 4.1' },
+                        { type: 'spontaneously-combustible', caption: 'Classe 4.2' },
+                        { type: 'dangerous-when-wet', caption: 'Classe 4.3' },
+                        { type: 'oxidizer', caption: 'Classe 5.1' },
+                        { type: 'organic-peroxide', caption: 'Classe 5.2' },
+                        { type: 'toxic', caption: 'Classe 6.1' },
+                        { type: 'infectious-substance', caption: 'Classe 6.2' },
+                        { type: 'radioactive-i', caption: 'Classe 7 (Cat I)' },
+                        { type: 'radioactive-ii', caption: 'Classe 7 (Cat II)' },
+                        { type: 'radioactive-iii', caption: 'Classe 7 (Cat III)' },
+                        { type: 'corrosive', caption: 'Classe 8' },
+                        { type: 'miscellaneous', caption: 'Classe 9' },
+                        { type: 'cargo-only', caption: 'Cargo Aircraft Only' },
+                        { type: 'orientation', caption: 'Setas de Orientação' },
+                        { type: 'magnetized-material', caption: 'Material Magnetizado' },
+                        { type: 'lithium-battery', caption: 'Bateria de Lítio' },
+                        { type: 'cryogenic', caption: 'Líquido Criogênico' },
+                        { type: 'environmentally-hazardous', caption: 'Perigoso ao Meio Ambiente' }
+                    ]
+                }}
+            ]
+          },
           { id: "7.3", title: "Etiquetas de Manuseio", blocks: [{ type: "paragraph", content: "Além das etiquetas de risco, etiquetas de manuseio são necessárias para fornecer instruções sobre como o volume deve ser manuseado e estivado." }, { type: "visual-mark", content: { type: 'cargo-only', caption: 'Cargo Aircraft Only' } }, { type: "visual-mark", content: { type: 'orientation', caption: 'Setas de Orientação' } } ] }
       ]
   },
@@ -2845,6 +2882,41 @@ Signature: (Assinatura de J. da Silva)
                 ],
                 caption: 'Tabela 10.6.B - Categorias de Volumes Radioativos'
             }}] },
+           { id: "9.3.1.1", title: "Ferramenta Interativa de Segregação", blocks: [{ type: "tool", content: {
+            toolType: 'segregation-checker',
+            title: 'Verificador de Segregação',
+            data: {
+                classes: ["1", "2.1", "2.2", "2.3", "3", "4.1", "4.2", "4.3", "5.1", "5.2", "6.1", "6.2", "7", "8", "9"],
+                labels: {
+                    "1": "Explosivos", "2.1": "Gás Inflamável", "2.2": "Gás Não-Inflamável", "2.3": "Gás Tóxico",
+                    "3": "Líquido Inflamável", "4.1": "Sólido Inflamável", "4.2": "Combustão Espontânea",
+                    "4.3": "Perigoso Quando Molhado", "5.1": "Oxidante", "5.2": "Peróxido Orgânico",
+                    "6.1": "Tóxico", "6.2": "Substância Infecciosa", "7": "Radioativo", "8": "Corrosivo", "9": "Miscelânea"
+                },
+                matrix: {
+                    "1": {"4.2": true, "5.2": true, "7": true},
+                    "2.1": {"4.2": true, "5.1": true, "5.2": true, "7": true},
+                    "2.2": {"4.2": true, "5.2": true, "7": true},
+                    "2.3": {"4.2": true, "5.2": true, "7": true},
+                    "3": {"4.2": true, "5.1": true, "5.2": true, "7": true},
+                    "4.1": {"4.2": true, "5.1": true, "5.2": true, "7": true},
+                    "4.2": {"1": true, "2.1": true, "2.2": true, "2.3": true, "3": true, "4.1": true, "4.3": true, "5.1": true, "5.2": true, "6.1": true, "6.2": true, "7": true, "8": true, "9": true},
+                    "4.3": {"4.2": true, "5.2": true, "7": true, "8": true},
+                    "5.1": {"2.1": true, "3": true, "4.1": true, "4.2": true, "5.2": true, "7": true, "8": true},
+                    "5.2": {"1": true, "2.1": true, "2.2": true, "2.3": true, "3": true, "4.1": true, "4.2": true, "4.3": true, "5.1": true, "6.1": true, "6.2": true, "7": true, "8": true, "9": true},
+                    "6.1": {"4.2": true, "5.2": true, "7": true},
+                    "6.2": {"4.2": true, "5.2": true, "7": true},
+                    "7": {"1": true, "2.1": true, "2.2": true, "2.3": true, "3": true, "4.1": true, "4.2": true, "4.3": true, "5.1": true, "5.2": true, "6.1": true, "6.2": true, "8": true, "9": true},
+                    "8": {"4.2": true, "4.3": true, "5.1": true, "5.2": true, "7": true},
+                    "9": {"4.2": true, "5.2": true, "7": true}
+                },
+                notes: {
+                    note1: 'Esta ferramenta é baseada na Tabela 9.3.A e não substitui a consulta ao DGR oficial.',
+                    note2: 'Riscos subsidiários devem ser sempre considerados e podem exigir segregação adicional.',
+                    note3: 'Consulte as disposições de segregação para alimentos e rações, se aplicável.'
+                }
+            }
+        }}]},
           { id: "10.7", title: "Marcação e Etiquetagem", blocks:[] },
           { id: "10.7.1", title: "Marcação", blocks:[
               { type: "paragraph", content: "Cada volume de material radioativo (exceto pacotes exceptuados) deve ser marcado de forma clara e durável com:" },

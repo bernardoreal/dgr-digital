@@ -6,10 +6,12 @@ import {
 } from 'lucide-react';
 import { 
     DGRChapter, DGRContentBlock, DGRTable, DGRList, DGRNote,
-    DGRMark, DGRDatabase, DGRDefinition, DGRChecklist
+    DGRMark, DGRDatabase, DGRDefinition, DGRChecklist, DGRVisualGallery, DGRTool
 } from '../types';
 import UNDetailModal from './UNDetailModal';
 import DatabasePopup from './DatabasePopup';
+import HazardLabel from './HazardLabel';
+import SegregationChecker from './SegregationChecker';
 
 let popupWindow: Window | null = null;
 
@@ -183,6 +185,28 @@ const ChapterDetail: React.FC<ChapterDetailProps> = ({
       case 'definition-list': {
           const defs = b.content as DGRDefinition[];
           return <dl key={i} className="space-y-4 mb-8">{defs.map((def, idx) => <div key={idx} className="border-l-2 border-gray-100 pl-4"><dt className="font-bold text-sm text-gray-800">{def.term}</dt><dd className="text-sm text-gray-600">{def.definition}</dd></div>)}</dl>;
+      }
+      case 'visual-gallery': {
+          const gallery = b.content as DGRVisualGallery;
+          return (
+            <div key={i} className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 my-12">
+                {gallery.items.map((item, idx) => (
+                    <div key={idx} className="flex flex-col items-center text-center">
+                        <div className="bg-white rounded-lg shadow-md w-32 h-32 flex items-center justify-center mb-2 p-2">
+                           <HazardLabel type={item.type} />
+                        </div>
+                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">{item.caption}</p>
+                    </div>
+                ))}
+            </div>
+          );
+      }
+      case 'tool': {
+          const tool = b.content as DGRTool;
+          if (tool.toolType === 'segregation-checker') {
+              return <SegregationChecker matrix={tool.data.matrix} classes={tool.data.classes} labels={tool.data.labels} notes={tool.data.notes} />;
+          }
+          return null;
       }
       case 'checklist': {
           const cl = b.content as DGRChecklist;
