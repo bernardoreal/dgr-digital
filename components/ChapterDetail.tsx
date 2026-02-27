@@ -11,6 +11,7 @@ import {
 import UNDetailModal from './UNDetailModal';
 import DatabasePopup from './DatabasePopup';
 import HazardLabel from './HazardLabel';
+import HazardClassModal from './HazardClassModal';
 import SegregationChecker from './SegregationChecker';
 
 let popupWindow: Window | null = null;
@@ -34,6 +35,7 @@ const ChapterDetail: React.FC<ChapterDetailProps> = ({
   const [selectedUNEntry, setSelectedUNEntry] = useState<Record<string, any> | null>(null);
   const [tableFilters, setTableFilters] = useState<Record<string, string>>({});
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
+  const [selectedHazard, setSelectedHazard] = useState<string | null>(null);
 
   useEffect(() => {
     if (initialScrollId) {
@@ -192,9 +194,13 @@ const ChapterDetail: React.FC<ChapterDetailProps> = ({
             <div key={i} className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 my-12">
                 {gallery.items.map((item, idx) => (
                     <div key={idx} className="flex flex-col items-center text-center">
-                        <div className="bg-white rounded-lg shadow-md w-32 h-32 flex items-center justify-center mb-2 p-2">
+                        <button 
+                          onClick={() => setSelectedHazard(item.type)}
+                          className="w-32 h-32 flex items-center justify-center mb-2 hover:scale-110 transition-transform duration-300 focus:outline-none focus:ring-4 focus:ring-latam-indigo/20 rounded-lg cursor-pointer"
+                          title={`Ver detalhes da classe: ${item.caption}`}
+                        >
                            <HazardLabel type={item.type} />
-                        </div>
+                        </button>
                         <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">{item.caption}</p>
                     </div>
                 ))}
@@ -271,6 +277,11 @@ const ChapterDetail: React.FC<ChapterDetailProps> = ({
         </div>
       </div>
       {selectedUNEntry && <UNDetailModal data={selectedUNEntry} onClose={() => setSelectedUNEntry(null)} />}
+      <HazardClassModal 
+        isOpen={!!selectedHazard} 
+        onClose={() => setSelectedHazard(null)} 
+        hazardType={selectedHazard} 
+      />
     </div>
   );
 };

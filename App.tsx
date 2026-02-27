@@ -1,4 +1,5 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
+import ErrorBoundary from './components/ErrorBoundary';
 import { Plane, Search, ShieldCheck, ArrowRight, Sparkles, Bot, AlertTriangle, X, Settings, CheckCircle, Loader2 } from 'lucide-react';
 import { DGR_CHAPTERS, APP_VERSION } from './constants';
 import { DGRChapter, ViewState, DGRTable, DGRDatabase } from './types';
@@ -151,7 +152,8 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col font-sans text-latam-text bg-latam-bg transition-all duration-300">
+    <ErrorBoundary>
+      <div className="min-h-screen flex flex-col font-sans text-latam-text bg-latam-bg transition-all duration-300">
       
       {/* Safety Disclaimer Banner - ONLY shown if Unverified */}
       {showDisclaimer && regConfig.validationStatus !== 'VERIFIED_OPERATIONAL' && (
@@ -415,6 +417,7 @@ const App: React.FC = () => {
         </div>
       </footer>
     </div>
+    </ErrorBoundary>
   );
 };
 
