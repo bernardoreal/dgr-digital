@@ -81,7 +81,7 @@ const ChapterDetail: React.FC<ChapterDetailProps> = ({
             {text.split(regex).map((part, i) => 
                 tokens.some(t => t.toLowerCase() === part.toLowerCase()) 
                 ? <mark key={i} className="bg-yellow-200 text-gray-900 px-0.5 rounded">{part}</mark> 
-                : part
+                : <React.Fragment key={i}>{part}</React.Fragment>
             )}
         </>
       );
@@ -213,13 +213,13 @@ const ChapterDetail: React.FC<ChapterDetailProps> = ({
       case 'tool': {
           const tool = b.content as DGRTool;
           if (tool.toolType === 'segregation-checker') {
-              return <SegregationChecker matrix={tool.data.matrix} classes={tool.data.classes} labels={tool.data.labels} notes={tool.data.notes} />;
+              return <SegregationChecker key={i} matrix={tool.data.matrix} classes={tool.data.classes} labels={tool.data.labels} notes={tool.data.notes} />;
           }
           if (tool.toolType === 'acceptance-checklist') {
-              return <AcceptanceChecklist />;
+              return <AcceptanceChecklist key={i} />;
           }
           if (tool.toolType === 'erg-decoder') {
-              return <ERGDecoder />;
+              return <ERGDecoder key={i} />;
           }
           return null;
       }
