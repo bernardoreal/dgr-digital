@@ -2496,7 +2496,155 @@ export const DGR_CHAPTERS: DGRChapter[] = [
         { id: "3.8.1", title: "Critérios do Grupo de Embalagem", blocks: [{ type: "paragraph", content: "O grupo de embalagem para substâncias da Classe 8 é atribuído com base na observação da destruição total da espessura da pele intacta."}, { type: "table", content: { caption: "Tabela 3.8.A - Critérios de Corrosividade por Grupo de Embalagem", headers: ["Grupo de Embalagem", "Tempo de Exposição", "Período de Observação", "Efeito"], rows: [["I (Alto Risco)", "≤ 3 min", "≤ 60 min", "Destruição total da pele"],["II (Risco Médio)", "> 3 min e ≤ 1 h", "≤ 14 dias", "Destruição total da pele"],["III (Baixo Risco)", "> 1 h e ≤ 4 h", "≤ 14 dias", "Destruição total da pele"]]}}]},
         { id: "3.9", title: "Classe 9 - Miscelâneas", blocks: [{ type: "paragraph", content: "Artigos e substâncias que, durante o transporte aéreo, apresentam um perigo não coberto por outras classes." }] },
         { id: "3.9.1", title: "Geral", blocks: [{ type: "paragraph", content: "Esta classe abrange substâncias e artigos que, durante o transporte aéreo, apresentam um perigo não coberto por outras classes, como substâncias perigosas ao meio ambiente (UN 3077, UN 3082), material magnetizado, e gelo seco (UN 1845)." }] },
-        { id: "3.9.2", title: "Baterias de Lítio", blocks: [{ type: "paragraph", content: "Regulamentações específicas para o transporte de baterias de lítio metálico (UN 3090, UN 3091) e de íon lítio (UN 3480, UN 3481). A classificação e embalagem dependem da capacidade em Watt-hora (Wh) para íon-lítio ou do conteúdo de lítio em gramas (g) para lítio-metal." }] },
+        { id: "3.9.2", title: "Baterias de Lítio", blocks: [
+            { type: "paragraph", content: "Regulamentações específicas para o transporte de baterias de lítio metálico (UN 3090, UN 3091) e de íon lítio (UN 3480, UN 3481). A classificação e embalagem dependem da capacidade em Watt-hora (Wh) para íon-lítio ou do conteúdo de lítio em gramas (g) para lítio-metal." },
+            { type: "wizard", content: {
+                id: "lithium-battery-wizard",
+                title: "Classificador de Baterias de Lítio (IATA DGR)",
+                startNodeId: "q1",
+                nodes: {
+                    "q1": {
+                        question: "Qual é o tipo da bateria?",
+                        options: [
+                            { label: "Íon de Lítio (Recarregável - UN 3480/3481)", nextNodeId: "q2_ion" },
+                            { label: "Lítio Metálico (Não Recarregável - UN 3090/3091)", nextNodeId: "q2_metal" }
+                        ]
+                    },
+                    "q2_ion": {
+                        question: "Como a bateria está sendo enviada?",
+                        options: [
+                            { label: "Apenas baterias (Soltas / UN 3480)", nextNodeId: "q3_ion_loose" },
+                            { label: "Embaladas COM equipamento (UN 3481)", nextNodeId: "q3_ion_packed" },
+                            { label: "Instaladas NO equipamento (UN 3481)", nextNodeId: "q3_ion_contained" }
+                        ]
+                    },
+                    "q3_ion_loose": {
+                        question: "Qual a capacidade em Watt-hora (Wh)?",
+                        options: [
+                            { label: "Célula ≤ 20 Wh ou Bateria ≤ 100 Wh", nextNodeId: "res_ion_loose_sec_ib_ii" },
+                            { label: "Célula > 20 Wh ou Bateria > 100 Wh", nextNodeId: "res_ion_loose_sec_ia" }
+                        ]
+                    },
+                    "q3_ion_packed": {
+                        question: "Qual a capacidade em Watt-hora (Wh)?",
+                        options: [
+                            { label: "Célula ≤ 20 Wh ou Bateria ≤ 100 Wh", nextNodeId: "res_ion_packed_sec_ii" },
+                            { label: "Célula > 20 Wh ou Bateria > 100 Wh", nextNodeId: "res_ion_packed_sec_i" }
+                        ]
+                    },
+                    "q3_ion_contained": {
+                        question: "Qual a capacidade em Watt-hora (Wh)?",
+                        options: [
+                            { label: "Célula ≤ 20 Wh ou Bateria ≤ 100 Wh", nextNodeId: "res_ion_contained_sec_ii" },
+                            { label: "Célula > 20 Wh ou Bateria > 100 Wh", nextNodeId: "res_ion_contained_sec_i" }
+                        ]
+                    },
+                    "q2_metal": {
+                        question: "Como a bateria está sendo enviada?",
+                        options: [
+                            { label: "Apenas baterias (Soltas / UN 3090)", nextNodeId: "q3_metal_loose" },
+                            { label: "Embaladas COM equipamento (UN 3091)", nextNodeId: "q3_metal_packed" },
+                            { label: "Instaladas NO equipamento (UN 3091)", nextNodeId: "q3_metal_contained" }
+                        ]
+                    },
+                    "q3_metal_loose": {
+                        question: "Qual o conteúdo de Lítio em gramas (g)?",
+                        options: [
+                            { label: "Célula ≤ 1g ou Bateria ≤ 2g", nextNodeId: "res_metal_loose_sec_ib_ii" },
+                            { label: "Célula > 1g ou Bateria > 2g", nextNodeId: "res_metal_loose_sec_ia" }
+                        ]
+                    },
+                    "q3_metal_packed": {
+                        question: "Qual o conteúdo de Lítio em gramas (g)?",
+                        options: [
+                            { label: "Célula ≤ 1g ou Bateria ≤ 2g", nextNodeId: "res_metal_packed_sec_ii" },
+                            { label: "Célula > 1g ou Bateria > 2g", nextNodeId: "res_metal_packed_sec_i" }
+                        ]
+                    },
+                    "q3_metal_contained": {
+                        question: "Qual o conteúdo de Lítio em gramas (g)?",
+                        options: [
+                            { label: "Célula ≤ 1g ou Bateria ≤ 2g", nextNodeId: "res_metal_contained_sec_ii" },
+                            { label: "Célula > 1g ou Bateria > 2g", nextNodeId: "res_metal_contained_sec_i" }
+                        ]
+                    }
+                },
+                results: {
+                    "res_ion_loose_sec_ia": {
+                        title: "UN 3480 - PI 965 Seção IA",
+                        description: "Baterias de Íon de Lítio de alta capacidade. Totalmente regulamentadas como Classe 9.",
+                        type: "danger",
+                        actionText: "Requer DGD, Etiqueta Classe 9, Etiqueta CAO. Proibido em aeronaves de passageiros."
+                    },
+                    "res_ion_loose_sec_ib_ii": {
+                        title: "UN 3480 - PI 965 Seção IB / II",
+                        description: "Baterias de Íon de Lítio de baixa capacidade. Devem voar apenas em aeronaves de carga (CAO).",
+                        type: "warning",
+                        actionText: "Seção IB requer Etiqueta Classe 9 e Marca de Bateria. Seção II requer apenas Marca de Bateria. Ambas requerem CAO."
+                    },
+                    "res_ion_packed_sec_i": {
+                        title: "UN 3481 - PI 966 Seção I",
+                        description: "Baterias de alta capacidade embaladas com equipamento. Totalmente regulamentadas.",
+                        type: "danger",
+                        actionText: "Requer DGD e Etiqueta Classe 9."
+                    },
+                    "res_ion_packed_sec_ii": {
+                        title: "UN 3481 - PI 966 Seção II",
+                        description: "Baterias de baixa capacidade embaladas com equipamento. Parcialmente regulamentadas.",
+                        type: "success",
+                        actionText: "Não requer DGD. Requer Marca de Bateria de Lítio."
+                    },
+                    "res_ion_contained_sec_i": {
+                        title: "UN 3481 - PI 967 Seção I",
+                        description: "Baterias de alta capacidade instaladas em equipamento. Totalmente regulamentadas.",
+                        type: "danger",
+                        actionText: "Requer DGD e Etiqueta Classe 9."
+                    },
+                    "res_ion_contained_sec_ii": {
+                        title: "UN 3481 - PI 967 Seção II",
+                        description: "Baterias de baixa capacidade instaladas em equipamento.",
+                        type: "success",
+                        actionText: "Não requer DGD. Marca de Bateria de Lítio pode ser exigida dependendo da quantidade de pacotes."
+                    },
+                    "res_metal_loose_sec_ia": {
+                        title: "UN 3090 - PI 968 Seção IA",
+                        description: "Baterias de Lítio Metálico de alta capacidade. Totalmente regulamentadas.",
+                        type: "danger",
+                        actionText: "Requer DGD, Etiqueta Classe 9, Etiqueta CAO. Proibido em aeronaves de passageiros."
+                    },
+                    "res_metal_loose_sec_ib_ii": {
+                        title: "UN 3090 - PI 968 Seção IB / II",
+                        description: "Baterias de Lítio Metálico de baixa capacidade. Devem voar apenas em aeronaves de carga (CAO).",
+                        type: "warning",
+                        actionText: "Seção IB requer Etiqueta Classe 9 e Marca de Bateria. Seção II requer apenas Marca de Bateria. Ambas requerem CAO."
+                    },
+                    "res_metal_packed_sec_i": {
+                        title: "UN 3091 - PI 969 Seção I",
+                        description: "Baterias de Lítio Metálico de alta capacidade com equipamento.",
+                        type: "danger",
+                        actionText: "Requer DGD e Etiqueta Classe 9."
+                    },
+                    "res_metal_packed_sec_ii": {
+                        title: "UN 3091 - PI 969 Seção II",
+                        description: "Baterias de Lítio Metálico de baixa capacidade com equipamento.",
+                        type: "success",
+                        actionText: "Não requer DGD. Requer Marca de Bateria de Lítio."
+                    },
+                    "res_metal_contained_sec_i": {
+                        title: "UN 3091 - PI 970 Seção I",
+                        description: "Baterias de Lítio Metálico de alta capacidade instaladas em equipamento.",
+                        type: "danger",
+                        actionText: "Requer DGD e Etiqueta Classe 9."
+                    },
+                    "res_metal_contained_sec_ii": {
+                        title: "UN 3091 - PI 970 Seção II",
+                        description: "Baterias de Lítio Metálico de baixa capacidade instaladas em equipamento.",
+                        type: "success",
+                        actionText: "Não requer DGD. Marca de Bateria de Lítio pode ser exigida dependendo da quantidade de pacotes."
+                    }
+                }
+            }}
+        ] },
         { id: "3.9.3", title: "Material Magnetizado", blocks: [{ type: "paragraph", content: "Artigos que possuem campos magnéticos fortes o suficiente para causar um desvio de bússola superior a 2 graus a uma distância de 2.1 m de qualquer ponto na superfície do pacote." }] },
         {
             id: "3.9.4",
@@ -2824,7 +2972,11 @@ Signature: (Assinatura de J. da Silva)
           { id: "9.6.1", title: "Informação aos Passageiros", blocks: [{ type: "paragraph", content: "Os operadores aéreos devem garantir que avisos sejam exibidos de forma clara e proeminente nos aeroportos (em áreas de check-in, venda de passagens, portões de embarque) e em seus websites. Esses avisos informam aos passageiros sobre os tipos de mercadorias perigosas que são estritamente proibidas em sua bagagem de mão e despachada." }] },
           { id: "9.6.2", title: "Informação a Funcionários", blocks: [{ type: "paragraph", content: "Manuais operacionais e instruções de emergência devem estar prontamente disponíveis para todos os funcionários envolvidos no manuseio de carga. O NOTOC (Notification to Pilot-in-Command) é a principal fonte de informação para a tripulação de voo e para o pessoal de terra responsável pelo carregamento." }] },
           { id: "9.6.3", title: "Informação em Emergência em Voo", blocks: [{ type: "paragraph", content: "No evento de uma emergência em voo, o piloto-em-comando deve, assim que a situação permitir, informar a unidade de controle de tráfego aéreo (ATC) apropriada sobre as mercadorias perigosas a bordo. A informação deve ser clara e concisa, incluindo, se possível, o Nome Apropriado para Embarque, Classe, Número UN, quantidade e localização na aeronave." }] },
-          { id: "9.7", title: "Retenção de Documentos", blocks: [{ type: "paragraph", content: "O operador deve reter uma cópia da DGD, do checklist de aceitação e do NOTOC por um período mínimo de três meses após o voo." }] }
+          { id: "9.7", title: "Retenção de Documentos", blocks: [{ type: "paragraph", content: "O operador deve reter uma cópia da DGD, do checklist de aceitação e do NOTOC por um período mínimo de três meses após o voo." }] },
+          { id: "9.8", title: "Resposta a Emergências (ERG)", blocks: [
+              { type: "paragraph", content: "O Código ERG (Emergency Response Drill Code) é fornecido para cada entrada na Lista de Mercadorias Perigosas. Ele orienta a tripulação sobre as ações imediatas a serem tomadas em caso de incidente a bordo." },
+              { type: "tool", content: { toolType: "erg-decoder", title: "Decodificador ERG", data: { classes: [], labels: {}, matrix: {}, notes: {} } } }
+          ] }
       ]
   },
   {

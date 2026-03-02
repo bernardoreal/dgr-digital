@@ -13,6 +13,9 @@ import DatabasePopup from './DatabasePopup';
 import HazardLabel from './HazardLabel';
 import HazardClassModal from './HazardClassModal';
 import SegregationChecker from './SegregationChecker';
+import AcceptanceChecklist from './AcceptanceChecklist';
+import ERGDecoder from './ERGDecoder';
+import DGRWizard from './DGRWizard';
 
 let popupWindow: Window | null = null;
 
@@ -212,6 +215,12 @@ const ChapterDetail: React.FC<ChapterDetailProps> = ({
           if (tool.toolType === 'segregation-checker') {
               return <SegregationChecker matrix={tool.data.matrix} classes={tool.data.classes} labels={tool.data.labels} notes={tool.data.notes} />;
           }
+          if (tool.toolType === 'acceptance-checklist') {
+              return <AcceptanceChecklist />;
+          }
+          if (tool.toolType === 'erg-decoder') {
+              return <ERGDecoder />;
+          }
           return null;
       }
       case 'checklist': {
@@ -232,6 +241,10 @@ const ChapterDetail: React.FC<ChapterDetailProps> = ({
                 </div>
             </div>
           );
+      }
+      case 'wizard': {
+          const wizardData = b.content as any;
+          return <DGRWizard key={i} wizard={wizardData} />;
       }
       default: return <div key={i} className="p-4 bg-gray-100 rounded text-xs text-gray-400">Bloco de conteúdo não suportado: {b.type}</div>;
     }

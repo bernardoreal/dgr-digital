@@ -73,7 +73,7 @@ export interface DGRChecklist {
     }[];
 }
 
-export type DGRToolType = 'segregation-checker';
+export type DGRToolType = 'segregation-checker' | 'acceptance-checklist' | 'erg-decoder';
 
 export interface DGRTool {
     toolType: DGRToolType;
