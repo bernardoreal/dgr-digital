@@ -1,7 +1,19 @@
-import React, { useState } from 'react';
+/**
+ * @file ERGDecoder.tsx
+ * @description Operational emergency response code translator.
+ * Maps ICAO/IATA Emergency Response Guidebook (ERG) drill codes to visual action cards.
+ */
+
+import React, { useState, useMemo, useCallback } from 'react';
 import { Search, ShieldAlert, Info, AlertTriangle, Wind, Flame, Droplets } from 'lucide-react';
 
-const ERG_NUMBERS: Record<string, { title: string, description: string, icon: any }> = {
+interface ERGPrimaryRisk {
+  title: string;
+  description: string;
+  icon: any;
+}
+
+const ERG_NUMBERS: Record<string, ERGPrimaryRisk> = {
   '1': { title: 'Explosivo', description: 'Risco de explosão em massa ou projeção. Mantenha distância.', icon: Flame },
   '2': { title: 'Gás', description: 'Risco de asfixia ou toxicidade. Use proteção respiratória.', icon: Wind },
   '3': { title: 'Líquido Inflamável', description: 'Risco de incêndio. Evite fontes de ignição.', icon: Flame },
@@ -26,7 +38,7 @@ const ERG_LETTERS: Record<string, string> = {
   'M': 'Magnético',
   'N': 'Nocivo',
   'P': 'Tóxico (Poison)',
-  'S': 'Combustão Espontânea',
+  'S': 'Combustão Spontânea',
   'W': 'Perigoso quando molhado',
   'X': 'Oxidante',
   'Z': 'Risco Múltiplo'
@@ -35,8 +47,19 @@ const ERG_LETTERS: Record<string, string> = {
 const ERGDecoder: React.FC = () => {
   const [code, setCode] = useState('');
 
-  const parseCode = (input: string) => {
-    const clean = input.trim().toUpperCase();
+  /**
+   * Safe change handler to control text capitalization.
+   */
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setCode(e.target.value.toUpperCase());
+  }, []);
+
+  /**
+   * Parses current ERG alphanumeric sequence.
+   * Runs the matching regular expression.
+   */
+  const parsedResult = useMemo(() => {
+    const clean = code.trim().toUpperCase();
     if (!clean) return null;
 
     const match = clean.match(/^(\d+)([A-Z]+)$/);
@@ -46,17 +69,19 @@ const ERGDecoder: React.FC = () => {
     const letters = match[2].split('');
 
     const primary = ERG_NUMBERS[num];
-    const secondary = letters.map(l => ({ letter: l, meaning: ERG_LETTERS[l] || 'Desconhecido' }));
-
     if (!primary) return null;
 
-    return { primary, secondary };
-  };
+    const secondary = letters.map(l => ({
+      letter: l,
+      meaning: ERG_LETTERS[l] || 'Desconhecido'
+    }));
 
-  const result = parseCode(code);
+    return { primary, secondary };
+  }, [code]);
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden my-8 font-sans">
+    <div id="erg-decoder-card" className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden my-8 font-sans">
+      {/* Decodificador visual bar */}
       <div className="bg-gray-900 text-white p-6 border-b-4 border-latam-coral">
         <div className="flex items-center">
           <ShieldAlert className="w-6 h-6 mr-3 text-latam-coral" />
@@ -64,8 +89,8 @@ const ERGDecoder: React.FC = () => {
             <h3 className="text-2xl font-black uppercase tracking-tight">
               Decodificador ERG (Emergency Response Drill Code)
             </h3>
-            <p className="text-gray-400 text-sm mt-1 font-medium">
-              Traduza os códigos ERG encontrados na DGD ou NOTOC para instruções de emergência.
+            <p className="text-gray-400 text-sm mt-1 font-medium leading-relaxed">
+              Traduza os códigos ERG encontrados na DGD ou NOTOC para obter as instruções adequadas de emergência.
             </p>
           </div>
         </div>
@@ -80,7 +105,7 @@ const ERGDecoder: React.FC = () => {
             <input
               type="text"
               value={code}
-              onChange={(e) => setCode(e.target.value)}
+              onChange={handleInputChange}
               placeholder="Ex: 3L"
               className="w-full text-2xl font-black uppercase tracking-widest pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:border-latam-indigo focus:ring-4 focus:ring-latam-indigo/20 transition-all outline-none"
               maxLength={5}
@@ -89,28 +114,30 @@ const ERGDecoder: React.FC = () => {
           </div>
         </div>
 
-        {code && !result && (
-          <div className="text-center p-6 bg-red-50 text-red-600 rounded-xl border border-red-100 font-bold">
+        {code && !parsedResult && (
+          <div className="text-center p-6 bg-red-50 text-red-600 rounded-xl border border-red-100 font-bold animate-pulse">
             Código ERG inválido ou não reconhecido. Formato esperado: Número + Letra(s) (ex: 3L).
           </div>
         )}
 
-        {result && (
+        {parsedResult && (
           <div className="animate-fade-in space-y-6">
-            <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-6 flex items-start">
-              <div className="bg-latam-indigo text-white p-3 rounded-lg mr-4">
-                <result.primary.icon className="w-8 h-8" />
+            {/* Primary category risk */}
+            <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-6 flex items-start shadow-sm shadow-indigo-100/50">
+              <div className="bg-latam-indigo text-white p-3 rounded-lg mr-4 shadow-md shadow-indigo-200">
+                <parsedResult.primary.icon className="w-8 h-8" />
               </div>
               <div>
-                <h4 className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-1">Risco Principal</h4>
-                <h5 className="text-2xl font-black text-indigo-900 mb-2">{result.primary.title}</h5>
-                <p className="text-indigo-800 font-medium leading-relaxed">{result.primary.description}</p>
+                <h4 className="text-xs font-black text-indigo-400 uppercase tracking-widest mb-1">Risco Principal</h4>
+                <h5 className="text-2xl font-black text-indigo-900 mb-2">{parsedResult.primary.title}</h5>
+                <p className="text-indigo-800 font-medium leading-relaxed">{parsedResult.primary.description}</p>
               </div>
             </div>
 
+            {/* Minor risks listing */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {result.secondary.map((sec, idx) => (
-                <div key={idx} className="bg-gray-50 border border-gray-200 rounded-xl p-4 flex items-center">
+              {parsedResult.secondary.map((sec, idx) => (
+                <div key={idx} className="bg-gray-50 border border-gray-200 rounded-xl p-4 flex items-center shadow-sm">
                   <div className="w-12 h-12 bg-white border-2 border-gray-900 rounded-lg flex items-center justify-center text-xl font-black text-gray-900 mr-4 shadow-sm">
                     {sec.letter}
                   </div>
@@ -128,4 +155,4 @@ const ERGDecoder: React.FC = () => {
   );
 };
 
-export default ERGDecoder;
+export default React.memo(ERGDecoder);

@@ -1,4 +1,10 @@
-import React, { useState } from 'react';
+/**
+ * @file AcceptanceChecklist.tsx
+ * @description Interactive Non-Radioactive Acceptance Checklist conforming to standard IATA DGR guidelines.
+ * Collects step-by-step verification answers and enforces "no-go" constraints for non-compliant cargo.
+ */
+
+import React, { useState, useCallback } from 'react';
 import { CheckCircle, XCircle, AlertTriangle, FileText, RefreshCw } from 'lucide-react';
 
 interface ChecklistItem {
@@ -7,6 +13,7 @@ interface ChecklistItem {
   reference: string;
 }
 
+// IATA guidelines reference questions mapping to specific regulation articles
 const CHECKLIST_ITEMS: ChecklistItem[] = [
   { id: '1', question: 'A remessa está acompanhada de duas cópias da Declaração do Expedidor (DGD)?', reference: '8.1.2.3.1' },
   { id: '2', question: 'A DGD está preenchida em inglês e assinada pelo expedidor?', reference: '8.1.1.1' },
@@ -23,20 +30,26 @@ const CHECKLIST_ITEMS: ChecklistItem[] = [
 const AcceptanceChecklist: React.FC = () => {
   const [answers, setAnswers] = useState<Record<string, 'YES' | 'NO' | 'N/A' | null>>({});
 
-  const handleAnswer = (id: string, answer: 'YES' | 'NO' | 'N/A') => {
+  /**
+   * Registers a single answer checklist option.
+   */
+  const handleAnswer = useCallback((id: string, answer: 'YES' | 'NO' | 'N/A') => {
     setAnswers(prev => ({ ...prev, [id]: answer }));
-  };
+  }, []);
 
-  const resetChecklist = () => {
+  /**
+   * Clears the current progress to restart audit logs.
+   */
+  const resetChecklist = useCallback(() => {
     setAnswers({});
-  };
+  }, []);
 
   const isComplete = CHECKLIST_ITEMS.every(item => answers[item.id] !== undefined && answers[item.id] !== null);
   const hasRejection = Object.values(answers).some(ans => ans === 'NO');
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden my-8 font-sans">
-      {/* Header */}
+    <div id="acceptance-checklist-card" className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden my-8 font-sans">
+      {/* Visual Header card */}
       <div className="bg-gray-900 text-white p-6 border-b-4 border-latam-coral">
         <div className="flex items-center justify-between">
           <div>
@@ -47,6 +60,7 @@ const AcceptanceChecklist: React.FC = () => {
             <p className="text-gray-400 text-sm mt-1 font-medium">Non-Radioactive Shipment (Simulated DGR 2026 Standard)</p>
           </div>
           <button 
+            id="btn-checklist-reset"
             onClick={resetChecklist}
             className="flex items-center text-xs bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-lg transition-colors font-bold text-gray-300"
           >
@@ -55,23 +69,32 @@ const AcceptanceChecklist: React.FC = () => {
         </div>
       </div>
 
-      {/* Instructions */}
+      {/* Warnings & legal instruction framework */}
       <div className="bg-yellow-50 p-4 border-b border-yellow-100 flex items-start">
         <AlertTriangle className="w-5 h-5 text-yellow-600 mr-3 mt-0.5 flex-shrink-0" />
-        <p className="text-sm text-yellow-800 font-medium">
+        <p className="text-sm text-yellow-800 font-medium leading-relaxed">
           <strong>INSTRUÇÕES:</strong> Responda a cada pergunta. Se a resposta a qualquer pergunta for <strong>"NO"</strong>, a remessa <strong>NÃO DEVE SER ACEITA</strong>. Indique "N/A" se o requisito não for aplicável à remessa.
         </p>
       </div>
 
-      {/* Checklist Items */}
+      {/* Questions table list */}
       <div className="divide-y divide-gray-100">
         {CHECKLIST_ITEMS.map((item, index) => (
-          <div key={item.id} className={`p-4 flex flex-col md:flex-row md:items-center justify-between transition-colors ${answers[item.id] === 'NO' ? 'bg-red-50' : answers[item.id] === 'YES' ? 'bg-green-50/30' : 'hover:bg-gray-50'}`}>
+          <div 
+            key={item.id} 
+            className={`p-4 flex flex-col md:flex-row md:items-center justify-between transition-colors duration-200 ${
+              answers[item.id] === 'NO' 
+                ? 'bg-red-50' 
+                : answers[item.id] === 'YES' 
+                  ? 'bg-green-50/30' 
+                  : 'hover:bg-gray-50'
+            }`}
+          >
             <div className="flex-1 pr-6 mb-4 md:mb-0">
               <div className="flex items-start">
                 <span className="font-bold text-gray-400 mr-3 w-6 text-right">{index + 1}.</span>
                 <div>
-                  <p className={`text-sm font-bold ${answers[item.id] === 'NO' ? 'text-red-900' : 'text-gray-800'}`}>
+                  <p className={`text-sm font-semibold leading-relaxed ${answers[item.id] === 'NO' ? 'text-red-900 font-bold' : 'text-gray-800'}`}>
                     {item.question}
                   </p>
                   <p className="text-[10px] text-gray-400 font-mono mt-1">DGR Ref: {item.reference}</p>
@@ -79,10 +102,11 @@ const AcceptanceChecklist: React.FC = () => {
               </div>
             </div>
             
+            {/* Action toggles */}
             <div className="flex space-x-2 md:ml-4 pl-9 md:pl-0">
               <button
                 onClick={() => handleAnswer(item.id, 'YES')}
-                className={`px-4 py-2 text-xs font-bold rounded border transition-all ${
+                className={`px-4 py-2 text-xs font-bold rounded-lg border transition-all ${
                   answers[item.id] === 'YES' 
                     ? 'bg-green-600 text-white border-green-600 shadow-inner' 
                     : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
@@ -92,7 +116,7 @@ const AcceptanceChecklist: React.FC = () => {
               </button>
               <button
                 onClick={() => handleAnswer(item.id, 'NO')}
-                className={`px-4 py-2 text-xs font-bold rounded border transition-all ${
+                className={`px-4 py-2 text-xs font-bold rounded-lg border transition-all ${
                   answers[item.id] === 'NO' 
                     ? 'bg-red-600 text-white border-red-600 shadow-inner' 
                     : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
@@ -102,7 +126,7 @@ const AcceptanceChecklist: React.FC = () => {
               </button>
               <button
                 onClick={() => handleAnswer(item.id, 'N/A')}
-                className={`px-4 py-2 text-xs font-bold rounded border transition-all ${
+                className={`px-4 py-2 text-xs font-bold rounded-lg border transition-all ${
                   answers[item.id] === 'N/A' 
                     ? 'bg-gray-600 text-white border-gray-600 shadow-inner' 
                     : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
@@ -115,30 +139,30 @@ const AcceptanceChecklist: React.FC = () => {
         ))}
       </div>
 
-      {/* Result Footer */}
-      <div className={`p-6 border-t-4 transition-all duration-500 ${
+      {/* Result Status Display Footer */}
+      <div className={`p-6 border-t-4 transition-all duration-300 ${
         !isComplete ? 'bg-gray-50 border-gray-200' :
         hasRejection ? 'bg-red-50 border-red-500' : 'bg-green-50 border-green-500'
       }`}>
         {!isComplete ? (
           <div className="text-center text-gray-500 font-bold flex items-center justify-center">
-            <span className="w-2 h-2 bg-gray-400 rounded-full animate-pulse mr-2"></span>
-            Aguardando conclusão do checklist...
+            <span className="w-2.5 h-2.5 bg-gray-400 rounded-full animate-ping mr-2.5"></span>
+            Aguardando conclusão de todos os itens do checklist...
           </div>
         ) : hasRejection ? (
           <div className="flex items-center justify-center text-red-700">
-            <XCircle className="w-10 h-10 mr-4" />
+            <XCircle className="w-10 h-10 mr-4 flex-shrink-0" />
             <div>
               <h4 className="text-2xl font-black uppercase tracking-tight">Remessa Rejeitada</h4>
-              <p className="text-sm font-medium">A remessa não atende aos requisitos do IATA DGR e não pode ser aceita para transporte aéreo.</p>
+              <p className="text-sm font-medium leading-relaxed">A remessa não atende ou falhou em testes regulamentares específicos do IATA DGR e não pode ser aceita para transporte.</p>
             </div>
           </div>
         ) : (
           <div className="flex items-center justify-center text-green-700">
-            <CheckCircle className="w-10 h-10 mr-4" />
+            <CheckCircle className="w-10 h-10 mr-4 flex-shrink-0" />
             <div>
               <h4 className="text-2xl font-black uppercase tracking-tight">Remessa Aceita</h4>
-              <p className="text-sm font-medium">A remessa está em conformidade com as verificações documentais e visuais do IATA DGR.</p>
+              <p className="text-sm font-medium leading-relaxed">A remessa está em total conformidade e aprovada em todas as verificações do IATA DGR.</p>
             </div>
           </div>
         )}
@@ -147,4 +171,5 @@ const AcceptanceChecklist: React.FC = () => {
   );
 };
 
-export default AcceptanceChecklist;
+export default React.memo(AcceptanceChecklist);
+

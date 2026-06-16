@@ -80,8 +80,8 @@ export const analyzeShipment = async (scenario: string): Promise<AIResponse> => 
                 AUDIT PROTOCOL:
                 1. UN & PSN VERIFICATION: Validate against 2026 IATA DGR.
                 2. LIMITS & PACKING: Check quantity vs. Pax/CAO limits.
-                3. VARIATIONS CHECK: Search specifically for Airline variations (e.g., "LATAM variation LA-01", "LA-07" or "JJ-01" to "JJ-07"). 
-                   IMPORTANT: LATAM Group (including LA and JJ - LATAM Airlines Brasil) prohibits Lithium Ion Batteries on Passenger Aircraft (LA-01, JJ-01) and has strict restrictions on Section II battery shipments (JJ-03).
+                3. VARIATIONS CHECK: Search specifically for Airline variations (e.g., "LATAM variation LA-01", "LA-07", "JJ-01" to "JJ-12", "M3-01" to "M3-13" or "UC-01" to "UC-07"). 
+                   IMPORTANT: LATAM Group (including LA, JJ, M3, and UC) has strict restrictions on lithium batteries. LA and JJ prohibit loose Lithium Ion Batteries on Passenger Aircraft (LA-01, JJ-01). M3 and UC require prior written authorization for Section IA/IB battery cargo. Section II batteries (loose) are not accepted on any LATAM Group carriers (LA-03, JJ-03, M3-03, UC-03) without strict airline pre-approval. Furthermore, lithium metal batteries under UN3091 require CAO and have specific carveouts or passenger plane bans under JJ-08 / M3-08, and UN3090 prepared under PI 968 Sec IA/IB have strict net weight limits per package and compartment on M3 cargo flights (M3-12).
                 4. SEGREGATION: Cross-reference classes using Table 9.3.A.
                 
                 CRITICAL INSTRUCTION: AUTOMATIC CORRECTIVE ACTION

@@ -1,6 +1,6 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useEffect, lazy, Suspense, useCallback, useMemo } from 'react';
 import ErrorBoundary from './components/ErrorBoundary';
-import { Plane, Search, ShieldCheck, ArrowRight, Sparkles, Bot, AlertTriangle, X, Settings, CheckCircle, Loader2 } from 'lucide-react';
+import { Plane, Search, ShieldCheck, ArrowRight, Sparkles, Bot, AlertTriangle, X, Settings, CheckCircle, Loader2, Zap, BookOpen } from 'lucide-react';
 import { DGR_CHAPTERS, APP_VERSION } from './constants';
 import { DGRChapter, ViewState, DGRTable, DGRDatabase } from './types';
 import ChapterCard from './components/ChapterCard';
@@ -10,6 +10,9 @@ import DatabasePopup from './components/DatabasePopup';
 import { getRegulatoryConfig } from './services/regulatoryService';
 
 const ChapterDetail = lazy(() => import('./components/ChapterDetail'));
+const AnacLatamAudit = lazy(() => import('./components/AnacLatamAudit'));
+const LithiumCalculator = lazy(() => import('./components/LithiumCalculator'));
+const AnacQuiz = lazy(() => import('./components/AnacQuiz'));
 
 const findDatabaseById = (id: string): DGRDatabase | null => {
   for (const chapter of DGR_CHAPTERS) {
@@ -61,7 +64,7 @@ const App: React.FC = () => {
   const [showDisclaimer, setShowDisclaimer] = useState(getRegulatoryConfig().validationStatus !== 'VERIFIED_OPERATIONAL');
 
   // Sync state whenever regulatory config changes
-  const refreshConfig = () => {
+  const refreshConfig = useCallback(() => {
       const newConfig = getRegulatoryConfig();
       setRegConfig(newConfig);
       // Auto-hide disclaimer if operational
@@ -70,14 +73,14 @@ const App: React.FC = () => {
       } else {
           setShowDisclaimer(true);
       }
-  };
+  }, []);
 
   // Handle scroll for header transparency effect
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -89,49 +92,51 @@ const App: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleChapterClick = (chapter: DGRChapter) => {
+  const handleChapterClick = useCallback((chapter: DGRChapter) => {
     setSelectedChapter(chapter);
     setViewState(ViewState.CHAPTER_DETAIL);
     window.scrollTo(0, 0);
-  };
+  }, []);
 
-  const handleBackToDashboard = () => {
+  const handleBackToDashboard = useCallback(() => {
     setSelectedChapter(null);
     setViewState(ViewState.DASHBOARD);
-  };
+  }, []);
 
-  // Deep Search Logic
-  const filteredChapters = DGR_CHAPTERS.filter(chapter => {
-    const lowerTerm = searchTerm.toLowerCase();
-    
-    // 1. Check basic metadata
-    if (chapter.title.toLowerCase().includes(lowerTerm) || chapter.id.toString().includes(searchTerm)) {
-        return true;
-    }
+  // Memoized deep Search Logic computation
+  const filteredChapters = useMemo(() => {
+    return DGR_CHAPTERS.filter(chapter => {
+      const lowerTerm = searchTerm.toLowerCase();
+      
+      // 1. Check basic metadata
+      if (chapter.title.toLowerCase().includes(lowerTerm) || chapter.id.toString().includes(searchTerm)) {
+          return true;
+      }
 
-    // 2. Deep Content Search (Sections & Blocks)
-    return chapter.sections.some(section => {
-        // Check section title
-        if (section.title.toLowerCase().includes(lowerTerm)) return true;
+      // 2. Deep Content Search (Sections & Blocks)
+      return chapter.sections.some(section => {
+          // Check section title
+          if (section.title.toLowerCase().includes(lowerTerm)) return true;
 
-        // Check blocks content
-        return section.blocks.some(block => {
-            // Text Search
-            if (block.type === 'paragraph' && (block.content as string).toLowerCase().includes(lowerTerm)) return true;
-            
-            // Deep Table Search (Crucial for Table 4.2)
-            if (block.type === 'table' || block.type === 'database') {
-                const table = block.content as DGRTable | DGRDatabase;
-                const rows = 'rows' in table ? table.rows : table.data;
-                return rows.some(row => 
-                    Object.values(row).some(cell => String(cell).toLowerCase().includes(lowerTerm))
-                );
-            }
-            
-            return false;
-        });
+          // Check blocks content
+          return section.blocks.some(block => {
+              // Text Search
+              if (block.type === 'paragraph' && (block.content as string).toLowerCase().includes(lowerTerm)) return true;
+              
+              // Deep Table Search (Crucial for Table 4.2)
+              if (block.type === 'table' || block.type === 'database') {
+                  const table = block.content as DGRTable | DGRDatabase;
+                  const rows = 'rows' in table ? table.rows : table.data;
+                  return rows.some(row => 
+                      Object.values(row).some(cell => String(cell).toLowerCase().includes(lowerTerm))
+                  );
+              }
+              
+              return false;
+          });
+      });
     });
-  });
+  }, [searchTerm]);
 
   const isHeaderActive = scrolled || viewState !== ViewState.DASHBOARD;
 
@@ -322,8 +327,109 @@ const App: React.FC = () => {
 
           {/* Cards Grid Section - Overlapping Hero */}
           <main className="relative z-30 container mx-auto px-6 -mt-10 md:-mt-20 pb-20">
+            {/* Compliance Portal Section */}
+            {searchTerm === '' && (
+              <div className="mb-12 animate-fade-in-up">
+                <div className="flex flex-col md:flex-row md:items-end justify-between mb-6">
+                  <div>
+                    <h3 className="text-xl font-extrabold text-white drop-shadow-md flex items-center">
+                      <ShieldCheck className="w-6 h-6 mr-2 text-latam-coral" />
+                      Central de Compliance Operacional (IATA, LATAM & ANAC)
+                    </h3>
+                    <p className="text-sm text-white/90 drop-shadow font-medium mt-1">
+                      Ferramentas integradas para verificação operacional preliminar e validação regulatória de despacho de cargas.
+                    </p>
+                  </div>
+                  <span className="self-start md:self-auto mt-2 md:mt-0 bg-white/10 text-white backdrop-blur-sm border border-white/20 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm animate-pulse">
+                    Filtros de Solo Ativos
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Card 1: Auditoria */}
+                  <div 
+                    onClick={() => setViewState(ViewState.ANAC_LATAM_AUDIT)}
+                    className="bg-white rounded-2xl border border-gray-200/85 p-6 shadow-xl shadow-gray-200/20 hover:shadow-2xl hover:border-latam-indigo/30 hover:-translate-y-1.5 transition-all cursor-pointer group flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="bg-indigo-50 text-latam-indigo p-3 rounded-xl inline-block mb-4 group-hover:bg-latam-indigo group-hover:text-white transition-all">
+                        <ShieldCheck className="w-6 h-6" />
+                      </div>
+                      <h4 className="text-base font-black text-gray-900 group-hover:text-latam-indigo transition-colors mb-2">
+                        Auditoria de Carga ANAC RBAC 175
+                      </h4>
+                      <p className="text-sm text-gray-500 leading-relaxed font-semibold">
+                        Gere pareceres digitais de liberação de solo e validação de minuta AWB contra exigências de operador LATAM Cargo.
+                      </p>
+                    </div>
+                    <div className="mt-6 flex items-center font-bold text-xs text-latam-indigo">
+                      <span>Iniciar Auditoria Integrada</span>
+                      <ArrowRight className="w-4 h-4 ml-1.5 transform group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </div>
+
+                  {/* Card 2: Calculadora de Lítio */}
+                  <div 
+                    onClick={() => setViewState(ViewState.LITHIUM_CALCULATOR)}
+                    className="bg-white rounded-2xl border border-gray-200/85 p-6 shadow-xl shadow-gray-200/20 hover:shadow-2xl hover:border-amber-500/30 hover:-translate-y-1.5 transition-all cursor-pointer group flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="bg-amber-50 text-amber-600 p-3 rounded-xl inline-block mb-4 group-hover:bg-amber-500 group-hover:text-white transition-all">
+                        <Zap className="w-6 h-6" />
+                      </div>
+                      <h4 className="text-base font-black text-gray-900 group-hover:text-amber-600 transition-colors mb-2">
+                        Calculadora de Baterias de Lítio
+                      </h4>
+                      <p className="text-sm text-gray-500 leading-relaxed font-semibold">
+                        Calcule limitações de Watt-Hora/gramas na Seção II/IB e monitore vedações específicas (como restrição de baterias soltas TAM/ABSA).
+                      </p>
+                    </div>
+                    <div className="mt-6 flex items-center font-bold text-xs text-amber-600">
+                      <span>Calcular Limites & Regras</span>
+                      <ArrowRight className="w-4 h-4 ml-1.5 transform group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </div>
+
+                  {/* Card 3: Treinamento Quiz */}
+                  <div 
+                    onClick={() => setViewState(ViewState.ANAC_QUIZ)}
+                    className="bg-white rounded-2xl border border-gray-200/85 p-6 shadow-xl shadow-gray-200/20 hover:shadow-2xl hover:border-latam-coral/30 hover:-translate-y-1.5 transition-all cursor-pointer group flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="bg-rose-50 text-latam-coral p-3 rounded-xl inline-block mb-4 group-hover:bg-latam-coral group-hover:text-white transition-all">
+                        <BookOpen className="w-6 h-6" />
+                      </div>
+                      <h4 className="text-base font-black text-gray-900 group-hover:text-latam-coral transition-colors mb-2">
+                        Simulador de Treinamento ANAC
+                      </h4>
+                      <p className="text-sm text-gray-500 leading-relaxed font-semibold">
+                        Treinamento e e-learning rápido de segurança operacional exigido pelas regras de recorrência bienal em solo.
+                      </p>
+                    </div>
+                    <div className="mt-6 flex items-center font-bold text-xs text-latam-coral">
+                      <span>Iniciar Quiz de Recorrência</span>
+                      <ArrowRight className="w-4 h-4 ml-1.5 transform group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-8 border-t border-dashed border-gray-300 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500 font-bold uppercase tracking-wider gap-4">
+                  <span className="text-center sm:text-left">Normas Ativas: IATA DGR Edição 67 - ANAC RBAC 175 - LATAM Operator Variations JJ/LA/UC</span>
+                  <span className="text-emerald-700 bg-emerald-50 px-3 py-1 rounded border border-emerald-200 animate-pulse shrink-0">Base Validada</span>
+                </div>
+              </div>
+            )}
+
+            {/* Default Regulatory Manual Chapters list header */}
+            <div className="mb-6 mt-12 md:mt-20">
+              <h3 className="text-lg font-extrabold text-gray-900 uppercase tracking-wider">
+                Capítulos & Seções do IATA DGR
+              </h3>
+              <p className="text-xs text-gray-500 font-semibold mt-1">Manual Normativo estruturado de referência técnica.</p>
+            </div>
+
             <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8`}>
-              {filteredChapters.map((chapter, index) => (
+              {filteredChapters.map((chapter: DGRChapter, index: number) => (
                 <div key={chapter.id} className="animate-fade-in-up" style={{ animationDelay: `${0.1 * (index + 1)}s` }}>
                   <ChapterCard 
                     chapter={chapter} 
@@ -351,7 +457,7 @@ const App: React.FC = () => {
         <div className={`bg-gray-50 min-h-screen transition-all duration-300 ${showDisclaimer && regConfig.validationStatus !== 'VERIFIED_OPERATIONAL' ? 'pt-32' : 'pt-20'}`}>
           <main className="container mx-auto px-4 py-6 min-h-[calc(100vh-80px)]">
             <Suspense fallback={<FullPageLoader />}>
-                {selectedChapter && (
+                {selectedChapter && viewState === ViewState.CHAPTER_DETAIL && (
                 <ChapterDetail 
                     chapter={selectedChapter} 
                     onBack={handleBackToDashboard} 
@@ -359,6 +465,15 @@ const App: React.FC = () => {
                     initialScrollId={initialScrollId}
                     onClearInitialScroll={() => setInitialScrollId(null)}
                 />
+                )}
+                {viewState === ViewState.ANAC_LATAM_AUDIT && (
+                  <AnacLatamAudit onClose={handleBackToDashboard} />
+                )}
+                {viewState === ViewState.LITHIUM_CALCULATOR && (
+                  <LithiumCalculator onClose={handleBackToDashboard} />
+                )}
+                {viewState === ViewState.ANAC_QUIZ && (
+                  <AnacQuiz onClose={handleBackToDashboard} />
                 )}
             </Suspense>
           </main>

@@ -248,6 +248,8 @@ const AISearchModal: React.FC<AISearchModalProps> = ({ isOpen, onClose }) => {
                             >
                                 <option value="LATAM Airlines Brasil (JJ)">LATAM Airlines Brasil (JJ)</option>
                                 <option value="LATAM Airlines Chile / Group (LA)">LATAM Airlines Group (LA)</option>
+                                <option value="LATAM Cargo Brasil (M3)">LATAM Cargo Brasil (M3)</option>
+                                <option value="LATAM Cargo Colombia (UC)">LATAM Cargo Colombia (UC)</option>
                             </select>
                         </div>
 
