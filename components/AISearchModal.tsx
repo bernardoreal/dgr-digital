@@ -62,7 +62,7 @@ const AISearchModal: React.FC<AISearchModalProps> = ({ isOpen, onClose }) => {
   // Scenario State
   const [scenarioData, setScenarioData] = useState({
       unNumbers: '',
-      airline: 'LATAM Airlines Group', // Locked to LATAM
+      airline: 'LATAM Airlines Brasil (JJ)', // Configured to JJ by default
       destination: '',
       type: 'PASSENGER' // PASSENGER or CARGO
   });
@@ -106,13 +106,13 @@ const AISearchModal: React.FC<AISearchModalProps> = ({ isOpen, onClose }) => {
       const scenarioText = `
       CENÁRIO DE EMBARQUE LATAM (INTERNO):
       - Itens/UNs: ${scenarioData.unNumbers}
-      - Companhia Aérea: LATAM Airlines Group (Verificar Variações LA/LA-Cargo)
+      - Companhia Aérea: ${scenarioData.airline}
       - Destino: ${scenarioData.destination}
       - Tipo de Aeronave: ${scenarioData.type === 'PASSENGER' ? 'Passageiros (PAX)' : 'Somente Carga (CAO)'}
-      - Contexto: Voo Doméstico/Internacional LATAM Brasil
+      - Contexto: Voo Doméstico/Internacional LATAM Brasil (Variações JJ/LA)
       `;
 
-      setMessages(prev => [...prev, { role: 'user', content: `Auditoria LATAM: ${scenarioData.unNumbers} para ${scenarioData.destination}`, type: 'analysis' }]);
+      setMessages(prev => [...prev, { role: 'user', content: `Auditoria LATAM: ${scenarioData.unNumbers} para ${scenarioData.destination} (${scenarioData.airline})`, type: 'analysis' }]);
       setIsLoading(true);
 
       const result = await analyzeShipment(scenarioText);
@@ -241,12 +241,14 @@ const AISearchModal: React.FC<AISearchModalProps> = ({ isOpen, onClose }) => {
 
                         <div>
                             <label className="block text-xs font-bold text-gray-600 mb-1.5">Companhia Aérea</label>
-                            <input 
-                                type="text"
-                                readOnly
+                            <select
+                                className="w-full p-3 border border-gray-300 rounded-lg text-sm bg-white text-gray-900 focus:ring-2 focus:ring-latam-indigo/20 focus:border-latam-indigo shadow-sm"
                                 value={scenarioData.airline}
-                                className="w-full p-3 border border-gray-300 rounded-lg text-sm bg-gray-100 text-gray-500 cursor-not-allowed shadow-sm"
-                            />
+                                onChange={(e) => setScenarioData(prev => ({...prev, airline: e.target.value}))}
+                            >
+                                <option value="LATAM Airlines Brasil (JJ)">LATAM Airlines Brasil (JJ)</option>
+                                <option value="LATAM Airlines Chile / Group (LA)">LATAM Airlines Group (LA)</option>
+                            </select>
                         </div>
 
                         <div>

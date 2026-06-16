@@ -2025,7 +2025,8 @@ const generateVariations = () => {
         { code: "BA", name: "British Airways" }, { code: "CX", name: "Cathay Pacific" }, { code: "DL", name: "Delta Air Lines" },
         { code: "EK", name: "Emirates" }, { code: "FX", name: "FedEx" }, { code: "LA", name: "LATAM Airlines" },
         { code: "LH", name: "Lufthansa" }, { code: "QF", name: "Qantas" }, { code: "QR", name: "Qatar Airways" },
-        { code: "SQ", name: "Singapore Airlines" }, { code: "UA", name: "United Airlines" }, { code: "UPS", name: "UPS" }
+        { code: "SQ", name: "Singapore Airlines" }, { code: "UA", name: "United Airlines" }, { code: "UPS", name: "UPS" },
+        { code: "JJ", name: "LATAM Airlines Brasil" }
     ];
     const countries = [
         { code: "USG", name: "Estados Unidos" }, { code: "BRG", name: "Brasil" }, { code: "GBG", name: "Reino Unido" },
@@ -2072,15 +2073,29 @@ const generateVariations = () => {
         { code: "FX-02", owner: "FedEx", text: "Não aceita Cargas Perigosas para aeroportos onde não tem instalações adequadas. Consulte a lista de estações." },
         { code: "FX-04", owner: "FedEx", text: "O expedidor deve preparar a Shipper's Declaration usando software aprovado. Declarações manuscritas não são aceitas." },
         { code: "FX-18", owner: "FedEx", text: "Não aceita UN 3090 ou UN 3480 preparado sob a Seção II (apenas Seção IA/IB são aceitas com contrato)." },
-        { code: "LA-01", owner: "LATAM Airlines", text: "UN 3480 (Baterias de Íon Lítio) é proibido em aeronaves de passageiros. Aceito apenas em CAO (Cargo Aircraft Only)." },
-        { code: "LA-07", owner: "LATAM Airlines", text: "Animais vivos infectados não são aceitos para transporte." },
+        { code: "LA-01", owner: "LATAM Airlines", text: "UN 3480 (Baterias de Íon Lítio) preparadas sob as Seções IA ou IB são estritamente PROIBIDAS em aeronaves de passageiros operadas pela LA. Aceito apenas em aeronaves cargueiras (CAO)." },
+        { code: "LA-02", owner: "LATAM Airlines", text: "UN 3090 (Baterias de Lítio Metal) preparadas sob as Seções IA ou IB são estritamente PROIBIDAS em aeronaves de passageiros operadas pela LA. Aceito apenas em aeronaves cargueiras (CAO)." },
+        { code: "LA-03", owner: "LATAM Airlines", text: "Baterias de lítio preparadas de acordo com a Seção II (UN 3480, UN 3481, UN 3090, UN 3091) não são aceitas para transporte sob o código LA, exceto quando instaladas ou embaladas com equipamentos em condições operacionais pré-aprovadas." },
+        { code: "LA-04", owner: "LATAM Airlines", text: "Substâncias infecciosas da Divisão 6.2 Categoria A (UN 2814 e UN 2900) e animais vivos infectados não são aceitos para transporte aéreo sob nenhuma circunstância sob o código LA." },
+        { code: "LA-05", owner: "LATAM Airlines", text: "O transporte de explosivos (Classe 1) é proibido sob o código LA, com exceção de artigos da Divisão 1.4S sujeitos à aprovação governamental e operacional prévia." },
+        { code: "LA-06", owner: "LATAM Airlines", text: "Materiais radioativos (Classe 7) não são aceitos para transporte, exceto os destinados a fins médicos ou farmacêuticos devidamente autorizados pelo órgão regulador nacional competente." },
+        { code: "LA-07", owner: "LATAM Airlines", text: "Animais vivos infectados de laboratório (incluindo espécimes clínicos de diagnóstico infectados) não são aceitos para transporte em voos operados pela LA." },
+        { code: "LA-08", owner: "LATAM Airlines", text: "Não são aceitas mercadorias perigosas em consolidação (consolidated DGs) sob o código LA, exceto quando pré-autorizadas por escrito." },
+        { code: "LA-09", owner: "LATAM Airlines", text: "Declarações de Carga Perigosa (DGD) manuais não são aceitas. Todas as DGDs enviadas para embarque sob a LA devem ser geradas por via eletrônica, impressas sem emendas e preenchidas em inglês." },
         { code: "LH-01", owner: "Lufthansa", text: "Não aceita explosivos 1.4S sem aprovação prévia." },
         { code: "LH-03", owner: "Lufthansa", text: "Restrições adicionais aplicam-se ao transporte de motores e veículos (UN 3166)." },
         { code: "QF-01", owner: "Qantas", text: "Não aceita animais vivos de laboratório (ratos, camundongos) como carga." },
         { code: "QR-01", owner: "Qatar Airways", text: "Todo embarque de mercadorias perigosas deve ser pré-reservado e aprovado." },
         { code: "SQ-01", owner: "Singapore Airlines", text: "Não aceita UN 3480 (Lítio Ion) em aeronaves de passageiros." },
-        { code: "UA-01", owner: "United Airlines", text: "Não aceita UN 3090 ou 3480 sem contrato específico de mercadorias perigosas." },
-        { code: "UPS-01", owner: "UPS", text: "Exige que todos os pacotes de mercadorias perigosas sejam preparados usando software compatível com UPS." }
+        { code: "UA-01", owner: "United Airlines", text: "Não aceita UN 3090 ou 3480 sem contrato specific de mercadorias perigosas." },
+        { code: "UPS-01", owner: "UPS", text: "Exige que todos os pacotes de mercadorias perigosas sejam preparados usando software compatível com UPS." },
+        { code: "JJ-01", owner: "LATAM Airlines Brasil", text: "UN 3480 (Baterias de Íon Lítio) preparadas sob as Seções IA ou IB são estritamente PROIBIDAS em aeronaves de passageiros operadas pela JJ." },
+        { code: "JJ-02", owner: "LATAM Airlines Brasil", text: "UN 3090 (Baterias de Lítio Metal) preparadas sob as Seções IA ou IB são estritamente PROIBIDAS em aeronaves de passageiros operadas pela JJ." },
+        { code: "JJ-03", owner: "LATAM Airlines Brasil", text: "Baterias de lítio preparadas de acordo com a Seção II (UN 3480, UN 3481, UN 3090, UN 3091) não são aceitas para transporte sob o código JJ, exceto quando instaladas ou embaladas com equipamentos em condições operacionais pré-aprovadas." },
+        { code: "JJ-04", owner: "LATAM Airlines Brasil", text: "Animais vivos infectados e substâncias infecciosas da Divisão 6.2 (Categoria A - UN 2814 e UN 2900) não são aceitos para transporte sob nenhuma circunstância." },
+        { code: "JJ-05", owner: "LATAM Airlines Brasil", text: "O transporte de explosivos (Classe 1) é proibido em voos da JJ, com exceção de artigos da Divisão 1.4S sujeitos à aprovação governamental e operacional prévia." },
+        { code: "JJ-06", owner: "LATAM Airlines Brasil", text: "Materiais radioativos (Classe 7) não são aceitos para transporte, exceto os destinados a fins médicos ou farmacêuticos devidamente autorizados e com aprovação da CNEN." },
+        { code: "JJ-07", owner: "LATAM Airlines Brasil", text: "Declarações de Carga Perigosa (DGD) manuais não são aceitas. Todas as DGDs devem ser digitadas eletronicamente e impressas sem rasuras." }
     ];
 
     // Real data first
@@ -2332,6 +2347,8 @@ export const DGR_CHAPTERS: DGRChapter[] = [
         { id: "1.3", title: "Responsabilidades", blocks: [{ type: "paragraph", content: "O transporte seguro de mercadorias perigosas é uma responsabilidade compartilhada por todas as partes envolvidas na cadeia de transporte." }] },
         { id: "1.3.1", title: "Responsabilidades do Expedidor", blocks: [{ type: "paragraph", content: "O expedidor (shipper) é a principal parte responsável por garantir que as mercadorias perigosas sejam oferecidas para transporte em total conformidade com estes regulamentos. Esta responsabilidade não pode ser delegada. O expedidor deve garantir que:"}, {type: "list", content: { ordered: true, type: 'alpha', items: ["Os artigos ou substâncias não estão proibidos para transporte aéreo.", "Os artigos ou substâncias estão devidamente identificados, classificados, embalados, marcados, etiquetados e documentados em conformidade com todas as regulamentações aplicáveis.", "Antes de reutilizar uma embalagem, todos os rótulos e marcações irrelevantes foram removidos ou obliterados.", "A Declaração do Expedidor para Mercadorias Perigosas (DGD) foi preenchida com precisão, em inglês, e assinada.", "Todo o pessoal envolvido na preparação da remessa foi devidamente treinado para cumprir suas funções."]}}] },
         { id: "1.3.2", title: "Responsabilidades do Operador", blocks: [{ type: "paragraph", content: "O operador (companhia aérea) deve garantir que apenas mercadorias perigosas aceitáveis, devidamente documentadas e inspecionadas sejam carregadas a bordo. As responsabilidades incluem:", }, {type: "list", content: { ordered: true, type: 'alpha', items: ["Aceitar mercadorias perigosas apenas se estiverem em conformidade, usando um checklist de aceitação.", "Inspecionar os volumes quanto a vazamentos ou danos antes do carregamento.", "Garantir a segregação adequada de pacotes incompatíveis.", "Fornecer ao Piloto em Comando a informação necessária (NOTOC).", "Assegurar que avisos aos passageiros sejam exibidos.", "Relatar incidentes e acidentes com mercadorias perigosas."]}}] },
+        { id: "1.3.3", title: "Responsabilidades do Agente de Carga (Freight Forwarder)", blocks: [{ type: "paragraph", content: "O agente de carga que atua em nome do expedidor deve garantir que toda mercadoria perigosa sob sua custódia seja adequadamente identificada, temporariamente armazenada de acordo com as regras de segregação, e que seus funcionários que preparam ou processam a remessa possuam treinamento válido e certificado no modelo CBTA para suas funções específicas." }] },
+        { id: "1.3.4", title: "Responsabilidades do Agente de Manuseio Solo (GHA)", blocks: [{ type: "paragraph", content: "Como prestador de serviços para o operador, o Agente de Manuseio de Solo (Ground Handling Agent) deve seguir rigorosamente as diretrizes de manuseio e segurança do operador. Suas responsabilidades incluem a execução física da inspeção de aceitação por meio do checklist aplicável, verificação de danos e vazamentos no momento da recepção e estiva, carregamento segregado na aeronave, e preparação física do documento de notificação (NOTOC) conforme as especificações dadas pelo operador." }] },
         { id: "1.4", title: "Definição de Mercadorias Perigosas", blocks: [{ type: "paragraph", content: "Mercadorias perigosas são artigos ou substâncias que são capazes de colocar em risco a saúde, a segurança, a propriedade ou o meio ambiente e que estão apresentadas na lista de mercadorias perigosas nestes regulamentos ou que são classificadas de acordo com estes regulamentos." }] },
         { id: "1.5", title: "Treinamento (CBTA)", blocks: [{ type: "paragraph", content: "O treinamento deve ser baseado em competências (Competency-Based Training and Assessment - CBTA). Todos os funcionários envolvidos no transporte de carga aérea devem receber treinamento adequado à sua função e ser avaliados periodicamente. O treinamento deve ser projetado para alcançar a proficiência funcional." }, { type: "note", content: { title: "Validade e Reciclagem", text: "O treinamento é válido por 24 meses. A reciclagem deve ocorrer dentro dos 3 meses finais do período de validade para garantir a continuidade da qualificação." } }] },
         { id: "1.5.1", title: "Requisitos de Treinamento por Função", blocks: [{ type: "paragraph", content: "O escopo do treinamento varia conforme a responsabilidade do funcionário. Por exemplo, o pessoal de aceitação de carga requer treinamento aprofundado em todas as etapas, enquanto o pessoal de rampa pode necessitar de treinamento focado em reconhecimento de etiquetas, manuseio seguro e procedimentos de emergência." }] },
@@ -2460,7 +2477,7 @@ export const DGR_CHAPTERS: DGRChapter[] = [
         { id: "3.5.2", title: "Divisão 5.2 – Peróxidos Orgânicos", blocks: [{ type: "paragraph", content: "Substâncias termicamente instáveis que podem sofrer decomposição exotérmica auto-acelerada." }] },
         { id: "3.6", title: "Classe 6 - Tóxicos e Infectantes", blocks: [{ type: "paragraph", content: "Substâncias que podem causar morte, lesões graves ou danos à saúde humana se ingeridas, inaladas ou em contato com a pele." }] },
         { id: "3.6.1", title: "Divisão 6.1 – Substâncias Tóxicas", blocks: [{ type: "paragraph", content: "Substâncias que podem causar morte, lesões graves ou danos à saúde humana se ingeridas, inaladas ou em contato com a pele." }] },
-        { id: "3.6.1.1", title: "Critérios do Grupo de Embalagem", blocks: [{ type: "paragraph", content: "O grupo de embalagem para substâncias da Divisão 6.1 é atribuído com base nos dados de toxicidade aguda por exposição oral, dérmica ou por inalação."}, { type: "table", content: { caption: "Tabela 3.6.A - Critérios de Toxicidade por Grupo de Embalagem", headers: ["Grupo de Embalagem", "Toxicidade Oral (LD50 mg/kg)", "Toxicidade Dérmica (LD50 mg/kg)", "Toxicidade por Inalação (LC50 mg/L)"], rows: [["I (Alto Risco)", "≤ 5", "≤ 50", "≤ 0.2"],["II (Risco Médio)", "> 5 e ≤ 50", "> 50 e ≤ 200", "> 0.2 e ≤ 2.0"],["III (Baixo Risco)", "> 50 e ≤ 300 (sólidos), > 50 e ≤ 2000 (líquidos)", "> 200 e ≤ 1000", "> 2.0 e ≤ 4.0"]]}}]},
+        { id: "3.6.1.1", title: "Critérios do Grupo de Embalagem", blocks: [{ type: "paragraph", content: "O grupo de embalagem para substâncias da Divisão 6.1 é atribuído com base nos dados de toxicidade aguda por exposição oral, dérmica ou por inalação."}, { type: "table", content: { caption: "Tabela 3.6.A - Critérios de Toxicidade por Grupo de Embalagem", headers: ["Grupo de Embalagem", "Toxicidade Oral (LD50 mg/kg)", "Toxicidade Dérmica (LD50 mg/kg)", "Toxicidade por Inalação (LC50 mg/L)"], rows: [["I (Alto Risco)", "≤ 5", "≤ 50", "≤ 0.2"],["II (Risco Médio)", "> 5 e ≤ 50", "> 50 e ≤ 200", "> 0.2 e ≤ 2.0"],["III (Baixo Risco)", "> 50 e ≤ 300 (sólidos), > 50 e ≤ 2000 (liquidos)", "> 200 e ≤ 1000", "> 2.0 e ≤ 4.0"]]}}]},
         { id: "3.6.2", title: "Divisão 6.2 – Substâncias Infectantes", blocks: [{ type: "paragraph", content: "Substâncias que contêm patógenos, que são micro-organismos (incluindo bactérias, vírus, etc.) que podem causar doenças em humanos ou animais." }] },
         {
             id: "3.6.2.1",
@@ -2478,7 +2495,7 @@ export const DGR_CHAPTERS: DGRChapter[] = [
                         items: [
                             "A embalagem deve consistir em três componentes: um recipiente primário estanque, um recipiente secundário estanque e uma embalagem externa robusta.",
                             "Para líquidos, material absorvente em quantidade suficiente para absorver todo o conteúdo deve ser colocado entre o recipiente primário e o secundário.",
-                            "A embalagem externa deve ser marcada com as palavras 'EXEMPT HUMAN SPECIMEN' ou 'EXEMPT ANIMAL SPECIMEN'."
+                            "A embalagem externa deve ser marcada with as palavras 'EXEMPT HUMAN SPECIMEN' ou 'EXEMPT ANIMAL SPECIMEN'."
                         ]
                     }
                 },
@@ -2574,13 +2591,13 @@ export const DGR_CHAPTERS: DGRChapter[] = [
                         title: "UN 3480 - PI 965 Seção IA",
                         description: "Baterias de Íon de Lítio de alta capacidade. Totalmente regulamentadas como Classe 9.",
                         type: "danger",
-                        actionText: "Requer DGD, Etiqueta Classe 9, Etiqueta CAO. Proibido em aeronaves de passageiros."
+                        actionText: "Requer DGD, Etiqueta Classe 9, Etiqueta CAO. Proibido em aeronaves de passageiro. Nota LATAM: Estritamente proibido em voos PAX operados pela LATAM (Variações LA-01, JJ-01)."
                     },
                     "res_ion_loose_sec_ib_ii": {
                         title: "UN 3480 - PI 965 Seção IB / II",
                         description: "Baterias de Íon de Lítio de baixa capacidade. Devem voar apenas em aeronaves de carga (CAO).",
                         type: "warning",
-                        actionText: "Seção IB requer Etiqueta Classe 9 e Marca de Bateria. Seção II requer apenas Marca de Bateria. Ambas requerem CAO."
+                        actionText: "Seção IB requer Etiqueta Classe 9 e Marca de Bateria. Seção II requer Marca de Bateria. Ambas requerem CAO. LATAM (LA-03, JJ-03): Seção II de baterias soltas não é aceita pela LATAM, exceto sob condições extremamente rígidas e pré-aprovação."
                     },
                     "res_ion_packed_sec_i": {
                         title: "UN 3481 - PI 966 Seção I",
@@ -2592,7 +2609,7 @@ export const DGR_CHAPTERS: DGRChapter[] = [
                         title: "UN 3481 - PI 966 Seção II",
                         description: "Baterias de baixa capacidade embaladas com equipamento. Parcialmente regulamentadas.",
                         type: "success",
-                        actionText: "Não requer DGD. Requer Marca de Bateria de Lítio."
+                        actionText: "Não requer DGD. Requer Marca de Bateria de Lítio. [LATAM LA-03 / JJ-03: Requer conformidade com regras operacionais e aprovação]"
                     },
                     "res_ion_contained_sec_i": {
                         title: "UN 3481 - PI 967 Seção I",
@@ -2604,19 +2621,19 @@ export const DGR_CHAPTERS: DGRChapter[] = [
                         title: "UN 3481 - PI 967 Seção II",
                         description: "Baterias de baixa capacidade instaladas em equipamento.",
                         type: "success",
-                        actionText: "Não requer DGD. Marca de Bateria de Lítio pode ser exigida dependendo da quantidade de pacotes."
+                        actionText: "Não requer DGD. Marca de Bateria de Lítio pode ser exigida dependendo do número de células/volumes. [LATAM LA-03 / JJ-03: Requer conformidade com coberturas regulatórias]"
                     },
                     "res_metal_loose_sec_ia": {
                         title: "UN 3090 - PI 968 Seção IA",
                         description: "Baterias de Lítio Metálico de alta capacidade. Totalmente regulamentadas.",
                         type: "danger",
-                        actionText: "Requer DGD, Etiqueta Classe 9, Etiqueta CAO. Proibido em aeronaves de passageiros."
+                        actionText: "Requer DGD, Etiqueta Classe 9, Etiqueta CAO. Proibido em aeronaves de passageiro. Nota LATAM: Estritamente proibido em voos de passageiros operados pela LATAM (Variações LA-02, JJ-02)."
                     },
                     "res_metal_loose_sec_ib_ii": {
                         title: "UN 3090 - PI 968 Seção IB / II",
                         description: "Baterias de Lítio Metálico de baixa capacidade. Devem voar apenas em aeronaves de carga (CAO).",
                         type: "warning",
-                        actionText: "Seção IB requer Etiqueta Classe 9 e Marca de Bateria. Seção II requer apenas Marca de Bateria. Ambas requerem CAO."
+                        actionText: "Seção IB requer Etiqueta Classe 9 e Marca de Bateria. Seção II requer Marca de Bateria. Ambas requerem CAO. LATAM (LA-03, JJ-03): Seção II de baterias soltas não é aceita pela LATAM, exceto sob condições extremamente rígidas e pré-aprovação."
                     },
                     "res_metal_packed_sec_i": {
                         title: "UN 3091 - PI 969 Seção I",
@@ -2628,7 +2645,7 @@ export const DGR_CHAPTERS: DGRChapter[] = [
                         title: "UN 3091 - PI 969 Seção II",
                         description: "Baterias de Lítio Metálico de baixa capacidade com equipamento.",
                         type: "success",
-                        actionText: "Não requer DGD. Requer Marca de Bateria de Lítio."
+                        actionText: "Não requer DGD. Requer Marca de Bateria de Lítio. [LATAM LA-03 / JJ-03: Revestido de aprovação regulatória]"
                     },
                     "res_metal_contained_sec_i": {
                         title: "UN 3091 - PI 970 Seção I",
@@ -2640,7 +2657,7 @@ export const DGR_CHAPTERS: DGRChapter[] = [
                         title: "UN 3091 - PI 970 Seção II",
                         description: "Baterias de Lítio Metálico de baixa capacidade instaladas em equipamento.",
                         type: "success",
-                        actionText: "Não requer DGD. Marca de Bateria de Lítio pode ser exigida dependendo da quantidade de pacotes."
+                        actionText: "Não requer DGD. Marca pode ser exigida conforme regras da IATA. [LATAM LA-03 / JJ-03: Revestido de aprovação regulatória interna]"
                     }
                 }
             }}
@@ -3004,12 +3021,12 @@ Signature: (Assinatura de J. da Silva)
               ]},
               { type: "note", content: { title: "Cálculo", text: "Para uma mistura de radionuclídeos, o cálculo para determinar se os limites A1 ou A2 são excedidos requer uma fórmula específica de soma de frações descrita na seção 10.3.1.2." }}
           ]},
-          { id: "10.3", title: "Classificação de Materiais", blocks: [] },
+          { id: "10.3", title: "Classificação de Materiais", blocks: [{ type: "paragraph", content: "De acordo com os critérios da Classe 7, materiais radioativos são classificados sob números UN específicos dependendo de sua atividade total, se são substâncias de baixa atividade específica (LSA), objetos contaminados na superfície (SCO), físsil ou não físsil, e sua conformidade com limites de embalagem industrial ou certificações de autoridade competente." }] },
           { id: "10.3.1", title: "Designação de Números UN", blocks: [{ type: "paragraph", content: "A classificação começa com a atribuição do número UN correto, que varia com base no tipo de material, atividade e se é físsil." }] },
           { id: "10.3.2", title: "Material de Baixa Atividade Específica (LSA)", blocks: [{ type: "paragraph", content: "Material radioativo que por sua natureza tem uma atividade específica limitada. É dividido em LSA-I, LSA-II e LSA-III com base na sua composição e atividade." }] },
           { id: "10.3.3", title: "Objeto Contaminado na Superfície (SCO)", blocks: [{ type: "paragraph", content: "Um objeto sólido que não é em si radioativo, mas tem material radioativo distribuído em suas superfícies. Dividido em SCO-I e SCO-II." }] },
           { id: "10.3.4", title: "Material Físsil", blocks: [{ type: "paragraph", content: "Materiais como urânio-233, urânio-235, plutônio-239, que são capazes de sustentar uma reação nuclear em cadeia. Requerem controle estrito para garantir a segurança contra criticidade (uma reação nuclear acidental)." }] },
-          { id: "10.4", title: "Requisitos de Fabricação e Teste para Pacotes", blocks: [] },
+          { id: "10.4", title: "Requisitos de Fabricação e Teste para Pacotes", blocks: [{ type: "paragraph", content: "Os pacotes utilizados no transporte de mercadorias radioativas devem passar por rigorosa validação que garanta que, mesmo sob abuso físico severo, a dispersão do material radioativo e o aumento da taxa de dose de radiação externa permaneçam estritamente dentro dos parâmetros de segurança da AIEA." }] },
           { id: "10.4.1", title: "Tipos de Pacotes", blocks: [{ type: "paragraph", content: "Existem vários tipos de pacotes, projetados para diferentes níveis de risco:" }, { type: 'definition-list', content: [
                 { term: 'Pacote Exceptuado (Excepted Package)', definition: 'Para quantidades muito pequenas de material radioativo com risco mínimo, isentos da maioria dos requisitos de marcação, etiquetagem e documentação.' },
                 { term: 'Pacote Industrial (Industrial Package - IP)', definition: 'Para materiais LSA e SCO, com três níveis de integridade (IP-1, IP-2, IP-3).' },

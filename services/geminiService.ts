@@ -80,8 +80,8 @@ export const analyzeShipment = async (scenario: string): Promise<AIResponse> => 
                 AUDIT PROTOCOL:
                 1. UN & PSN VERIFICATION: Validate against 2026 IATA DGR.
                 2. LIMITS & PACKING: Check quantity vs. Pax/CAO limits.
-                3. VARIATIONS CHECK: Search specifically for Airline variations (e.g., "LATAM variation LA-01", "LA-07"). 
-                   IMPORTANT: LATAM often prohibits Lithium Ion Batteries on Passenger Aircraft (LA-01). 
+                3. VARIATIONS CHECK: Search specifically for Airline variations (e.g., "LATAM variation LA-01", "LA-07" or "JJ-01" to "JJ-07"). 
+                   IMPORTANT: LATAM Group (including LA and JJ - LATAM Airlines Brasil) prohibits Lithium Ion Batteries on Passenger Aircraft (LA-01, JJ-01) and has strict restrictions on Section II battery shipments (JJ-03).
                 4. SEGREGATION: Cross-reference classes using Table 9.3.A.
                 
                 CRITICAL INSTRUCTION: AUTOMATIC CORRECTIVE ACTION

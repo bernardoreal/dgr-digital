@@ -263,8 +263,10 @@ const ChapterDetail: React.FC<ChapterDetailProps> = ({
             </div>
             <nav className="p-4 space-y-1 max-h-[calc(100vh-12rem)] overflow-y-auto">
                 {chapter.sections.map(s => (
-                    <a key={s.id} href={`#${s.id}`} onClick={() => setActiveSectionId(s.id)} className={`block px-4 py-3 rounded-xl text-xs font-bold transition-all ${activeSectionId === s.id ? 'bg-indigo-50 text-latam-indigo' : 'text-gray-400 hover:bg-gray-50 hover:text-gray-700'}`}>
-                        {s.id} • {s.title}
+                    <a key={s.id} href={`#${s.id}`} onClick={() => setActiveSectionId(s.id)} className={`flex items-center px-4 py-3 rounded-xl text-xs transition-all ${activeSectionId === s.id ? 'bg-indigo-50 text-latam-indigo font-black' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-800 font-bold'}`}>
+                        <span className={`font-mono font-black text-sm mr-2 shrink-0 ${activeSectionId === s.id ? 'text-latam-indigo' : 'text-gray-950 bg-gray-100/80 px-1.5 py-0.5 rounded'}`}>{s.id}</span>
+                        <span className="text-gray-300 mr-2 shrink-0">•</span>
+                        <span className="truncate">{s.title}</span>
                     </a>
                 ))}
             </nav>
@@ -280,7 +282,11 @@ const ChapterDetail: React.FC<ChapterDetailProps> = ({
             {chapter.sections.map(s => (
                 <section key={s.id} id={s.id} className="scroll-mt-32 group">
                     <div className="flex items-center mb-8">
-                        <h2 className="text-2xl font-black text-gray-800 uppercase tracking-tight flex items-center"><span className="text-latam-coral mr-3 opacity-30">/</span> {s.id} {s.title}</h2>
+                        <h2 className="text-2xl font-black text-gray-900 uppercase tracking-tight flex items-center">
+                            <span className="text-latam-coral mr-3 opacity-30">/</span>
+                            <span className="font-mono font-black text-latam-indigo bg-indigo-50/80 px-2.5 py-1 rounded-xl mr-3 border border-indigo-100/40 text-lg leading-none shrink-0">{s.id}</span>
+                            <span>{s.title}</span>
+                        </h2>
                         <div className="h-px bg-gray-50 flex-grow ml-6"></div>
                     </div>
                     <div className="pl-0 md:pl-10">{s.blocks.map((b, idx) => renderBlock(b, idx))}</div>
