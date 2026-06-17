@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
-import { Search, FilterX } from 'lucide-react';
+import { Search, FilterX, ArrowLeft } from 'lucide-react';
 import { DGRDatabase } from '../types';
 import { BLUE_PAGES_DATA } from '../constants';
 import UNDetailModal from './UNDetailModal';
@@ -82,10 +82,7 @@ const DatabasePopup: React.FC<DatabasePopupProps> = ({ initialDb, initialFilter:
     const handlePiClick = useCallback((pi: string) => {
         if (!pi || pi === 'Forbidden' || String(pi).toLowerCase().includes('see')) return;
         
-        const newWindow = window.open(`/?table=pi-database&filter_id=${pi}`, '_blank');
-        if (!newWindow) {
-            alert('Pop-up bloqueado. Por favor, permita a abertura de novas abas.');
-        }
+        window.location.href = `/?table=pi-database&filter_id=${pi}`;
     }, []);
 
     /**
@@ -109,6 +106,10 @@ const DatabasePopup: React.FC<DatabasePopupProps> = ({ initialDb, initialFilter:
         setFilters({});
     }, []);
 
+    const handleClose = useCallback(() => {
+        window.location.href = '/';
+    }, []);
+
     // Virtualization grid dimensions computations
     const containerHeight = scrollContainerRef.current?.clientHeight || window.innerHeight;
     const totalRows = sortedAndFilteredData.length;
@@ -122,21 +123,31 @@ const DatabasePopup: React.FC<DatabasePopupProps> = ({ initialDb, initialFilter:
 
     return (
         <>
-            <div id="database-manager-view" className="bg-gray-100 p-8 flex flex-col h-screen font-sans">
+            <div id="database-manager-view" className="bg-gray-100 p-4 md:p-8 flex flex-col h-screen font-sans">
                 {/* Search Bar & Stats Header */}
                 <div className="bg-white p-4 shadow-md rounded-t-lg flex justify-between items-center shrink-0 border-b border-gray-200">
-                    <div>
-                        <h1 className="font-bold text-lg text-gray-800">{currentDb.title}</h1>
-                        <p className="text-xs text-gray-400 font-bold uppercase tracking-wider mt-0.5">
-                            Visualizando {totalRows} de {currentDb.data.length} registros
-                        </p>
+                    <div className="flex items-center space-x-3">
+                        <button
+                            id="btn-database-close"
+                            onClick={handleClose}
+                            className="p-1.5 hover:bg-gray-100 rounded-full text-gray-500 transition-colors cursor-pointer"
+                            aria-label="Voltar para o Dashboard"
+                        >
+                            <ArrowLeft className="w-5 h-5" />
+                        </button>
+                        <div>
+                            <h1 className="font-bold text-sm md:text-lg text-gray-800">{currentDb.title}</h1>
+                            <p className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-wider mt-0.5">
+                                Visualizando {totalRows} de {currentDb.data.length} registros
+                            </p>
+                        </div>
                     </div>
                     <button 
                         id="btn-database-clear-filters"
                         onClick={handleClearFilters} 
-                        className="flex items-center text-xs font-bold text-blue-600 hover:underline hover:text-blue-800 uppercase tracking-wider transition-colors"
+                        className="flex items-center text-xs font-bold text-blue-600 hover:underline hover:text-blue-800 uppercase tracking-wider transition-colors shrink-0 ml-2"
                     >
-                        <FilterX className="w-3.5 h-3.5 mr-1.5" /> Limpar Filtros
+                        <FilterX className="w-3.5 h-3.5 mr-1.5" /> <span className="hidden sm:inline">Limpar Filtros</span>
                     </button>
                 </div>
 

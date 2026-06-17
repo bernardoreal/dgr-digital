@@ -24,6 +24,7 @@ const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({ onClose, onSt
     const [stats, setStats] = useState(getStats());
     const [isValidating, setIsValidating] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     /**
      * Connects to global internet grounding datasets.
@@ -32,6 +33,7 @@ const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({ onClose, onSt
      */
     const handleConnectLiveWeb = useCallback(async () => {
         setIsValidating(true);
+        setErrorMessage(null);
         // Dispatch test connectivity check to verify API key presence
         const result = await queryGemini("Test connectivity");
         setIsValidating(false);
@@ -54,7 +56,7 @@ const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({ onClose, onSt
                 }
             }, 150);
         } else {
-            alert("Falha na conexão com a IA. Verifique sua chave de API ou conexão de rede.");
+            setErrorMessage("Falha de conexão com o Assistente de Inteligência Artificial. Verifique as configurações de chave de API em seu ambiente de desenvolvimento ou sua conectividade de rede.");
         }
     }, [onStatusChange]);
 
@@ -146,7 +148,7 @@ const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({ onClose, onSt
                                                 id="btn-connect-live-web"
                                                 onClick={handleConnectLiveWeb}
                                                 disabled={isValidating}
-                                                className="w-full bg-latam-indigo text-white py-3 rounded-lg text-sm font-bold hover:bg-latam-indigoLight disabled:opacity-50 flex justify-center items-center shadow-lg shadow-indigo-100 transition-colors"
+                                                className="w-full bg-latam-indigo text-white py-3 rounded-lg text-sm font-bold hover:bg-latam-indigoLight disabled:opacity-50 flex justify-center items-center shadow-lg shadow-indigo-100 transition-colors cursor-pointer"
                                             >
                                                 {isValidating ? (
                                                     <RefreshCw className="w-4 h-4 animate-spin" />
@@ -154,6 +156,15 @@ const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({ onClose, onSt
                                                     <span className="flex items-center"><Wifi className="w-4 h-4 mr-2" /> Conectar à Rede Global</span>
                                                 )}
                                             </button>
+
+                                            {errorMessage && (
+                                                <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-lg mt-3 flex items-start leading-relaxed animate-fade-in">
+                                                    <AlertTriangle className="w-4 h-4 mr-1.5 flex-shrink-0 mt-0.5" />
+                                                    <div>
+                                                        <span className="font-bold">Falha na conexão:</span> {errorMessage}
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
                                     ) : (
                                         <div className="text-xs text-green-700 font-semibold flex items-center bg-green-100/50 p-2 rounded">

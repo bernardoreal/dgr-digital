@@ -1,0 +1,23 @@
+{
+  "hasUpdates": true,
+  "version": "65.1",
+  "date": "2024-03-31",
+  "changes": [
+    "IATA DGR 65ª Edição - Addendum 1: Atualização mandatória.",
+    "Baterias de Lítio (UN 3480): Esclarecimento sobre baterias com State of Charge (SoC) superior a 30% e aprovação requerida.",
+    "Variações de Operador (JJ/LA): Modificação das restrições de bagagem para passageiros contendo dispositivos de mobilidade."
+  ],
+  "chapterUpdates": [
+    {
+      "chapterId": 8,
+      "sectionId": "8.1",
+      "newBlocks": [
+        {
+          "type": "alert",
+          "style": "warning",
+          "content": "ATUALIZAÇÃO DGR (Addendum 1): Para baterias UN 3480 despachadas sob aprovação da autoridade com SoC superior a 30%, a aprovação deve indicar claramente a validade e os requisitos especiais atendidos."
+        }
+      ]
+    }
+  ]
+}

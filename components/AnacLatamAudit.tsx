@@ -380,6 +380,24 @@ export const AnacLatamAudit: React.FC<AnacLatamAuditProps> = ({ onClose }) => {
                     );
                   })}
                 </div>
+
+                {/* Mobile-only Validation Button */}
+                <div className="p-5 border-t border-gray-100 bg-gray-50/50 block lg:hidden">
+                  <button
+                    id="btn-audit-validate-mobile"
+                    onClick={handleGenerateCertificate}
+                    disabled={!allQuestionsAnswered}
+                    className="w-full bg-latam-indigo text-white py-3.5 rounded-xl text-sm font-bold hover:bg-latam-indigoLight disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-lg transition-all cursor-pointer"
+                  >
+                    <ShieldCheck className="w-5 h-5 mr-2" /> Validar & Emitir Selo
+                  </button>
+                  {!allQuestionsAnswered && (
+                    <p className="text-[10px] text-gray-400 mt-2 text-center font-medium">Responda todas as perguntas da auditoria acima para liberar o selo.</p>
+                  )}
+                  {errorMessage && (
+                    <p className="text-xs text-red-600 mt-2 text-center font-bold">{errorMessage}</p>
+                  )}
+                </div>
               </div>
             ) : (
               /* Clearance Certificate Display panel */
@@ -500,6 +518,24 @@ export const AnacLatamAudit: React.FC<AnacLatamAuditProps> = ({ onClose }) => {
                     </div>
                   </div>
                 )}
+
+                {/* Mobile-only Action Buttons at bottom of certificate card */}
+                <div className="p-5 border-t border-gray-100 bg-gray-50 block lg:hidden space-y-2">
+                  <button
+                    id="btn-audit-recheck-mobile"
+                    onClick={() => setIsGenerated(false)}
+                    className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                  >
+                    <RefreshCw className="w-4 h-4 mr-1.5 text-gray-500" /> Reavaliar Outro Lote
+                  </button>
+                  <button
+                    id="btn-audit-print-mobile"
+                    onClick={() => window.print()}
+                    className="w-full bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                  >
+                    <Printer className="w-4 h-4 mr-1.5" /> Imprimir Laudo de Conformidade
+                  </button>
+                </div>
               </div>
             )}
           </div>

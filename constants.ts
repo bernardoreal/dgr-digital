@@ -1,6 +1,7 @@
 
 import { DGRChapter, DGRVariation } from './types.ts';
 import { Package, Plane, AlertTriangle, Box, ShieldCheck, FileText, Globe, Layers, Search, Check, Zap, Truck, Anchor, Info, BookOpen, FlaskConical, ListFilter, Ban, Radiation, Library, Scale, FileQuestion, Building2, Tag } from 'lucide-react';
+import { SEGREGATION_DATABASE } from './segregationData';
 
 export const APP_VERSION = "67ª Edição (2026)";
 
@@ -2156,7 +2157,7 @@ export const PAX_PROVISIONS_DATA = [
     { item: "Thermometer (Weather Bureau) - Mercury", carry_on: "Yes", checked: "Yes", operator_approval: "Yes", limits: "By government representative only." },
 ].sort((a,b) => a.item.localeCompare(b.item));
 
-const GLOSSARY_DATA = [
+export const GLOSSARY_DATA = [
     { term: "A1 Value", definition: "O valor da atividade de material radioativo de forma especial listado na Tabela 10.3.A, usado para determinar o limite de atividade para transporte." },
     { term: "A2 Value", definition: "O valor da atividade de material radioativo, que não seja de forma especial, listado na Tabela 10.3.A." },
     { term: "Approval", definition: "Uma autorização emitida pela autoridade competente nacional para o transporte de mercadorias perigosas." },
@@ -2938,7 +2939,11 @@ Signature: (Assinatura de J. da Silva)
               caption: "Tabela 9.3.A - Requisitos de Segregação",
               type: 'matrix',
               footnotes: ["'true' (ou X na DGR): Segregação necessária.", "'false' (ou célula em branco na DGR): Segregação não necessária. Riscos subsidiários e requisitos de segregação para alimentos/rações não são mostrados."]
-          }}] },
+          }},
+          {
+              type: "database",
+              content: SEGREGATION_DATABASE
+          }] },
           { id: "9.3.2", title: "Segregação de Material Radioativo", blocks: [{ type: "paragraph", content: "Volumes de material radioativo devem ser segregados de áreas ocupadas por pessoas e de filmes fotográficos não revelados. A distância mínima de separação é baseada na soma dos Índices de Transporte (TI) de todos os pacotes." }, { type: "table", content: { caption: "Tabela 10.9.C - Distâncias Mínimas de Separação (Simplificada)", headers: ["Soma dos Índices de Transporte (TI)", "Distância Mínima (metros)"], rows: [["0.1 a 1.0", "0.5 m"], ["1.1 a 2.0", "1.0 m"], ["2.1 a 3.0", "1.5 m"], ["3.1 a 4.0", "2.0 m"], ["4.1 a 5.0", "2.5 m"], ["5.1 a 10.0", "4.5 m"], ["10.1 a 20.0", "6.5 m"], ["20.1 a 50.0", "9.0 m"]]}}]},
           {
               id: "9.4",

@@ -135,7 +135,8 @@ export enum ViewState {
   COMPLIANCE_ADMIN = 'COMPLIANCE_ADMIN',
   ANAC_LATAM_AUDIT = 'ANAC_LATAM_AUDIT',
   LITHIUM_CALCULATOR = 'LITHIUM_CALCULATOR',
-  ANAC_QUIZ = 'ANAC_QUIZ'
+  ANAC_QUIZ = 'ANAC_QUIZ',
+  FDS_INFO = 'FDS_INFO'
 }
 
 export interface SearchResult {
@@ -157,4 +158,13 @@ export interface RegulatoryConfig {
     validationStatus: ValidationStatus;
     lastSync: string;
     activeVariationsCount: number;
+}
+
+export interface RecentQuery {
+  id: string; // e.g., 'chapter-4' or 'table-blue-pages'
+  type: 'chapter' | 'table';
+  title: string;
+  subtitle?: string;
+  itemId: string | number; // chapter id or database id
+  timestamp: number;
 }

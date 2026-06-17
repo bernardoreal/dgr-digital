@@ -22,6 +22,8 @@ export const LithiumCalculator: React.FC<LithiumCalculatorProps> = ({ onClose })
   const [lithiumGrams, setLithiumGrams] = useState<number>(1.5);
   const [qtyPerPackage, setQtyPerPackage] = useState<number>(2);
   const [totalPackages, setTotalPackages] = useState<number>(5);
+  const [isOverpack, setIsOverpack] = useState<boolean>(false);
+  const [socCompliant, setSocCompliant] = useState<boolean>(true);
   const [showCertificate, setShowCertificate] = useState(false);
 
   const effectiveWattHours = useMemo(() => {
@@ -41,12 +43,22 @@ export const LithiumCalculator: React.FC<LithiumCalculatorProps> = ({ onClose })
     let labelsRequired: string[] = [];
     let dgdRequired = false;
     let caohazlabel = false;
+    let ergCode = '';
+    let socAlert = false;
 
     if (batteryChemistry === 'ION') {
+      ergCode = '12FZ';
+      
       // Lithium Ion: UN3480 (loose) or UN3481 (with or in equipment)
       if (packagingType === 'LOOSE') {
         unNumber = 'UN 3480';
         packingInstruction = 'PI 965';
+        
+        if (!socCompliant) {
+          socAlert = true;
+          isLatamForbidden = true;
+          latamProhibitionReason = 'IATA DGR: Baterias UN 3480 exigem SoC máximo de 30% para embarque. (Requisito mandatório PI 965).';
+        }
         
         // Under DGR Ion rules, loose battery limit determine Section
         if (effectiveWattHours > 100) {
@@ -95,6 +107,7 @@ export const LithiumCalculator: React.FC<LithiumCalculatorProps> = ({ onClose })
         }
       }
     } else {
+      ergCode = '12FZ';
       // Lithium Metal: UN3090 (loose) or UN3091 (with or in equipment)
       if (packagingType === 'LOOSE') {
         unNumber = 'UN 3090';
@@ -181,6 +194,10 @@ export const LithiumCalculator: React.FC<LithiumCalculatorProps> = ({ onClose })
       }
     }
 
+    if (isOverpack) {
+      labelsRequired.push('Marca "OVERPACK" (Letras mín. 12mm de altura)');
+    }
+
     return {
       unNumber,
       packingInstruction,
@@ -192,9 +209,11 @@ export const LithiumCalculator: React.FC<LithiumCalculatorProps> = ({ onClose })
       latamProhibitionReason,
       flightRestriction,
       flightStatus,
-      packingModeDescription
+      packingModeDescription,
+      ergCode,
+      socAlert
     };
-  }, [batteryChemistry, packagingType, effectiveWattHours, lithiumGrams, qtyPerPackage, totalPackages]);
+  }, [batteryChemistry, packagingType, effectiveWattHours, lithiumGrams, qtyPerPackage, totalPackages, isOverpack, socCompliant]);
 
   let generatedHash = useMemo(() => {
     let raw = `${batteryChemistry}-${packagingType}-${effectiveWattHours}-${qtyPerPackage}-LIO-2026`;
@@ -493,6 +512,31 @@ export const LithiumCalculator: React.FC<LithiumCalculatorProps> = ({ onClose })
                 </div>
               </div>
 
+              {/* Advanced Flags */}
+              <div className="space-y-3 mb-6 bg-gray-50 p-3 rounded-lg border border-gray-200">
+                 <label className="flex items-center space-x-3 cursor-pointer">
+                   <input 
+                     type="checkbox" 
+                     className="w-4 h-4 text-latam-indigo rounded border-gray-300 focus:ring-latam-indigo cursor-pointer"
+                     checked={isOverpack}
+                     onChange={(e) => { setIsOverpack(e.target.checked); setShowCertificate(false); }}
+                   />
+                   <span className="text-xs font-bold text-gray-700">O embarque consolida pacotes em um OVERPACK?</span>
+                 </label>
+                 
+                 {batteryChemistry === 'ION' && packagingType === 'LOOSE' && (
+                   <label className="flex items-center space-x-3 cursor-pointer">
+                     <input 
+                       type="checkbox" 
+                       className="w-4 h-4 text-emerald-600 rounded border-gray-300 focus:ring-emerald-600 cursor-pointer"
+                       checked={socCompliant}
+                       onChange={(e) => { setSocCompliant(e.target.checked); setShowCertificate(false); }}
+                     />
+                     <span className="text-xs font-bold text-gray-700">Estado de Carga (SoC) é menor ou igual a 30%? (Req. UN3480)</span>
+                   </label>
+                 )}
+              </div>
+
               <button
                 id="btn-calc-generate"
                 onClick={() => setShowCertificate(true)}
@@ -518,7 +562,7 @@ export const LithiumCalculator: React.FC<LithiumCalculatorProps> = ({ onClose })
                 </span>
               </div>
 
-              <div className="grid grid-cols-3 gap-4 mb-6">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                 <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
                   <span className="block text-[10px] text-gray-400 font-black uppercase mb-0.5">Instrução:</span>
                   <span className="text-xl font-black text-gray-950">{evaluation.packingInstruction}</span>
@@ -528,8 +572,12 @@ export const LithiumCalculator: React.FC<LithiumCalculatorProps> = ({ onClose })
                   <span className="text-xl font-black text-latam-indigo">{evaluation.category}</span>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                  <span className="block text-[10px] text-gray-400 font-black uppercase mb-0.5">ERG Drill Code:</span>
+                  <span className="text-xl font-black text-latam-coral">{evaluation.ergCode}</span>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
                   <span className="block text-[10px] text-gray-400 font-black uppercase mb-0.5">Modo de Embalagem:</span>
-                  <span className="text-xs font-black text-gray-800 leading-tight block mt-1">{evaluation.packingModeDescription}</span>
+                  <span className="text-[11px] font-black text-gray-800 leading-tight block mt-1">{evaluation.packingModeDescription}</span>
                 </div>
               </div>
 
@@ -537,11 +585,30 @@ export const LithiumCalculator: React.FC<LithiumCalculatorProps> = ({ onClose })
               <div className="space-y-4 font-medium text-sm text-gray-700">
                 <div className="flex items-start">
                   <div className="text-gray-400 mr-3 mt-0.5 font-bold">📄</div>
-                  <div>
+                  <div className="w-full">
                     <span className="block text-[10px] text-gray-400 font-black uppercase">Exigência de DGD (Declaração):</span>
                     <span className="font-bold text-gray-950">{evaluation.dgdRequired ? 'OBRIGATÓRIO (Emissão de DGD Eletrônica em Inglês)' : 'NÃO REQUERIDO'}</span>
+                    {evaluation.dgdRequired && (
+                      <div className="mt-2 bg-indigo-50 border border-indigo-100 p-2 rounded text-xs text-indigo-900">
+                        <span className="font-extrabold block mb-1">Contato de Emergência (Telefone 24h)</span>
+                        Obrigatório preenchimento na DGD um contato em prontidão ininterrupta. Adicional LA-02 válido.
+                      </div>
+                    )}
                   </div>
                 </div>
+
+                {evaluation.socAlert && (
+                  <div className="flex items-start">
+                    <div className="text-red-500 mr-3 mt-0.5 font-bold">⚠️</div>
+                    <div className="w-full">
+                      <span className="block text-[10px] text-red-500 font-black uppercase mb-2">Alerta de Risco (State of Charge):</span>
+                      <div className="bg-red-50 border border-red-200 text-red-900 p-3 rounded-lg text-xs font-bold w-full flex items-start space-x-3">
+                         <AlertTriangle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+                         <div>Estado de Carga (SoC) não documentado/validado. Baterias UN 3480 exigem SoC não excedendo 30%. O embarque deve ser rejeitado ou deve apresentar aprovação prévia competente.</div>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 <div className="flex items-start">
                   <div className="text-gray-400 mr-3 mt-0.5 font-bold mb-1">✈️</div>

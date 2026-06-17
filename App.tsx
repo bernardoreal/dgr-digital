@@ -1,9 +1,10 @@
 import React, { useState, useEffect, lazy, Suspense, useCallback, useMemo } from 'react';
 import ErrorBoundary from './components/ErrorBoundary';
-import { Plane, Search, ShieldCheck, ArrowRight, Sparkles, Bot, AlertTriangle, X, Settings, CheckCircle, Loader2, Zap, BookOpen } from 'lucide-react';
+import { Plane, Search, ShieldCheck, ArrowRight, Sparkles, Bot, AlertTriangle, X, Settings, CheckCircle, Loader2, Zap, BookOpen, FileText } from 'lucide-react';
 import { DGR_CHAPTERS, APP_VERSION } from './constants';
-import { DGRChapter, ViewState, DGRTable, DGRDatabase } from './types';
+import { DGRChapter, ViewState, DGRTable, DGRDatabase, RecentQuery } from './types';
 import ChapterCard from './components/ChapterCard';
+import RecentQueriesPanel from './components/RecentQueriesPanel';
 import AISearchModal from './components/AISearchModal';
 import ComplianceDashboard from './components/ComplianceDashboard';
 import DatabasePopup from './components/DatabasePopup';
@@ -13,6 +14,7 @@ const ChapterDetail = lazy(() => import('./components/ChapterDetail'));
 const AnacLatamAudit = lazy(() => import('./components/AnacLatamAudit'));
 const LithiumCalculator = lazy(() => import('./components/LithiumCalculator'));
 const AnacQuiz = lazy(() => import('./components/AnacQuiz'));
+const FdsExplorer = lazy(() => import('./components/FdsExplorer'));
 
 const findDatabaseById = (id: string): DGRDatabase | null => {
   for (const chapter of DGR_CHAPTERS) {
@@ -51,12 +53,58 @@ const App: React.FC = () => {
   }
 
   const [viewState, setViewState] = useState<ViewState>(ViewState.DASHBOARD);
-  const [selectedChapter, setSelectedChapter] = useState<DGRChapter | null>(null);
+  const [selectedChapterId, setSelectedChapterId] = useState<number | string | null>(null);
+
+  const [dgrUpdates, setDgrUpdates] = useState<{hasUpdates: boolean, version: string, date: string, changes: string[], chapterUpdates?: any[]} | null>(null);
+  const [downloadingUpdate, setDownloadingUpdate] = useState(false);
+  const [appVersion, setAppVersion] = useState(APP_VERSION);
+  const [updateApplied, setUpdateApplied] = useState(false);
+  const [chaptersConfig, setChaptersConfig] = useState<DGRChapter[]>(DGR_CHAPTERS);
+
+  const selectedChapter = useMemo(() => {
+    if (selectedChapterId === null) return null;
+    return chaptersConfig.find(c => c.id === selectedChapterId) || null;
+  }, [chaptersConfig, selectedChapterId]);
+
   const [isAiModalOpen, setIsAiModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [scrolled, setScrolled] = useState(false);
   const [aiStatus, setAiStatus] = useState<'checking' | 'online'>('checking');
   const [initialScrollId, setInitialScrollId] = useState<string | null>(null);
+  
+  // Recent queries state
+  const [recentQueries, setRecentQueries] = useState<RecentQuery[]>(() => {
+    try {
+      const stored = localStorage.getItem('iata_dgr_recent_queries_v1');
+      return stored ? JSON.parse(stored) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+
+  const trackRecentQuery = useCallback((type: 'chapter' | 'table', itemId: string | number, title: string, subtitle?: string) => {
+    const prefix = type === 'chapter' ? 'Capítulo' : 'Tabela';
+    const finalSubtitle = subtitle || `${prefix} ${itemId}`;
+    setRecentQueries(prev => {
+      const id = `${type}-${itemId}`;
+      const filtered = prev.filter(q => q.id !== id);
+      const newQuery: RecentQuery = {
+        id,
+        type,
+        itemId,
+        title,
+        subtitle: finalSubtitle,
+        timestamp: Date.now()
+      };
+      const updated = [newQuery, ...filtered].slice(0, 8);
+      try {
+        localStorage.setItem('iata_dgr_recent_queries_v1', JSON.stringify(updated));
+      } catch (e) {
+        console.error('Error saving recent queries:', e);
+      }
+      return updated;
+    });
+  }, []);
   
   // Regulatory Config State
   const [regConfig, setRegConfig] = useState(getRegulatoryConfig());
@@ -92,20 +140,79 @@ const App: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleChapterClick = useCallback((chapter: DGRChapter) => {
-    setSelectedChapter(chapter);
-    setViewState(ViewState.CHAPTER_DETAIL);
-    window.scrollTo(0, 0);
+  const applyUpdatesToChapters = (updatesData: any) => {
+    if (!updatesData.chapterUpdates) return;
+    setChaptersConfig(prevChapters => {
+      const newChapters = [...prevChapters];
+      updatesData.chapterUpdates.forEach((chUpdate: any) => {
+         const chapterIndex = newChapters.findIndex(c => c.id === chUpdate.chapterId);
+         if (chapterIndex >= 0) {
+           const chapter = { ...newChapters[chapterIndex] };
+           const sectionIndex = chapter.sections.findIndex((s: any) => s.id === chUpdate.sectionId);
+           if (sectionIndex >= 0) {
+             const section = { ...chapter.sections[sectionIndex] };
+             section.blocks = [...section.blocks, ...chUpdate.newBlocks];
+             chapter.sections[sectionIndex] = section;
+           }
+           newChapters[chapterIndex] = chapter;
+         }
+      });
+      return newChapters;
+    });
+  };
+
+  // Check for DGR updates
+  useEffect(() => {
+    fetch('/dgr-updates.json')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.hasUpdates) {
+          const appliedVersion = localStorage.getItem('appliedDgrUpdateVersion');
+          if (appliedVersion === data.version) {
+            // Already applied
+            setAppVersion(`${APP_VERSION} + Atualização ${data.version}`);
+            applyUpdatesToChapters(data);
+          } else {
+            setDgrUpdates(data);
+          }
+        }
+      })
+      .catch(err => console.log('No DGR updates found or error fetching.'));
   }, []);
 
+  const handleDownloadUpdate = () => {
+    if (!dgrUpdates) return;
+    setDownloadingUpdate(true);
+    // Simulate apply delay
+    setTimeout(() => {
+      localStorage.setItem('appliedDgrUpdateVersion', dgrUpdates.version);
+      
+      setDownloadingUpdate(false);
+      setUpdateApplied(true);
+      setAppVersion(`${APP_VERSION} + Atualização ${dgrUpdates.version}`);
+      applyUpdatesToChapters(dgrUpdates);
+      
+      setTimeout(() => {
+         setDgrUpdates(null); // Hide banner after success msg
+      }, 3000);
+    }, 2000);
+  };
+
+  const handleChapterClick = useCallback((chapter: DGRChapter) => {
+    setSelectedChapterId(chapter.id);
+    setViewState(ViewState.CHAPTER_DETAIL);
+    trackRecentQuery('chapter', chapter.id, chapter.title, `Capítulo ${chapter.id}`);
+    window.scrollTo(0, 0);
+  }, [trackRecentQuery]);
+
   const handleBackToDashboard = useCallback(() => {
-    setSelectedChapter(null);
+    setSelectedChapterId(null);
     setViewState(ViewState.DASHBOARD);
   }, []);
 
   // Memoized deep Search Logic computation
   const filteredChapters = useMemo(() => {
-    return DGR_CHAPTERS.filter(chapter => {
+    return chaptersConfig.filter(chapter => {
       const lowerTerm = searchTerm.toLowerCase();
       
       // 1. Check basic metadata
@@ -214,28 +321,30 @@ const App: React.FC = () => {
           </div>
 
           {/* CENTER COLUMN: Search Bar (Flexbox Centered) */}
-          <div className="flex-1 flex items-center justify-center z-20 hidden md:flex">
-            <div className={`relative w-full max-w-lg transition-all duration-500 transform ${
+          <div className={`flex-[2] md:flex-1 flex items-center justify-center z-20 ${
+              isHeaderActive ? 'flex mx-2' : 'hidden md:flex'
+          }`}>
+            <div className={`relative w-full max-w-xs sm:max-w-md md:max-w-lg transition-all duration-500 transform ${
                 isHeaderActive ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-4 pointer-events-none'
             }`}>
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Search className="h-4 w-4 text-white/60" />
+              <div className="absolute inset-y-0 left-0 pl-3 md:pl-4 flex items-center pointer-events-none font-sans">
+                <Search className="h-3.5 w-3.5 md:h-4 md:w-4 text-white/60" />
               </div>
               <input
                 type="text"
                 placeholder="Pesquisar..."
-                className="block w-full pl-11 pr-11 py-2.5 border border-white/20 rounded-full leading-5 bg-white/10 text-white placeholder-white/50 focus:outline-none focus:bg-white/20 focus:ring-2 focus:ring-white/40 focus:border-white/40 sm:text-sm transition-all shadow-lg backdrop-blur-md"
+                className="block w-full pl-8 md:pl-11 pr-8 md:pr-11 py-1.5 md:py-2.5 border border-white/20 rounded-full leading-5 bg-white/10 text-white placeholder-white/50 focus:outline-none focus:bg-white/20 focus:ring-2 focus:ring-white/40 focus:border-white/40 text-xs sm:text-sm transition-all shadow-lg backdrop-blur-md"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
               {searchTerm && (
-                <div className="absolute inset-y-0 right-0 flex items-center pr-4">
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                     <button
                     onClick={() => setSearchTerm('')}
                     className="p-1 text-white/50 hover:text-white hover:bg-white/20 rounded-full"
                     title="Limpar busca"
                     >
-                    <X className="w-4 h-4" />
+                    <X className="w-3.5 h-3.5" />
                     </button>
                 </div>
               )}
@@ -280,7 +389,7 @@ const App: React.FC = () => {
             {/* Hero Content */}
             <div className="relative z-40 container mx-auto px-6 text-center text-white">
               <div className="inline-block px-3 py-1 mb-4 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm text-xs font-semibold tracking-wider uppercase text-white/90 animate-fade-in-up">
-                {APP_VERSION}
+                {appVersion}
               </div>
               <h2 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight leading-tight animate-fade-in-up" style={{animationDelay: '0.1s'}}>
                 Regulamentação de <br/>
@@ -327,6 +436,8 @@ const App: React.FC = () => {
 
           {/* Cards Grid Section - Overlapping Hero */}
           <main className="relative z-30 container mx-auto px-6 -mt-10 md:-mt-20 pb-20">
+
+
             {/* Compliance Portal Section */}
             {searchTerm === '' && (
               <div className="mb-12 animate-fade-in-up">
@@ -345,73 +456,95 @@ const App: React.FC = () => {
                   </span>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {/* Card 1: Auditoria */}
-                  <div 
-                    onClick={() => setViewState(ViewState.ANAC_LATAM_AUDIT)}
-                    className="bg-white rounded-2xl border border-gray-200/85 p-6 shadow-xl shadow-gray-200/20 hover:shadow-2xl hover:border-latam-indigo/30 hover:-translate-y-1.5 transition-all cursor-pointer group flex flex-col justify-between"
-                  >
-                    <div>
-                      <div className="bg-indigo-50 text-latam-indigo p-3 rounded-xl inline-block mb-4 group-hover:bg-latam-indigo group-hover:text-white transition-all">
-                        <ShieldCheck className="w-6 h-6" />
-                      </div>
-                      <h4 className="text-base font-black text-gray-900 group-hover:text-latam-indigo transition-colors mb-2">
-                        Auditoria de Carga ANAC RBAC 175
-                      </h4>
-                      <p className="text-sm text-gray-500 leading-relaxed font-semibold">
-                        Gere pareceres digitais de liberação de solo e validação de minuta AWB contra exigências de operador LATAM Cargo.
-                      </p>
-                    </div>
-                    <div className="mt-6 flex items-center font-bold text-xs text-latam-indigo">
-                      <span>Iniciar Auditoria Integrada</span>
-                      <ArrowRight className="w-4 h-4 ml-1.5 transform group-hover:translate-x-1 transition-transform" />
-                    </div>
-                  </div>
+                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                   {/* Card 1: Auditoria */}
+                   <div 
+                     onClick={() => setViewState(ViewState.ANAC_LATAM_AUDIT)}
+                     className="bg-white rounded-2xl border border-gray-200/85 p-6 shadow-xl shadow-gray-200/20 hover:shadow-2xl hover:border-latam-indigo/30 hover:-translate-y-1.5 transition-all cursor-pointer group flex flex-col justify-between"
+                   >
+                     <div>
+                       <div className="bg-indigo-50 text-latam-indigo p-3 rounded-xl inline-block mb-4 group-hover:bg-latam-indigo group-hover:text-white transition-all">
+                         <ShieldCheck className="w-6 h-6" />
+                       </div>
+                       <h4 className="text-base font-black text-gray-900 group-hover:text-latam-indigo transition-colors mb-2">
+                         Auditoria de Carga ANAC RBAC 175
+                       </h4>
+                       <p className="text-sm text-gray-500 leading-relaxed font-semibold">
+                         Gere pareceres digitais de liberação de solo e validação de minuta AWB contra exigências de operador LATAM Cargo.
+                       </p>
+                     </div>
+                     <div className="mt-6 flex items-center font-bold text-xs text-latam-indigo">
+                       <span>Iniciar Auditoria Integrada</span>
+                       <ArrowRight className="w-4 h-4 ml-1.5 transform group-hover:translate-x-1 transition-transform" />
+                     </div>
+                   </div>
 
-                  {/* Card 2: Calculadora de Lítio */}
-                  <div 
-                    onClick={() => setViewState(ViewState.LITHIUM_CALCULATOR)}
-                    className="bg-white rounded-2xl border border-gray-200/85 p-6 shadow-xl shadow-gray-200/20 hover:shadow-2xl hover:border-amber-500/30 hover:-translate-y-1.5 transition-all cursor-pointer group flex flex-col justify-between"
-                  >
-                    <div>
-                      <div className="bg-amber-50 text-amber-600 p-3 rounded-xl inline-block mb-4 group-hover:bg-amber-500 group-hover:text-white transition-all">
-                        <Zap className="w-6 h-6" />
-                      </div>
-                      <h4 className="text-base font-black text-gray-900 group-hover:text-amber-600 transition-colors mb-2">
-                        Calculadora de Baterias de Lítio
-                      </h4>
-                      <p className="text-sm text-gray-500 leading-relaxed font-semibold">
-                        Calcule limitações de Watt-Hora/gramas na Seção II/IB e monitore vedações específicas (como restrição de baterias soltas TAM/ABSA).
-                      </p>
-                    </div>
-                    <div className="mt-6 flex items-center font-bold text-xs text-amber-600">
-                      <span>Calcular Limites & Regras</span>
-                      <ArrowRight className="w-4 h-4 ml-1.5 transform group-hover:translate-x-1 transition-transform" />
-                    </div>
-                  </div>
+                   {/* Card 2: Calculadora de Lítio */}
+                   <div 
+                     onClick={() => setViewState(ViewState.LITHIUM_CALCULATOR)}
+                     className="bg-white rounded-2xl border border-gray-200/85 p-6 shadow-xl shadow-gray-200/20 hover:shadow-2xl hover:border-amber-500/30 hover:-translate-y-1.5 transition-all cursor-pointer group flex flex-col justify-between"
+                   >
+                     <div>
+                       <div className="bg-amber-50 text-amber-600 p-3 rounded-xl inline-block mb-4 group-hover:bg-amber-500 group-hover:text-white transition-all">
+                         <Zap className="w-6 h-6" />
+                       </div>
+                       <h4 className="text-base font-black text-gray-900 group-hover:text-amber-600 transition-colors mb-2">
+                         Calculadora de Baterias de Lítio
+                       </h4>
+                       <p className="text-sm text-gray-500 leading-relaxed font-semibold">
+                         Calcule limitações de Watt-Hora/gramas na Seção II/IB e monitore vedações específicas (como restrição de baterias soltas TAM/ABSA).
+                       </p>
+                     </div>
+                     <div className="mt-6 flex items-center font-bold text-xs text-amber-600">
+                       <span>Calcular Limites & Regras</span>
+                       <ArrowRight className="w-4 h-4 ml-1.5 transform group-hover:translate-x-1 transition-transform" />
+                     </div>
+                   </div>
 
-                  {/* Card 3: Treinamento Quiz */}
-                  <div 
-                    onClick={() => setViewState(ViewState.ANAC_QUIZ)}
-                    className="bg-white rounded-2xl border border-gray-200/85 p-6 shadow-xl shadow-gray-200/20 hover:shadow-2xl hover:border-latam-coral/30 hover:-translate-y-1.5 transition-all cursor-pointer group flex flex-col justify-between"
-                  >
-                    <div>
-                      <div className="bg-rose-50 text-latam-coral p-3 rounded-xl inline-block mb-4 group-hover:bg-latam-coral group-hover:text-white transition-all">
-                        <BookOpen className="w-6 h-6" />
-                      </div>
-                      <h4 className="text-base font-black text-gray-900 group-hover:text-latam-coral transition-colors mb-2">
-                        Simulador de Treinamento ANAC
-                      </h4>
-                      <p className="text-sm text-gray-500 leading-relaxed font-semibold">
-                        Treinamento e e-learning rápido de segurança operacional exigido pelas regras de recorrência bienal em solo.
-                      </p>
-                    </div>
-                    <div className="mt-6 flex items-center font-bold text-xs text-latam-coral">
-                      <span>Iniciar Quiz de Recorrência</span>
-                      <ArrowRight className="w-4 h-4 ml-1.5 transform group-hover:translate-x-1 transition-transform" />
-                    </div>
-                  </div>
-                </div>
+                   {/* Card 3: Treinamento Quiz */}
+                   <div 
+                     onClick={() => setViewState(ViewState.ANAC_QUIZ)}
+                     className="bg-white rounded-2xl border border-gray-200/85 p-6 shadow-xl shadow-gray-200/20 hover:shadow-2xl hover:border-latam-coral/30 hover:-translate-y-1.5 transition-all cursor-pointer group flex flex-col justify-between"
+                   >
+                     <div>
+                       <div className="bg-rose-50 text-latam-coral p-3 rounded-xl inline-block mb-4 group-hover:bg-latam-coral group-hover:text-white transition-all">
+                         <BookOpen className="w-6 h-6" />
+                       </div>
+                       <h4 className="text-base font-black text-gray-900 group-hover:text-latam-coral transition-colors mb-2">
+                         Simulador de Treinamento ANAC
+                       </h4>
+                       <p className="text-sm text-gray-500 leading-relaxed font-semibold">
+                         Treinamento e e-learning rápido de segurança operacional exigido pelas regras de recorrência bienal em solo.
+                       </p>
+                     </div>
+                     <div className="mt-6 flex items-center font-bold text-xs text-latam-coral">
+                       <span>Iniciar Quiz de Recorrência</span>
+                       <ArrowRight className="w-4 h-4 ml-1.5 transform group-hover:translate-x-1 transition-transform" />
+                     </div>
+                   </div>
+
+                   {/* Card 4: FDS / FISPQ Explorer */}
+                   <div 
+                     onClick={() => setViewState(ViewState.FDS_INFO)}
+                     className="bg-white rounded-2xl border border-gray-200/85 p-6 shadow-xl shadow-gray-200/20 hover:shadow-2xl hover:border-indigo-600/30 hover:-translate-y-1.5 transition-all cursor-pointer group flex flex-col justify-between"
+                   >
+                     <div>
+                       <div className="bg-indigo-50 text-latam-indigo p-3 rounded-xl inline-block mb-4 group-hover:bg-latam-indigo group-hover:text-white transition-all">
+                         <FileText className="w-6 h-6" />
+                       </div>
+                       <h4 className="text-base font-black text-gray-900 group-hover:text-latam-indigo transition-colors mb-2">
+                         FDS / FISPQ & GHS Explorer
+                       </h4>
+                       <p className="text-sm text-gray-500 leading-relaxed font-semibold">
+                         Guia de auditoria documental das 16 Seções de Ficha de Segurança segundo a norma ABNT NBR 14725:2023.
+                       </p>
+                     </div>
+                     <div className="mt-6 flex items-center font-bold text-xs text-latam-indigo">
+                       <span>Validar Documento FDS</span>
+                       <ArrowRight className="w-4 h-4 ml-1.5 transform group-hover:translate-x-1 transition-transform" />
+                     </div>
+                   </div>
+                 </div>
 
                 <div className="mt-8 border-t border-dashed border-gray-300 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500 font-bold uppercase tracking-wider gap-4">
                   <span className="text-center sm:text-left">Normas Ativas: IATA DGR Edição 67 - ANAC RBAC 175 - LATAM Operator Variations JJ/LA/UC</span>
@@ -420,37 +553,73 @@ const App: React.FC = () => {
               </div>
             )}
 
-            {/* Default Regulatory Manual Chapters list header */}
-            <div className="mb-6 mt-12 md:mt-20">
-              <h3 className="text-lg font-extrabold text-gray-900 uppercase tracking-wider">
-                Capítulos & Seções do IATA DGR
-              </h3>
-              <p className="text-xs text-gray-500 font-semibold mt-1">Manual Normativo estruturado de referência técnica.</p>
-            </div>
-
-            <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8`}>
-              {filteredChapters.map((chapter: DGRChapter, index: number) => (
-                <div key={chapter.id} className="animate-fade-in-up" style={{ animationDelay: `${0.1 * (index + 1)}s` }}>
-                  <ChapterCard 
-                    chapter={chapter} 
-                    onClick={handleChapterClick} 
-                  />
+            {/* Dual Column Layout: Chapters and Recent Queries */}
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mt-12 md:mt-20">
+              
+              {/* Chapters List and Grid (Takes 3 columns on large screens) */}
+              <div className={`lg:col-span-3 ${
+                recentQueries.length === 0 
+                  ? 'order-1 lg:order-1' 
+                  : 'order-2 lg:order-1'
+              }`}>
+                <div className="mb-6">
+                  <h3 className="text-lg font-extrabold text-gray-900 uppercase tracking-wider">
+                    Capítulos & Seções do IATA DGR
+                  </h3>
+                  <p className="text-xs text-gray-500 font-semibold mt-1">
+                    Manual Normativo estruturado de referência técnica.
+                  </p>
                 </div>
-              ))}
-            </div>
 
-            {filteredChapters.length === 0 && (
-              <div className="text-center py-20 bg-white rounded-xl shadow-sm border border-gray-100">
-                <Search className="w-12 h-12 mx-auto text-gray-300 mb-4" />
-                <p className="text-gray-500 text-lg">Nenhum capítulo encontrado correspondente a "{searchTerm}"</p>
-                <button 
-                  onClick={() => setSearchTerm('')}
-                  className="mt-4 text-latam-coral font-medium hover:underline"
-                >
-                  Limpar filtro
-                </button>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                  {filteredChapters.map((chapter: DGRChapter, index: number) => (
+                    <div key={chapter.id} className="animate-fade-in-up" style={{ animationDelay: `${0.05 * (index + 1)}s` }}>
+                      <ChapterCard 
+                        chapter={chapter} 
+                        onClick={handleChapterClick} 
+                      />
+                    </div>
+                  ))}
+                </div>
+
+                {filteredChapters.length === 0 && (
+                  <div className="text-center py-20 bg-white rounded-xl shadow-sm border border-gray-100">
+                    <Search className="w-12 h-12 mx-auto text-gray-300 mb-4" />
+                    <p className="text-gray-500 text-lg">Nenhum capítulo encontrado correspondente a "{searchTerm}"</p>
+                    <button 
+                      onClick={() => setSearchTerm('')}
+                      className="mt-4 text-latam-coral font-medium hover:underline"
+                    >
+                      Limpar filtro
+                    </button>
+                  </div>
+                )}
               </div>
-            )}
+
+              {/* Sidebar Panel: Últimas Consultas (Takes 1 column on large screens) */}
+              <div className={`lg:col-span-1 flex flex-col ${
+                recentQueries.length === 0 
+                  ? 'hidden lg:flex lg:order-2' 
+                  : 'order-1 lg:order-2'
+              }`}>
+                <RecentQueriesPanel
+                  recentQueries={recentQueries}
+                  onClear={() => {
+                    setRecentQueries([]);
+                    localStorage.removeItem('iata_dgr_recent_queries_v1');
+                  }}
+                  onSelectChapter={(chapterId) => {
+                    const ch = chaptersConfig.find(c => c.id === chapterId || String(c.id) === String(chapterId));
+                    if (ch) handleChapterClick(ch);
+                  }}
+                  onSelectTable={(dbId) => {
+                    // Navigate to dashboard and append the table parameter
+                    window.location.href = `/?table=${dbId}`;
+                  }}
+                />
+              </div>
+
+            </div>
           </main>
         </>
       ) : (
@@ -464,6 +633,7 @@ const App: React.FC = () => {
                     initialSearchTerm={searchTerm}
                     initialScrollId={initialScrollId}
                     onClearInitialScroll={() => setInitialScrollId(null)}
+                    onOpenTable={(db) => trackRecentQuery('table', db.id, db.title, db.type === 'blue-pages' ? 'Tabela Azul (4.2)' : 'Tabela Regulamentar')}
                 />
                 )}
                 {viewState === ViewState.ANAC_LATAM_AUDIT && (
@@ -474,6 +644,9 @@ const App: React.FC = () => {
                 )}
                 {viewState === ViewState.ANAC_QUIZ && (
                   <AnacQuiz onClose={handleBackToDashboard} />
+                )}
+                {viewState === ViewState.FDS_INFO && (
+                  <FdsExplorer onBack={handleBackToDashboard} />
                 )}
             </Suspense>
           </main>
@@ -514,7 +687,7 @@ const App: React.FC = () => {
                <span className="font-medium text-latam-indigo">Ferramenta de Referência IATA DGR</span>
             </div>
             <div className="flex flex-col items-center md:items-end">
-              <p>Baseado no IATA DGR {APP_VERSION} ({regConfig.validationStatus === 'VERIFIED_OPERATIONAL' ? 'Validado' : 'Simulação'})</p>
+              <p>Baseado no IATA DGR {appVersion} ({regConfig.validationStatus === 'VERIFIED_OPERATIONAL' ? 'Validado' : 'Simulação'})</p>
               <div className="flex space-x-4 mt-2 text-xs items-center">
                 <a href="#" className="hover:text-latam-indigo transition-colors">Privacidade</a>
                 <a href="#" className="hover:text-latam-indigo transition-colors">Termos</a>
