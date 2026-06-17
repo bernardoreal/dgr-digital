@@ -37,8 +37,8 @@ const RecentQueriesPanel: React.FC<RecentQueriesPanelProps> = ({
         )}
       </div>
 
-      {/* Query List */}
-      <div className="mt-4 flex-1 overflow-y-auto space-y-3 min-h-[220px] max-h-[450px] pr-1">
+      {/* Query Grid */}
+      <div className="mt-4 flex-1 overflow-y-auto min-h-[220px] max-h-[450px] pr-1">
         {recentQueries.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-10 px-4 text-center h-full">
             <Clock className="w-8 h-8 text-gray-300 dark:text-slate-700 mb-3 animate-pulse" />
@@ -50,7 +50,7 @@ const RecentQueriesPanel: React.FC<RecentQueriesPanelProps> = ({
             </p>
           </div>
         ) : (
-          <div className="space-y-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
             {recentQueries.map((query) => (
               <div
                 key={query.id}
@@ -61,39 +61,34 @@ const RecentQueriesPanel: React.FC<RecentQueriesPanelProps> = ({
                     onSelectTable(String(query.itemId));
                   }
                 }}
-                className="group flex items-start p-3 hover:bg-slate-50/80 dark:hover:bg-slate-900/65 rounded-xl border border-transparent hover:border-slate-100 dark:hover:border-slate-850 transition-all cursor-pointer text-left"
+                className="group flex items-start p-4 hover:bg-slate-50/80 dark:hover:bg-slate-900/65 rounded-xl border border-gray-100 hover:border-slate-200 dark:border-slate-800 dark:hover:border-slate-700 shadow-sm transition-all cursor-pointer text-left focus:outline-none focus:ring-2 focus:ring-latam-indigo/50"
               >
                 {/* Icon Container */}
                 <div className="mt-0.5 mr-3 flex-shrink-0">
                   {query.type === 'chapter' ? (
-                    <div className="bg-indigo-50 dark:bg-indigo-950/40 text-latam-indigo dark:text-indigo-300 p-2 rounded-lg group-hover:bg-latam-indigo group-hover:text-white transition-all">
-                      <BookOpen className="w-3.5 h-3.5" />
+                    <div className="bg-indigo-50 dark:bg-indigo-950/40 text-latam-indigo dark:text-indigo-300 p-2.5 rounded-lg group-hover:bg-latam-indigo group-hover:text-white transition-all shadow-sm">
+                      <BookOpen className="w-4 h-4" />
                     </div>
                   ) : (
-                    <div className="bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 p-2 rounded-lg group-hover:bg-amber-500 group-hover:text-white transition-all">
-                      <Database className="w-3.5 h-3.5" />
+                    <div className="bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 p-2.5 rounded-lg group-hover:bg-amber-500 group-hover:text-white transition-all shadow-sm">
+                      <Database className="w-4 h-4" />
                     </div>
                   )}
                 </div>
 
                 {/* Text Content */}
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between gap-1">
-                    <span className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest block truncate">
+                  <div className="flex items-center justify-between gap-1 mb-1">
+                    <span className="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest block truncate">
                       {query.subtitle}
                     </span>
-                    <span className="text-[8px] text-slate-400 dark:text-slate-500 font-bold tracking-tight">
+                    <span className="text-[9px] text-slate-400 dark:text-slate-500 font-bold tracking-tight bg-slate-50 dark:bg-slate-800/50 px-1.5 py-0.5 rounded">
                       {new Date(query.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   </div>
-                  <h5 className="text-xs font-bold text-gray-800 dark:text-slate-200 group-hover:text-latam-indigo dark:group-hover:text-white transition-colors truncate mt-0.5">
+                  <h5 className="text-sm font-bold text-gray-800 dark:text-slate-200 group-hover:text-latam-indigo dark:group-hover:text-white transition-colors line-clamp-2 leading-tight">
                     {query.title}
                   </h5>
-                </div>
-
-                {/* Action Arrow */}
-                <div className="self-center ml-2 text-gray-300 dark:text-slate-700 group-hover:text-latam-indigo dark:group-hover:text-indigo-300 transform group-hover:translate-x-0.5 transition-all">
-                  <ChevronRight className="w-3.5 h-3.5" />
                 </div>
               </div>
             ))}

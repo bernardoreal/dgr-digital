@@ -168,7 +168,7 @@ const AISearchModal: React.FC<AISearchModalProps> = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-latam-indigo/65 dark:bg-[#06050e]/80 backdrop-blur-sm animate-fade-in">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-latam-indigo/65 dark:bg-[#06050e]/80 backdrop-blur-sm animate-fade-in">
       <div className="bg-white dark:bg-[#110e26] rounded-2xl shadow-2xl w-full max-w-5xl overflow-hidden flex flex-col h-[90vh] border border-white/20 dark:border-slate-800">
         
         {/* Header with Tabs */}

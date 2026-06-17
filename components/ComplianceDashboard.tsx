@@ -108,12 +108,12 @@ const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({ onClose, onSt
                 </div>
             </div>
 
-            <main className="flex-grow container mx-auto px-6 py-8">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <main className="flex-grow container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-7xl">
+                <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8">
                     
                     {/* Left Column: Connection Setup & State Toggles */}
-                    <div className="lg:col-span-1 space-y-6">
-                        <div className="bg-white dark:bg-[#110e26] p-6 rounded-xl shadow-sm border border-gray-200 dark:border-slate-800/80">
+                    <div className="xl:col-span-1 space-y-6">
+                        <div className="bg-white dark:bg-[#110e26] p-5 sm:p-6 rounded-2xl shadow-sm border border-gray-200/80 dark:border-slate-800/80">
                             <h3 className="font-bold text-gray-700 dark:text-slate-350 mb-4 flex items-center uppercase text-xs tracking-wider">
                                 <Server className="w-4 h-4 mr-2 text-gray-500" />
                                 Fonte de Dados Ativa
@@ -193,8 +193,8 @@ const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({ onClose, onSt
                     </div>
 
                     {/* Right Column: Database Statistics and Sync Integrity monitors */}
-                    <div className="lg:col-span-2 space-y-6">
-                        <div className="bg-white dark:bg-[#110e26] p-6 rounded-xl shadow-sm border border-gray-200 dark:border-slate-800/80">
+                    <div className="xl:col-span-2 space-y-6">
+                        <div className="bg-white dark:bg-[#110e26] p-5 sm:p-6 rounded-2xl shadow-sm border border-gray-200/80 dark:border-slate-800/80">
                             <h3 className="font-bold text-gray-700 dark:text-slate-350 mb-6 flex items-center uppercase text-xs tracking-wider">
                                 <Activity className="w-4 h-4 mr-2 text-gray-500" />
                                 Monitor de Integridade da Regulação

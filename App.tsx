@@ -5,10 +5,13 @@ import { DGR_CHAPTERS, APP_VERSION } from './constants';
 import { DGRChapter, ViewState, DGRTable, DGRDatabase, RecentQuery } from './types';
 import ChapterCard from './components/ChapterCard';
 import RecentQueriesPanel from './components/RecentQueriesPanel';
+import BookmarksPanel from './components/BookmarksPanel';
 import AISearchModal from './components/AISearchModal';
 import ComplianceDashboard from './components/ComplianceDashboard';
 import DatabasePopup from './components/DatabasePopup';
+import OperatorAuth from './components/OperatorAuth';
 import { getRegulatoryConfig } from './services/regulatoryService';
+import { bootstrapIndexedDB } from './services/storageService';
 
 const ChapterDetail = lazy(() => import('./components/ChapterDetail'));
 const AnacLatamAudit = lazy(() => import('./components/AnacLatamAudit'));
@@ -16,8 +19,8 @@ const LithiumCalculator = lazy(() => import('./components/LithiumCalculator'));
 const AnacQuiz = lazy(() => import('./components/AnacQuiz'));
 const FdsExplorer = lazy(() => import('./components/FdsExplorer'));
 
-const findDatabaseById = (id: string): DGRDatabase | null => {
-  for (const chapter of DGR_CHAPTERS) {
+const findDatabaseById = (id: string, chapters: DGRChapter[] = DGR_CHAPTERS): DGRDatabase | null => {
+  for (const chapter of chapters) {
     for (const section of chapter.sections) {
       for (const block of section.blocks) {
         if (block.type === 'database') {
@@ -52,6 +55,33 @@ const App: React.FC = () => {
     }
   }
 
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('iata_dgr_authenticated') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  const [operatorBP, setOperatorBP] = useState<string | null>(() => {
+    try {
+      return localStorage.getItem('iata_dgr_operator_bp');
+    } catch {
+      return null;
+    }
+  });
+
+  const handleAuthenticate = useCallback((bp: string) => {
+    setIsAuthenticated(true);
+    setOperatorBP(bp);
+    try {
+      localStorage.setItem('iata_dgr_authenticated', 'true');
+      localStorage.setItem('iata_dgr_operator_bp', bp);
+    } catch (e) {
+      console.error('Error saving auth state:', e);
+    }
+  }, []);
+
   const [viewState, setViewState] = useState<ViewState>(ViewState.DASHBOARD);
   const [selectedChapterId, setSelectedChapterId] = useState<number | string | null>(null);
 
@@ -60,6 +90,15 @@ const App: React.FC = () => {
   const [appVersion, setAppVersion] = useState(APP_VERSION);
   const [updateApplied, setUpdateApplied] = useState(false);
   const [chaptersConfig, setChaptersConfig] = useState<DGRChapter[]>(DGR_CHAPTERS);
+
+  // Initialize from IndexedDB for permanent cache
+  useEffect(() => {
+    bootstrapIndexedDB().then(dbChapters => {
+      if (dbChapters) {
+        setChaptersConfig(dbChapters);
+      }
+    });
+  }, []);
 
   const selectedChapter = useMemo(() => {
     if (selectedChapterId === null) return null;
@@ -81,6 +120,29 @@ const App: React.FC = () => {
       return [];
     }
   });
+
+  // Bookmarks state
+  const [bookmarks, setBookmarks] = useState<string[]>(() => {
+    try {
+      const stored = localStorage.getItem('iata_dgr_bookmarks');
+      return stored ? JSON.parse(stored) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+
+  const toggleBookmark = useCallback((sectionId: string) => {
+    setBookmarks(prev => {
+      const isBookmarked = prev.includes(sectionId);
+      const updated = isBookmarked ? prev.filter(id => id !== sectionId) : [...prev, sectionId];
+      try {
+        localStorage.setItem('iata_dgr_bookmarks', JSON.stringify(updated));
+      } catch (e) {
+        console.error('Error saving bookmarks:', e);
+      }
+      return updated;
+    });
+  }, []);
 
   const trackRecentQuery = useCallback((type: 'chapter' | 'table', itemId: string | number, title: string, subtitle?: string) => {
     const prefix = type === 'chapter' ? 'Capítulo' : 'Tabela';
@@ -283,6 +345,10 @@ const App: React.FC = () => {
     </div>
   );
 
+  if (!isAuthenticated) {
+    return <OperatorAuth onAuthenticate={handleAuthenticate} />;
+  }
+
   if (viewState === ViewState.COMPLIANCE_ADMIN) {
       return <ComplianceDashboard 
                 onClose={() => setViewState(ViewState.DASHBOARD)} 
@@ -294,24 +360,42 @@ const App: React.FC = () => {
     <ErrorBoundary>
       <div className="min-h-screen flex flex-col font-sans text-latam-text bg-latam-bg dark:bg-[#06050e] dark:text-slate-100 transition-all duration-300">
       
-      {/* Safety Disclaimer Banner - ONLY shown if Unverified */}
-      {showDisclaimer && regConfig.validationStatus !== 'VERIFIED_OPERATIONAL' && (
-        <div className="bg-yellow-400 text-yellow-900 px-4 py-3 relative z-50 shadow-md">
+      {/* Safety Disclaimer Banner */}
+      {(showDisclaimer || regConfig.validationStatus !== 'VERIFIED_OPERATIONAL' || new Date().getFullYear() > 2026) && (
+        <div className={`px-4 py-3 relative z-[60] shadow-md ${
+          new Date().getFullYear() > 2026 
+            ? 'bg-red-600 text-white' 
+            : 'bg-yellow-400 text-yellow-900'
+        }`}>
           <div className="container mx-auto flex items-start justify-center pr-8">
             <AlertTriangle className="w-5 h-5 mr-3 mt-0.5 flex-shrink-0" />
             <div className="text-sm font-bold">
-              <span className="uppercase block md:inline md:mr-2">Ambiente de Simulação:</span>
-              <span className="font-medium">
-                Os dados regulatórios apresentados são gerados proceduralmente.
-                <span className="underline ml-1">Não utilize para embarques operacionais reais até validação.</span>
-              </span>
+              {new Date().getFullYear() > 2026 ? (
+                <span>
+                  ALERTA DE SEGURANÇA: Esta versão (67ª Edição - 2026) expirou. As regulamentações IATA DGR são renovadas anualmente. Operações baseadas nestes dados configuram infração gravíssima.
+                </span>
+              ) : (
+                <>
+                  <span className="uppercase block md:inline md:mr-2">
+                    {regConfig.validationStatus !== 'VERIFIED_OPERATIONAL' ? 'Ambiente de Simulação:' : 'Aviso Legal:'}
+                  </span>
+                  <span className="font-medium">
+                    {regConfig.validationStatus !== 'VERIFIED_OPERATIONAL' 
+                      ? 'Os dados são simulados. Não utilize para embarques operacionais reais até validação.'
+                      : 'Uso restrito. Consulte a edição física atualizada para processamentos críticos.'}
+                  </span>
+                </>
+              )}
             </div>
-            <button 
-              onClick={() => setShowDisclaimer(false)}
-              className="absolute right-4 top-2 p-1 hover:bg-yellow-500 rounded-full transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
+            {new Date().getFullYear() <= 2026 && (
+              <button 
+                onClick={() => setShowDisclaimer(false)}
+                className="absolute right-4 top-2 p-1 hover:bg-black/10 rounded-full transition-colors"
+                title="Fechar Aviso"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            )}
           </div>
         </div>
       )}
@@ -403,7 +487,7 @@ const App: React.FC = () => {
             
             {/* AI Status Indicator */}
             <div className={`flex flex-col items-end md:items-start justify-center md:border-l md:pl-4 transition-colors duration-300 ${isHeaderActive ? 'border-white/20' : 'border-white/20'}`}>
-                <div className="flex items-center space-x-1.5">
+                <div className="flex items-center space-x-1.5 mb-1">
                     <span className="relative flex h-2 w-2">
                       <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${aiStatus === 'online' ? 'bg-green-400' : 'bg-yellow-400'}`}></span>
                       <span className={`relative inline-flex rounded-full h-2 w-2 ${aiStatus === 'online' ? 'bg-green-500' : 'bg-yellow-500'}`}></span>
@@ -412,6 +496,11 @@ const App: React.FC = () => {
                         {aiStatus === 'online' ? 'IA ONLINE' : 'VERIFICANDO'}
                     </span>
                 </div>
+                {operatorBP && (
+                  <div className="text-[9px] font-medium text-white/70 uppercase tracking-widest hidden md:block">
+                    Ope: {operatorBP}
+                  </div>
+                )}
             </div>
           </div>
         </div>
@@ -645,10 +734,22 @@ const App: React.FC = () => {
 
               {/* Sidebar Panel: Últimas Consultas (Takes 1 column on large screens) */}
               <div className={`lg:col-span-1 flex flex-col ${
-                recentQueries.length === 0 
+                recentQueries.length === 0 && bookmarks.length === 0
                   ? 'hidden lg:flex lg:order-2' 
                   : 'order-1 lg:order-2'
               }`}>
+                <BookmarksPanel
+                  bookmarks={bookmarks}
+                  chaptersConfig={chaptersConfig}
+                  onRemoveBookmark={toggleBookmark}
+                  onSelectBookmark={(chapterId, sectionId) => {
+                    const ch = chaptersConfig.find(c => c.id === chapterId || String(c.id) === String(chapterId));
+                    if (ch) {
+                      setInitialScrollId(sectionId);
+                      handleChapterClick(ch);
+                    }
+                  }}
+                />
                 <RecentQueriesPanel
                   recentQueries={recentQueries}
                   onClear={() => {
@@ -681,6 +782,8 @@ const App: React.FC = () => {
                     initialScrollId={initialScrollId}
                     onClearInitialScroll={() => setInitialScrollId(null)}
                     onOpenTable={(db) => trackRecentQuery('table', db.id, db.title, db.type === 'blue-pages' ? 'Tabela Azul (4.2)' : 'Tabela Regulamentar')}
+                    bookmarks={bookmarks}
+                    onToggleBookmark={toggleBookmark}
                 />
                 )}
                 {viewState === ViewState.ANAC_LATAM_AUDIT && (

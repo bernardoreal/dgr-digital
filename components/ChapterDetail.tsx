@@ -27,6 +27,8 @@ interface ChapterDetailProps {
   initialScrollId: string | null;
   onClearInitialScroll: () => void;
   onOpenTable?: (db: DGRDatabase) => void;
+  bookmarks?: string[];
+  onToggleBookmark?: (sectionId: string) => void;
 }
 
 const ChapterDetail: React.FC<ChapterDetailProps> = ({ 
@@ -35,7 +37,9 @@ const ChapterDetail: React.FC<ChapterDetailProps> = ({
     initialSearchTerm = '', 
     initialScrollId, 
     onClearInitialScroll,
-    onOpenTable
+    onOpenTable,
+    bookmarks = [],
+    onToggleBookmark
 }) => {
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
   const [selectedUNEntry, setSelectedUNEntry] = useState<Record<string, any> | null>(null);
@@ -49,6 +53,7 @@ const ChapterDetail: React.FC<ChapterDetailProps> = ({
     x: number;
     y: number;
   } | null>(null);
+  const [zoomLevel, setZoomLevel] = useState(1);
 
   useEffect(() => {
     if (initialScrollId) {
@@ -355,7 +360,7 @@ const ChapterDetail: React.FC<ChapterDetailProps> = ({
           </button>
           
           {/* MODO LEITURA CONFIG PANEL */}
-          <div className="bg-white dark:bg-[#110e26] rounded-3xl shadow-2xl border border-gray-100 dark:border-slate-800/80 p-6 space-y-4">
+          <div className="bg-white dark:bg-[#110e26] rounded-3xl shadow-2xl border border-gray-100 dark:border-slate-800/80 p-6 space-y-6">
             <div className="flex items-center justify-between">
               <div className="space-y-1">
                 <h4 className="text-xs font-black text-gray-900 dark:text-white uppercase tracking-wider flex items-center">
@@ -371,8 +376,41 @@ const ChapterDetail: React.FC<ChapterDetailProps> = ({
                 <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${isReadingMode ? 'translate-x-5' : 'translate-x-0'}`} />
               </button>
             </div>
+
+            {/* Font Size Selector */}
+            <div className="pt-4 border-t border-gray-100 dark:border-slate-800/80">
+              <div className="flex items-center justify-between mb-3">
+                <h4 className="text-[10px] font-black text-gray-900 dark:text-white uppercase tracking-wider">
+                  Tamanho da Fonte
+                </h4>
+                <span className="text-[10px] font-bold text-latam-indigo dark:text-indigo-400">{Math.round(zoomLevel * 100)}%</span>
+              </div>
+              <div className="flex items-center space-x-2 bg-gray-50 dark:bg-slate-900/50 p-1 rounded-xl">
+                <button 
+                  onClick={() => setZoomLevel(z => Math.max(0.8, z - 0.1))}
+                  className="flex-1 px-3 py-1.5 text-xs font-bold text-gray-500 dark:text-slate-400 hover:text-latam-indigo dark:hover:text-white hover:bg-white dark:hover:bg-slate-800 rounded-lg shadow-sm transition-all"
+                >
+                  A-
+                </button>
+                <div className="w-px h-4 bg-gray-200 dark:bg-slate-700"></div>
+                <button 
+                  onClick={() => setZoomLevel(1)}
+                  className="flex-1 px-3 py-1.5 text-xs font-bold text-gray-500 dark:text-slate-400 hover:text-latam-indigo dark:hover:text-white hover:bg-white dark:hover:bg-slate-800 rounded-lg shadow-sm transition-all"
+                >
+                  Auto
+                </button>
+                <div className="w-px h-4 bg-gray-200 dark:bg-slate-700"></div>
+                <button 
+                  onClick={() => setZoomLevel(z => Math.min(1.5, z + 0.1))}
+                  className="flex-1 px-3 py-1.5 text-xs font-bold text-gray-500 dark:text-slate-400 hover:text-latam-indigo dark:hover:text-white hover:bg-white dark:hover:bg-slate-800 rounded-lg shadow-sm transition-all"
+                >
+                  A+
+                </button>
+              </div>
+            </div>
+
             <p className="text-[10px] text-gray-550 dark:text-slate-450 font-medium leading-relaxed">
-              Remove decorações pesadas, aumenta fontes e eleva o contraste de tabelas regulamentares para facilitar a leitura rápida sob sol forte ou pouca iluminação.
+              Ajuste para facilitar a leitura rápida sob sol forte ou pouca iluminação.
             </p>
           </div>
 
@@ -393,7 +431,7 @@ const ChapterDetail: React.FC<ChapterDetailProps> = ({
         </div>
       </aside>
       <div className="flex-1 max-w-5xl">
-        <div className={`overflow-hidden mb-20 relative ${isReadingMode ? 'bg-white border-4 border-black p-6 md:p-10 rounded-none shadow-none text-black' : 'bg-white dark:bg-[#110e26] rounded-[40px] shadow-2xl border border-gray-50 dark:border-slate-800/80 p-12 md:p-16'}`}>
+        <div style={{ zoom: isReadingMode ? Math.max(1.1, zoomLevel) : zoomLevel }} className={`overflow-hidden mb-20 relative ${isReadingMode ? 'bg-white border-4 border-black p-6 md:p-10 rounded-none shadow-none text-black' : 'bg-white dark:bg-[#110e26] rounded-[40px] shadow-2xl border border-gray-50 dark:border-slate-800/80 p-12 md:p-16'}`}>
           {isReadingMode && (
             <div className="mb-6 bg-yellow-101 border-2 border-black p-4 flex items-center space-x-3 text-black">
               <Info className="w-5 h-5 flex-shrink-0" />
@@ -422,6 +460,15 @@ const ChapterDetail: React.FC<ChapterDetailProps> = ({
                             </span>
                             <span className={isReadingMode ? "text-black underline decoration-2 decoration-black font-extrabold" : ""}>{s.title}</span>
                         </h2>
+                        {onToggleBookmark && !isReadingMode && (
+                          <button
+                            onClick={() => onToggleBookmark(s.id)}
+                            className={`ml-4 p-2 rounded-full transition-colors ${bookmarks.includes(s.id) ? 'bg-latam-coral/10 text-latam-coral' : 'text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800'}`}
+                            title={bookmarks.includes(s.id) ? "Remover do Acesso Rápido" : "Adicionar ao Acesso Rápido"}
+                          >
+                            <Bookmark className={`w-5 h-5 ${bookmarks.includes(s.id) ? 'fill-current' : ''}`} />
+                          </button>
+                        )}
                         <div className={`flex-grow ml-6 ${isReadingMode ? 'h-0.5 bg-black' : 'h-px bg-gray-50 dark:bg-slate-800/80'}`}></div>
                     </div>
                     <div className={isReadingMode ? "pl-0" : "pl-0 md:pl-10"}>{s.blocks.map((b, idx) => renderBlock(b, idx))}</div>
