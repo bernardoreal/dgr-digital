@@ -123,21 +123,21 @@ const DatabasePopup: React.FC<DatabasePopupProps> = ({ initialDb, initialFilter:
 
     return (
         <>
-            <div id="database-manager-view" className="bg-gray-100 p-4 md:p-8 flex flex-col h-screen font-sans">
+            <div id="database-manager-view" className="bg-gray-100 dark:bg-[#06050e] p-4 md:p-8 flex flex-col h-screen font-sans">
                 {/* Search Bar & Stats Header */}
-                <div className="bg-white p-4 shadow-md rounded-t-lg flex justify-between items-center shrink-0 border-b border-gray-200">
+                <div className="bg-white dark:bg-[#110e26] p-4 shadow-md rounded-t-lg flex justify-between items-center shrink-0 border-b border-gray-200 dark:border-slate-800/60">
                     <div className="flex items-center space-x-3">
                         <button
                             id="btn-database-close"
                             onClick={handleClose}
-                            className="p-1.5 hover:bg-gray-100 rounded-full text-gray-500 transition-colors cursor-pointer"
+                            className="p-1.5 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full text-gray-500 dark:text-slate-400 transition-colors cursor-pointer"
                             aria-label="Voltar para o Dashboard"
                         >
                             <ArrowLeft className="w-5 h-5" />
                         </button>
                         <div>
-                            <h1 className="font-bold text-sm md:text-lg text-gray-800">{currentDb.title}</h1>
-                            <p className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-wider mt-0.5">
+                            <h1 className="font-bold text-sm md:text-lg text-gray-800 dark:text-white">{currentDb.title}</h1>
+                            <p className="text-[10px] md:text-xs text-gray-400 dark:text-slate-500 font-bold uppercase tracking-wider mt-0.5">
                                 Visualizando {totalRows} de {currentDb.data.length} registros
                             </p>
                         </div>
@@ -145,7 +145,7 @@ const DatabasePopup: React.FC<DatabasePopupProps> = ({ initialDb, initialFilter:
                     <button 
                         id="btn-database-clear-filters"
                         onClick={handleClearFilters} 
-                        className="flex items-center text-xs font-bold text-blue-600 hover:underline hover:text-blue-800 uppercase tracking-wider transition-colors shrink-0 ml-2"
+                        className="flex items-center text-xs font-bold text-blue-600 dark:text-indigo-400 hover:underline hover:text-blue-800 dark:hover:text-indigo-300 uppercase tracking-wider transition-colors shrink-0 ml-2"
                     >
                         <FilterX className="w-3.5 h-3.5 mr-1.5" /> <span className="hidden sm:inline">Limpar Filtros</span>
                     </button>
@@ -155,30 +155,30 @@ const DatabasePopup: React.FC<DatabasePopupProps> = ({ initialDb, initialFilter:
                 <div 
                     ref={scrollContainerRef} 
                     onScroll={handleScroll} 
-                    className="flex-grow overflow-auto bg-white shadow-md rounded-b-lg min-h-0"
+                    className="flex-grow overflow-auto bg-white dark:bg-[#110e26] shadow-md rounded-b-lg min-h-0 border-x border-b border-gray-250 dark:border-slate-800/80"
                 >
                     <div className="min-w-max">
                         {/* Headers with integrated filter fields */}
-                        <div className="bg-gray-200 sticky top-0 z-10 border-b border-gray-300">
-                            <div className="flex bg-gray-100">
+                        <div className="sticky top-0 z-10 border-b border-gray-300 dark:border-slate-800">
+                            <div className="flex bg-gray-100 dark:bg-[#15112f]">
                                 {currentDb.columns.map(c => (
                                     <div 
                                         key={c.key} 
-                                        className={`p-3 border-r border-gray-200 font-bold uppercase text-[10px] tracking-widest text-gray-500 cursor-pointer flex items-center hover:bg-gray-200/50 transition-colors ${c.width === 'flex-1' ? 'flex-1 min-w-[200px]' : `flex-shrink-0 ${c.width || 'w-32'}`}`} 
+                                        className={`p-3 border-r border-gray-200 dark:border-slate-804 font-bold uppercase text-[10px] tracking-widest text-gray-500 dark:text-slate-400 cursor-pointer flex items-center hover:bg-gray-200/50 dark:hover:bg-slate-800 transition-colors ${c.width === 'flex-1' ? 'flex-1 min-w-[200px]' : `flex-shrink-0 ${c.width || 'w-32'}`}`} 
                                         onClick={() => handleSort(c.key)}
                                     >
                                         {c.label}
                                     </div>
                                 ))}
                             </div>
-                            <div className="flex bg-gray-50 border-t border-gray-200">
+                            <div className="flex bg-gray-55 dark:bg-[#0c0a1f] border-t border-gray-200 dark:border-slate-800">
                                 {currentDb.columns.map(c => (
-                                    <div key={`${c.key}-filter`} className={`p-1.5 border-r border-gray-200 ${c.width === 'flex-1' ? 'flex-1 min-w-[200px]' : `flex-shrink-0 ${c.width || 'w-32'}`}`}>
+                                    <div key={`${c.key}-filter`} className={`p-1.5 border-r border-gray-200 dark:border-slate-800 ${c.width === 'flex-1' ? 'flex-1 min-w-[200px]' : `flex-shrink-0 ${c.width || 'w-32'}`}`}>
                                         {c.filterable ? (
                                             <div className="relative">
                                                 <input 
                                                     type="text" 
-                                                    className="w-full pl-2 pr-2 py-1.5 text-xs border border-gray-300 rounded bg-white text-gray-800 outline-none focus:ring-2 focus:ring-latam-indigo/20 focus:border-latam-indigo" 
+                                                    className="w-full pl-2 pr-2 py-1.5 text-xs border border-gray-300 dark:border-slate-800 rounded bg-white dark:bg-[#0f0d22] text-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-latam-indigo/20 focus:border-latam-indigo" 
                                                     value={filters[c.key] || ''} 
                                                     onChange={e => setFilters(p => ({ ...p, [c.key]: e.target.value }))} 
                                                     placeholder="Filtrar..."
@@ -197,7 +197,7 @@ const DatabasePopup: React.FC<DatabasePopupProps> = ({ initialDb, initialFilter:
                                 return (
                                     <div 
                                       key={rowIndex} 
-                                      className={`flex border-b border-gray-100 transition-colors ${rowIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'} hover:bg-yellow-50 ${currentDb.id === 'blue-pages' ? 'cursor-pointer' : ''}`}
+                                      className={`flex border-b border-gray-100 dark:border-slate-800/50 transition-colors ${rowIndex % 2 === 0 ? 'bg-white dark:bg-[#110e26]' : 'bg-gray-50/50 dark:bg-[#0c0a1f]/60'} hover:bg-yellow-50 dark:hover:bg-[#18153c] ${currentDb.id === 'blue-pages' ? 'cursor-pointer' : ''}`}
                                       style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: `${ROW_HEIGHT}px`, transform: `translateY(${rowIndex * ROW_HEIGHT}px)`}}
                                       onClick={() => handleRowClick(row)}
                                     >
@@ -207,10 +207,10 @@ const DatabasePopup: React.FC<DatabasePopupProps> = ({ initialDb, initialFilter:
                                             const isClickable = isPiCol && cellValue && cellValue !== 'Forbidden' && !String(cellValue).toLowerCase().includes('see');
 
                                             return (
-                                                <div key={c.key} className={`p-3 border-r border-gray-100 text-xs font-medium text-gray-700 flex items-center ${c.width === 'flex-1' ? 'flex-1 min-w-[200px] whitespace-normal overflow-y-auto' : `truncate flex-shrink-0 ${c.width || 'w-32'}`}`}>
+                                                <div key={c.key} className={`p-3 border-r border-gray-100 dark:border-slate-800/60 text-xs font-semibold text-gray-700 dark:text-slate-300 flex items-center ${c.width === 'flex-1' ? 'flex-1 min-w-[200px] whitespace-normal overflow-y-auto' : `truncate flex-shrink-0 ${c.width || 'w-32'}`}`}>
                                                     {isClickable ? (
                                                         <span 
-                                                            className="text-blue-600 hover:underline font-semibold cursor-pointer" 
+                                                            className="text-blue-600 dark:text-indigo-400 hover:underline font-semibold cursor-pointer" 
                                                             onClick={(e) => { e.stopPropagation(); handlePiClick(String(cellValue)); }}
                                                         >
                                                             {cellValue}

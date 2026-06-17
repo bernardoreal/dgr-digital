@@ -20,7 +20,7 @@ const ChapterCard: React.FC<ChapterCardProps> = ({ chapter, onClick }) => {
   return (
     <div 
       onClick={() => onClick(chapter)}
-      className="bg-white rounded-xl shadow-sm hover:shadow-2xl transition-all duration-300 cursor-pointer overflow-hidden group border border-gray-100 flex flex-col h-full transform hover:-translate-y-2 relative"
+      className="bg-white dark:bg-[#110e26] rounded-xl shadow-sm hover:shadow-2xl transition-all duration-300 cursor-pointer overflow-hidden group border border-gray-100 dark:border-slate-800/80 flex flex-col h-full transform hover:-translate-y-2 relative"
     >
       {/* Top Accent Line */}
       <div className={`h-1 w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-r from-latam-indigo to-latam-coral`}></div>
@@ -29,7 +29,7 @@ const ChapterCard: React.FC<ChapterCardProps> = ({ chapter, onClick }) => {
         <div className="flex items-start justify-between mb-5">
           <div className={`
             flex items-center justify-center w-12 h-12 rounded-2xl 
-            bg-gray-50 group-hover:bg-latam-indigo group-hover:text-white
+            bg-gray-50 dark:bg-slate-900 group-hover:bg-latam-indigo group-hover:text-white
             transition-colors duration-300 shadow-sm
           `}>
             {chapter.icon ? (
@@ -41,27 +41,27 @@ const ChapterCard: React.FC<ChapterCardProps> = ({ chapter, onClick }) => {
           
           <div className="flex items-center gap-3">
             {/* Chapter Number Top Right - Gradient */}
-            <span className="text-4xl font-black bg-gradient-to-br from-latam-coral to-latam-indigo bg-clip-text text-transparent font-mono select-none opacity-90">
+            <span className="text-4xl font-black bg-gradient-to-br from-latam-coral to-latam-indigo dark:from-rose-400 dark:to-indigo-300 bg-clip-text text-transparent font-mono select-none opacity-90">
                 {displayId}
             </span>
-
+ 
             {/* Hover Action Arrow */}
-            <div className="p-2 rounded-full bg-gray-50 text-gray-400 group-hover:bg-latam-coral group-hover:text-white transition-all duration-300 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 shadow-sm">
+            <div className="p-2 rounded-full bg-gray-50 dark:bg-slate-900 text-gray-400 group-hover:bg-latam-coral group-hover:text-white transition-all duration-300 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 shadow-sm">
                 <ArrowUpRight className="w-4 h-4" />
             </div>
           </div>
         </div>
         
-        <h3 className="text-lg font-bold text-latam-indigo mb-3 group-hover:text-latam-coral transition-colors leading-tight">
+        <h3 className="text-lg font-bold text-latam-indigo dark:text-indigo-200 mb-3 group-hover:text-latam-coral dark:group-hover:text-rose-400 transition-colors leading-tight">
           {chapter.title}
         </h3>
         
-        <p className="text-sm text-latam-textMuted leading-relaxed flex-grow line-clamp-3 mb-4">
+        <p className="text-sm text-latam-textMuted dark:text-slate-400 leading-relaxed flex-grow line-clamp-3 mb-4">
           {chapter.description}
         </p>
         
         {/* Decorative background number/icon */}
-        <div className="absolute -bottom-6 -right-6 text-[120px] font-bold text-gray-50 opacity-50 select-none pointer-events-none group-hover:text-gray-100 transition-colors">
+        <div className="absolute -bottom-6 -right-6 text-[120px] font-bold text-gray-50 dark:text-slate-950/20 opacity-50 dark:opacity-30 select-none pointer-events-none group-hover:text-gray-100 dark:group-hover:text-slate-950/40 transition-colors">
           {chapter.id}
         </div>
       </div>

@@ -186,7 +186,7 @@ const HazardClassModal: React.FC<HazardClassModalProps> = ({ isOpen, onClose, ha
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="bg-white dark:bg-[#110e26] rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh] border dark:border-slate-800/80">
         
         {/* Header */}
         <div className="bg-gradient-to-r from-latam-indigo to-[#2e1065] p-5 flex items-center justify-between text-white">
@@ -196,7 +196,7 @@ const HazardClassModal: React.FC<HazardClassModalProps> = ({ isOpen, onClose, ha
           </div>
           <button 
             onClick={onClose}
-            className="p-1.5 hover:bg-white/20 rounded-full transition-colors"
+            className="p-1.5 hover:bg-white/20 rounded-full transition-colors cursor-pointer"
           >
             <X className="w-6 h-6" />
           </button>
@@ -207,12 +207,12 @@ const HazardClassModal: React.FC<HazardClassModalProps> = ({ isOpen, onClose, ha
           <div className="flex flex-col md:flex-row gap-8 items-start">
             
             {/* Label Visual */}
-            <div className="w-full md:w-1/3 flex flex-col items-center justify-center bg-gray-50 p-6 rounded-xl border border-gray-100 shadow-inner">
+            <div className="w-full md:w-1/3 flex flex-col items-center justify-center bg-gray-50 dark:bg-slate-900 p-6 rounded-xl border border-gray-100 dark:border-slate-800/60 shadow-inner">
               <div className="w-40 h-40 flex items-center justify-center">
                 <HazardLabel type={hazardType} />
               </div>
               <div className="mt-4 text-center">
-                <span className="inline-block px-3 py-1 bg-latam-indigo/10 text-latam-indigo font-bold rounded-full text-sm">
+                <span className="inline-block px-3 py-1 bg-latam-indigo/10 dark:bg-latam-indigo/25 text-latam-indigo dark:text-indigo-400 font-bold rounded-full text-sm">
                   Classe {details.classNumber}
                 </span>
               </div>
@@ -221,20 +221,20 @@ const HazardClassModal: React.FC<HazardClassModalProps> = ({ isOpen, onClose, ha
             {/* Details */}
             <div className="w-full md:w-2/3 space-y-6">
               <div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">{details.title}</h3>
-                <p className="text-gray-600 leading-relaxed text-sm">
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{details.title}</h3>
+                <p className="text-gray-600 dark:text-slate-400 leading-relaxed text-sm">
                   {details.description}
                 </p>
               </div>
 
-              <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-                <h4 className="flex items-center text-yellow-800 font-bold mb-3 text-sm uppercase tracking-wider">
+              <div className="bg-yellow-50 dark:bg-yellow-955/15 border border-yellow-200 dark:border-yellow-905/30 rounded-xl p-4">
+                <h4 className="flex items-center text-yellow-800 dark:text-yellow-405 font-bold mb-3 text-sm uppercase tracking-wider">
                   <AlertTriangle className="w-4 h-4 mr-2" />
                   Precauções de Manuseio
                 </h4>
                 <ul className="space-y-2">
                   {details.precautions.map((precaution, idx) => (
-                    <li key={idx} className="flex items-start text-sm text-yellow-900/80">
+                    <li key={idx} className="flex items-start text-sm text-yellow-900/80 dark:text-yellow-300/80 font-medium">
                       <span className="mr-2 mt-1 text-yellow-500">•</span>
                       <span>{precaution}</span>
                     </li>
@@ -246,10 +246,10 @@ const HazardClassModal: React.FC<HazardClassModalProps> = ({ isOpen, onClose, ha
         </div>
 
         {/* Footer */}
-        <div className="bg-gray-50 p-4 border-t border-gray-100 flex justify-end">
+        <div className="bg-gray-50 dark:bg-[#0c0a1f] p-4 border-t border-gray-100 dark:border-slate-805 flex justify-end">
           <button 
             onClick={onClose}
-            className="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium rounded-lg transition-colors"
+            className="px-6 py-2 bg-gray-200 dark:bg-slate-800 hover:bg-gray-300 dark:hover:bg-slate-700 text-gray-800 dark:text-slate-205 font-medium rounded-lg transition-colors cursor-pointer"
           >
             Fechar
           </button>

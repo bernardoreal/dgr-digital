@@ -1,6 +1,6 @@
 import React, { useState, useEffect, lazy, Suspense, useCallback, useMemo } from 'react';
 import ErrorBoundary from './components/ErrorBoundary';
-import { Plane, Search, ShieldCheck, ArrowRight, Sparkles, Bot, AlertTriangle, X, Settings, CheckCircle, Loader2, Zap, BookOpen, FileText } from 'lucide-react';
+import { Plane, Search, ShieldCheck, ArrowRight, Sparkles, Bot, AlertTriangle, X, Settings, CheckCircle, Loader2, Zap, BookOpen, FileText, Sun, Moon } from 'lucide-react';
 import { DGR_CHAPTERS, APP_VERSION } from './constants';
 import { DGRChapter, ViewState, DGRTable, DGRDatabase, RecentQuery } from './types';
 import ChapterCard from './components/ChapterCard';
@@ -110,6 +110,33 @@ const App: React.FC = () => {
   const [regConfig, setRegConfig] = useState(getRegulatoryConfig());
   // Initialize based on config status so it doesn't show if already verified
   const [showDisclaimer, setShowDisclaimer] = useState(getRegulatoryConfig().validationStatus !== 'VERIFIED_OPERATIONAL');
+
+  // Dark mode state with localStorage persistence for hangar night-shift operators
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    try {
+      const stored = localStorage.getItem('latam_dgr_theme');
+      if (stored) return stored === 'dark';
+      return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    } catch (_) {
+      return false;
+    }
+  });
+
+  // Dark mode class toggle sync
+  useEffect(() => {
+    try {
+      const root = document.documentElement;
+      if (darkMode) {
+        root.classList.add('dark');
+        localStorage.setItem('latam_dgr_theme', 'dark');
+      } else {
+        root.classList.remove('dark');
+        localStorage.setItem('latam_dgr_theme', 'light');
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, [darkMode]);
 
   // Sync state whenever regulatory config changes
   const refreshConfig = useCallback(() => {
@@ -265,7 +292,7 @@ const App: React.FC = () => {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen flex flex-col font-sans text-latam-text bg-latam-bg transition-all duration-300">
+      <div className="min-h-screen flex flex-col font-sans text-latam-text bg-latam-bg dark:bg-[#06050e] dark:text-slate-100 transition-all duration-300">
       
       {/* Safety Disclaimer Banner - ONLY shown if Unverified */}
       {showDisclaimer && regConfig.validationStatus !== 'VERIFIED_OPERATIONAL' && (
@@ -353,6 +380,26 @@ const App: React.FC = () => {
 
           {/* RIGHT COLUMN: Actions */}
           <div className="flex-1 flex items-center justify-end space-x-4 min-w-0 z-30">
+            
+            {/* Dark Mode Toggle */}
+            <button
+              onClick={() => setDarkMode(prev => !prev)}
+              className="px-3 py-1.5 rounded-full hover:bg-white/20 text-white/90 hover:text-white transition-all duration-300 flex items-center space-x-2 cursor-pointer border border-white/20 text-xs font-black shrink-0 shadow-sm"
+              title={darkMode ? "Ativar Modo Diurno" : "Ativar Modo Noturno (Turno de Hangar / TECA)"}
+              aria-label="Alternar modo escuro"
+            >
+              {darkMode ? (
+                <>
+                  <Sun className="w-3.5 h-3.5 text-amber-300" />
+                  <span className="hidden sm:inline uppercase tracking-widest text-[9px]">Turno Noite</span>
+                </>
+              ) : (
+                <>
+                  <Moon className="w-3.5 h-3.5 text-slate-200" />
+                  <span className="hidden sm:inline uppercase tracking-widest text-[9px]">Turno Dia</span>
+                </>
+              )}
+            </button>
             
             {/* AI Status Indicator */}
             <div className={`flex flex-col items-end md:items-start justify-center md:border-l md:pl-4 transition-colors duration-300 ${isHeaderActive ? 'border-white/20' : 'border-white/20'}`}>
@@ -460,20 +507,20 @@ const App: React.FC = () => {
                    {/* Card 1: Auditoria */}
                    <div 
                      onClick={() => setViewState(ViewState.ANAC_LATAM_AUDIT)}
-                     className="bg-white rounded-2xl border border-gray-200/85 p-6 shadow-xl shadow-gray-200/20 hover:shadow-2xl hover:border-latam-indigo/30 hover:-translate-y-1.5 transition-all cursor-pointer group flex flex-col justify-between"
+                     className="bg-white dark:bg-[#110e26] rounded-2xl border border-gray-200/85 dark:border-slate-800/80 p-6 shadow-xl shadow-gray-200/20 dark:shadow-none hover:shadow-2xl hover:border-latam-indigo/30 hover:-translate-y-1.5 transition-all cursor-pointer group flex flex-col justify-between"
                    >
                      <div>
-                       <div className="bg-indigo-50 text-latam-indigo p-3 rounded-xl inline-block mb-4 group-hover:bg-latam-indigo group-hover:text-white transition-all">
+                       <div className="bg-indigo-50 dark:bg-indigo-950/40 text-latam-indigo dark:text-indigo-300 p-3 rounded-xl inline-block mb-4 group-hover:bg-latam-indigo group-hover:text-white transition-all">
                          <ShieldCheck className="w-6 h-6" />
                        </div>
-                       <h4 className="text-base font-black text-gray-900 group-hover:text-latam-indigo transition-colors mb-2">
+                       <h4 className="text-base font-black text-gray-900 dark:text-white group-hover:text-latam-indigo dark:group-hover:text-indigo-300 transition-colors mb-2">
                          Auditoria de Carga ANAC RBAC 175
                        </h4>
-                       <p className="text-sm text-gray-500 leading-relaxed font-semibold">
+                       <p className="text-sm text-gray-500 dark:text-slate-400 leading-relaxed font-semibold">
                          Gere pareceres digitais de liberação de solo e validação de minuta AWB contra exigências de operador LATAM Cargo.
                        </p>
                      </div>
-                     <div className="mt-6 flex items-center font-bold text-xs text-latam-indigo">
+                     <div className="mt-6 flex items-center font-bold text-xs text-latam-indigo dark:text-indigo-300">
                        <span>Iniciar Auditoria Integrada</span>
                        <ArrowRight className="w-4 h-4 ml-1.5 transform group-hover:translate-x-1 transition-transform" />
                      </div>
@@ -482,20 +529,20 @@ const App: React.FC = () => {
                    {/* Card 2: Calculadora de Lítio */}
                    <div 
                      onClick={() => setViewState(ViewState.LITHIUM_CALCULATOR)}
-                     className="bg-white rounded-2xl border border-gray-200/85 p-6 shadow-xl shadow-gray-200/20 hover:shadow-2xl hover:border-amber-500/30 hover:-translate-y-1.5 transition-all cursor-pointer group flex flex-col justify-between"
+                     className="bg-white dark:bg-[#110e26] rounded-2xl border border-gray-200/85 dark:border-slate-800/80 p-6 shadow-xl shadow-gray-200/20 dark:shadow-none hover:shadow-2xl hover:border-amber-500/30 hover:-translate-y-1.5 transition-all cursor-pointer group flex flex-col justify-between"
                    >
                      <div>
-                       <div className="bg-amber-50 text-amber-600 p-3 rounded-xl inline-block mb-4 group-hover:bg-amber-500 group-hover:text-white transition-all">
+                       <div className="bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 p-3 rounded-xl inline-block mb-4 group-hover:bg-amber-500 group-hover:text-white transition-all">
                          <Zap className="w-6 h-6" />
                        </div>
-                       <h4 className="text-base font-black text-gray-900 group-hover:text-amber-600 transition-colors mb-2">
+                       <h4 className="text-base font-black text-gray-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors mb-2">
                          Calculadora de Baterias de Lítio
                        </h4>
-                       <p className="text-sm text-gray-500 leading-relaxed font-semibold">
+                       <p className="text-sm text-gray-500 dark:text-slate-400 leading-relaxed font-semibold">
                          Calcule limitações de Watt-Hora/gramas na Seção II/IB e monitore vedações específicas (como restrição de baterias soltas TAM/ABSA).
                        </p>
                      </div>
-                     <div className="mt-6 flex items-center font-bold text-xs text-amber-600">
+                     <div className="mt-6 flex items-center font-bold text-xs text-amber-600 dark:text-amber-400">
                        <span>Calcular Limites & Regras</span>
                        <ArrowRight className="w-4 h-4 ml-1.5 transform group-hover:translate-x-1 transition-transform" />
                      </div>
@@ -504,20 +551,20 @@ const App: React.FC = () => {
                    {/* Card 3: Treinamento Quiz */}
                    <div 
                      onClick={() => setViewState(ViewState.ANAC_QUIZ)}
-                     className="bg-white rounded-2xl border border-gray-200/85 p-6 shadow-xl shadow-gray-200/20 hover:shadow-2xl hover:border-latam-coral/30 hover:-translate-y-1.5 transition-all cursor-pointer group flex flex-col justify-between"
+                     className="bg-white dark:bg-[#110e26] rounded-2xl border border-gray-200/85 dark:border-slate-800/80 p-6 shadow-xl shadow-gray-200/20 dark:shadow-none hover:shadow-2xl hover:border-latam-coral/30 hover:-translate-y-1.5 transition-all cursor-pointer group flex flex-col justify-between"
                    >
                      <div>
-                       <div className="bg-rose-50 text-latam-coral p-3 rounded-xl inline-block mb-4 group-hover:bg-latam-coral group-hover:text-white transition-all">
+                       <div className="bg-rose-50 dark:bg-rose-950/40 text-latam-coral dark:text-rose-400 p-3 rounded-xl inline-block mb-4 group-hover:bg-latam-coral group-hover:text-white transition-all">
                          <BookOpen className="w-6 h-6" />
                        </div>
-                       <h4 className="text-base font-black text-gray-900 group-hover:text-latam-coral transition-colors mb-2">
+                       <h4 className="text-base font-black text-gray-900 dark:text-white group-hover:text-latam-coral dark:group-hover:text-rose-400 transition-colors mb-2">
                          Simulador de Treinamento ANAC
                        </h4>
-                       <p className="text-sm text-gray-500 leading-relaxed font-semibold">
+                       <p className="text-sm text-gray-500 dark:text-slate-400 leading-relaxed font-semibold">
                          Treinamento e e-learning rápido de segurança operacional exigido pelas regras de recorrência bienal em solo.
                        </p>
                      </div>
-                     <div className="mt-6 flex items-center font-bold text-xs text-latam-coral">
+                     <div className="mt-6 flex items-center font-bold text-xs text-latam-coral dark:text-rose-400">
                        <span>Iniciar Quiz de Recorrência</span>
                        <ArrowRight className="w-4 h-4 ml-1.5 transform group-hover:translate-x-1 transition-transform" />
                      </div>
@@ -526,20 +573,20 @@ const App: React.FC = () => {
                    {/* Card 4: FDS / FISPQ Explorer */}
                    <div 
                      onClick={() => setViewState(ViewState.FDS_INFO)}
-                     className="bg-white rounded-2xl border border-gray-200/85 p-6 shadow-xl shadow-gray-200/20 hover:shadow-2xl hover:border-indigo-600/30 hover:-translate-y-1.5 transition-all cursor-pointer group flex flex-col justify-between"
+                     className="bg-white dark:bg-[#110e26] rounded-2xl border border-gray-200/85 dark:border-slate-800/80 p-6 shadow-xl shadow-gray-200/20 dark:shadow-none hover:shadow-2xl hover:border-indigo-600/30 hover:-translate-y-1.5 transition-all cursor-pointer group flex flex-col justify-between"
                    >
                      <div>
-                       <div className="bg-indigo-50 text-latam-indigo p-3 rounded-xl inline-block mb-4 group-hover:bg-latam-indigo group-hover:text-white transition-all">
+                       <div className="bg-indigo-50 dark:bg-indigo-950/40 text-latam-indigo dark:text-indigo-300 p-3 rounded-xl inline-block mb-4 group-hover:bg-latam-indigo group-hover:text-white transition-all">
                          <FileText className="w-6 h-6" />
                        </div>
-                       <h4 className="text-base font-black text-gray-900 group-hover:text-latam-indigo transition-colors mb-2">
+                       <h4 className="text-base font-black text-gray-900 dark:text-white group-hover:text-latam-indigo dark:group-hover:text-indigo-300 transition-colors mb-2">
                          FDS / FISPQ & GHS Explorer
                        </h4>
-                       <p className="text-sm text-gray-500 leading-relaxed font-semibold">
+                       <p className="text-sm text-gray-500 dark:text-slate-400 leading-relaxed font-semibold">
                          Guia de auditoria documental das 16 Seções de Ficha de Segurança segundo a norma ABNT NBR 14725:2023.
                        </p>
                      </div>
-                     <div className="mt-6 flex items-center font-bold text-xs text-latam-indigo">
+                     <div className="mt-6 flex items-center font-bold text-xs text-latam-indigo dark:text-indigo-300">
                        <span>Validar Documento FDS</span>
                        <ArrowRight className="w-4 h-4 ml-1.5 transform group-hover:translate-x-1 transition-transform" />
                      </div>
@@ -563,10 +610,10 @@ const App: React.FC = () => {
                   : 'order-2 lg:order-1'
               }`}>
                 <div className="mb-6">
-                  <h3 className="text-lg font-extrabold text-gray-900 uppercase tracking-wider">
+                  <h3 className="text-lg font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">
                     Capítulos & Seções do IATA DGR
                   </h3>
-                  <p className="text-xs text-gray-500 font-semibold mt-1">
+                  <p className="text-xs text-gray-500 dark:text-slate-400 font-semibold mt-1">
                     Manual Normativo estruturado de referência técnica.
                   </p>
                 </div>

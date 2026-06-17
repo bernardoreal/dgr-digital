@@ -148,24 +148,24 @@ export const AnacQuiz: React.FC<AnacQuizProps> = ({ onClose }) => {
   }, []);
 
   return (
-    <div id="anac-quiz-view" className="min-h-screen bg-gray-50 flex flex-col font-sans pb-16">
+    <div id="anac-quiz-view" className="min-h-screen bg-gray-50 dark:bg-[#06050e] flex flex-col font-sans pb-16 text-slate-900 dark:text-slate-100">
       {/* Dynamic Navigation Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm">
+      <div className="bg-white dark:bg-[#0c0a1f] border-b border-gray-200 dark:border-slate-850 px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm">
         <div className="flex items-center space-x-3">
           <button 
             id="btn-quiz-close"
             onClick={onClose} 
-            className="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-colors cursor-pointer"
+            className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full text-gray-500 dark:text-slate-400 transition-colors cursor-pointer"
             aria-label="Voltar para a tela inicial"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
-            <h2 className="text-xl font-bold text-gray-800 flex items-center">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-white flex items-center">
               <BookOpen className="w-5 h-5 mr-2 text-latam-coral animate-pulse" />
               Treinamento de Segurança ANAC RBAC 175 & LATAM
             </h2>
-            <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Simulado Recorrente Técnico Cargo / Despacho</p>
+            <p className="text-xs text-gray-400 dark:text-slate-400 font-bold uppercase tracking-wider">Simulado Recorrente Técnico Cargo / Despacho</p>
           </div>
         </div>
         <button 
@@ -180,24 +180,24 @@ export const AnacQuiz: React.FC<AnacQuizProps> = ({ onClose }) => {
       <div className="container mx-auto px-6 py-8 max-w-3xl">
         {!quizFinished ? (
           /* Active Question layout */
-          <div className="bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden">
+          <div className="bg-white dark:bg-[#110e26] rounded-xl shadow-xl border border-gray-200 dark:border-slate-800/80 overflow-hidden">
             {/* Progress indicators */}
-            <div className="bg-gray-100 px-6 py-3 border-b border-gray-200 flex justify-between items-center text-xs font-bold text-gray-500">
+            <div className="bg-gray-100 dark:bg-[#0c0a1f]/80 px-6 py-3 border-b border-gray-200 dark:border-slate-805/80 flex justify-between items-center text-xs font-bold text-gray-500 dark:text-slate-400">
               <span className="uppercase tracking-wider">Questão {currentIdx + 1} de {QUIZ_QUESTIONS.length}</span>
-              <span className="bg-latam-indigo/10 text-latam-indigo px-2.5 py-1 rounded-full font-black">
+              <span className="bg-latam-indigo/10 dark:bg-indigo-950/40 text-latam-indigo dark:text-indigo-300 px-2.5 py-1 rounded-full font-black">
                 {Math.round(((currentIdx) / QUIZ_QUESTIONS.length) * 100)}% Concluído
               </span>
             </div>
 
             <div className="p-8">
               <div className="flex items-start mb-6">
-                <div className="bg-amber-100 text-amber-800 w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-black mr-4 text-sm">
+                <div className="bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-400 w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-black mr-4 text-sm">
                   ?
                 </div>
                 <div>
-                  <h3 className="text-lg font-black text-gray-900 leading-snug">{activeQuestion.question}</h3>
-                  <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1.5 flex items-center">
-                    <Bookmark className="w-3 w-3 mr-1 text-gray-300" /> Referência: {activeQuestion.reference}
+                  <h3 className="text-lg font-black text-gray-900 dark:text-white leading-snug">{activeQuestion.question}</h3>
+                  <p className="text-[10px] text-gray-400 dark:text-slate-400 font-bold uppercase tracking-wider mt-1.5 flex items-center">
+                    <Bookmark className="w-3 w-3 mr-1 text-gray-300 dark:text-slate-500" /> Referência: {activeQuestion.reference}
                   </p>
                 </div>
               </div>
@@ -208,18 +208,18 @@ export const AnacQuiz: React.FC<AnacQuizProps> = ({ onClose }) => {
                   const isSelected = selectedOpt === idx;
                   const isCorrectAnswer = idx === activeQuestion.correctIdx;
                   
-                  let optionStyle = 'border-gray-200 bg-white hover:bg-gray-50 text-gray-800';
+                  let optionStyle = 'border-gray-200 dark:border-slate-800 bg-white dark:bg-[#0f0d22] hover:bg-gray-50 dark:hover:bg-slate-900/60 text-gray-850 dark:text-slate-200';
                   
                   if (showExplanation) {
                     if (isCorrectAnswer) {
-                      optionStyle = 'border-green-600 bg-green-50 text-green-900 font-extrabold';
+                      optionStyle = 'border-green-600 dark:border-green-900/60 bg-green-50 dark:bg-green-950/20 text-green-900 dark:text-green-300 font-extrabold';
                     } else if (isSelected) {
-                      optionStyle = 'border-red-600 bg-red-50 text-red-900 font-extrabold';
+                      optionStyle = 'border-red-600 dark:border-red-900/60 bg-red-50 dark:bg-red-950/20 text-red-900 dark:text-red-300 font-extrabold';
                     } else {
-                      optionStyle = 'border-gray-100 bg-white/50 text-gray-400';
+                      optionStyle = 'border-gray-100 dark:border-slate-900 bg-white/50 dark:bg-slate-950/30 text-gray-400 dark:text-slate-500';
                     }
                   } else if (isSelected) {
-                    optionStyle = 'border-latam-indigo bg-indigo-50/50 text-latam-indigo font-black shadow-sm ring-2 ring-indigo-100';
+                    optionStyle = 'border-latam-indigo dark:border-indigo-500 bg-indigo-50/50 dark:bg-indigo-950/40 text-latam-indigo dark:text-indigo-300 font-black shadow-sm ring-2 ring-indigo-100 dark:ring-indigo-955';
                   }
 
                   return (
@@ -244,8 +244,8 @@ export const AnacQuiz: React.FC<AnacQuizProps> = ({ onClose }) => {
 
               {/* Explanation section shown after submitting */}
               {showExplanation && (
-                <div className="mb-8 p-5 rounded-lg border bg-blue-50 border-blue-100 text-xs text-blue-900 animate-fade-in">
-                  <h4 className="font-black uppercase tracking-wider mb-1 flex items-center">
+                <div className="mb-8 p-5 rounded-lg border bg-blue-50 dark:bg-indigo-950/30 border-blue-100 dark:border-indigo-900/30 text-xs text-blue-900 dark:text-indigo-300 animate-fade-in animate-fade-in">
+                  <h4 className="font-black uppercase tracking-wider mb-1 flex items-center animate-pulse">
                     Explicação de Segurança Regulamentar
                   </h4>
                   <p className="leading-relaxed font-semibold">{activeQuestion.explanation}</p>
@@ -272,7 +272,7 @@ export const AnacQuiz: React.FC<AnacQuizProps> = ({ onClose }) => {
           </div>
         ) : (
           /* Finished score board layout with provisional training certificate emissions */
-          <div className="bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden text-center p-8 animate-fade-in">
+          <div className="bg-white dark:bg-[#110e26] rounded-xl shadow-xl border border-gray-200 dark:border-slate-800 overflow-hidden text-center p-8 animate-fade-in">
             {isApproved ? (
               <div className="inline-flex p-4 rounded-full bg-green-100 text-green-700 mb-4 animate-bounce">
                 <Award className="w-12 h-12" />
@@ -283,30 +283,30 @@ export const AnacQuiz: React.FC<AnacQuizProps> = ({ onClose }) => {
               </div>
             )}
 
-            <h3 className="text-2xl font-black uppercase text-gray-950 mb-2">Simulado de Recorrência Concluído</h3>
-            <p className="text-sm text-gray-500 mb-6 font-medium">
-              Você acertou <span className="font-extrabold text-latam-indigo text-lg">{score}</span> de <span className="font-extrabold text-gray-900 text-lg">{QUIZ_QUESTIONS.length}</span> questões. 
+            <h3 className="text-2xl font-black uppercase text-gray-950 dark:text-white mb-2">Simulado de Recorrência Concluído</h3>
+            <p className="text-sm text-gray-500 dark:text-slate-400 mb-6 font-medium">
+              Você acertou <span className="font-extrabold text-latam-indigo text-lg">{score}</span> de <span className="font-extrabold text-gray-905 dark:text-gray-100 text-lg">{QUIZ_QUESTIONS.length}</span> questões. 
               {isApproved ? ' (Status: Aprovado)' : ' (Status: Requer mais estudos)'}
             </p>
 
             {isApproved ? (
               /* Approved Provisional Training Certificate box */
-              <div className="my-8 border-4 border-double border-latam-indigo bg-indigo-50/20 p-8 rounded-2xl relative max-w-xl mx-auto text-left rotate-0 animate-zoom-in">
+              <div className="my-8 border-4 border-double border-latam-indigo dark:border-indigo-500 bg-indigo-50/20 dark:bg-indigo-950/15 p-8 rounded-2xl relative max-w-xl mx-auto text-left rotate-0 animate-zoom-in">
                 
                 {/* Micro logo header */}
-                <div className="flex items-center justify-between border-b border-gray-200 pb-4 mb-6 text-xs text-gray-400 font-bold tracking-wider">
+                <div className="flex items-center justify-between border-b border-gray-200 dark:border-slate-800 pb-4 mb-6 text-xs text-gray-400 dark:text-slate-500 font-bold tracking-wider">
                   <span>ANAC RBAC 175 DIGITAL COMPLIANCE</span>
                   <span>LATAM CARGO TEAM</span>
                 </div>
 
                 <div className="space-y-4 text-center">
-                  <h4 className="text-lg font-black text-gray-900 uppercase tracking-tight">Certidão de Aptidão Provisória</h4>
+                  <h4 className="text-lg font-black text-gray-900 dark:text-white uppercase tracking-tight">Certidão de Aptidão Provisória</h4>
                   
-                  <div className="text-xs text-gray-600 space-y-1 py-4 font-sans max-w-md mx-auto">
+                  <div className="text-xs text-gray-600 dark:text-slate-350 space-y-1 py-4 font-sans max-w-md mx-auto">
                     <p className="leading-relaxed">
                       Certificamos para fins de simulação de ground safety que o operador cargo
                     </p>
-                    <p className="text-base font-black text-latam-indigo tracking-tight block py-1.5 uppercase">
+                    <p className="text-base font-black text-latam-indigo dark:text-indigo-300 tracking-tight block py-1.5 uppercase">
                       {userName}
                     </p>
                     <p className="leading-relaxed">
@@ -314,32 +314,32 @@ export const AnacQuiz: React.FC<AnacQuizProps> = ({ onClose }) => {
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 border-t border-gray-200 pt-4 text-[10px] font-mono text-gray-400 font-bold">
+                  <div className="grid grid-cols-2 gap-4 border-t border-gray-200 dark:border-slate-800 pt-4 text-[10px] font-mono text-gray-400 dark:text-slate-500 font-bold">
                     <div>
                       <span>CÓDIGO DE AUTENTICIDADE:</span>
-                      <span className="block text-gray-800 font-black tracking-wider text-xs">{certificateHash}</span>
+                      <span className="block text-gray-800 dark:text-slate-200 font-black tracking-wider text-xs">{certificateHash}</span>
                     </div>
                     <div>
                       <span>STATUS DE TREINAMENTO:</span>
-                      <span className="block text-green-700 font-black text-xs uppercase">APROVADO E RECORRENTE</span>
+                      <span className="block text-green-700 dark:text-green-400 font-black text-xs uppercase">APROVADO E RECORRENTE</span>
                     </div>
                   </div>
                 </div>
               </div>
             ) : (
               /* Retry advice box */
-              <div className="bg-red-50 border border-red-100 p-6 rounded-xl max-w-lg mx-auto mb-8 text-left text-xs font-medium text-red-900 leading-relaxed">
-                <h4 className="font-black uppercase tracking-wider text-red-950 mb-1">Nota de Treinamento Insuficiente</h4>
+              <div className="bg-red-50 dark:bg-red-955/20 border border-red-100 dark:border-red-900/40 p-6 rounded-xl max-w-lg mx-auto mb-8 text-left text-xs font-medium text-red-900 dark:text-red-350 leading-relaxed">
+                <h4 className="font-black uppercase tracking-wider text-red-950 dark:text-red-200 mb-1">Nota de Treinamento Insuficiente</h4>
                 A pontuação mínima de aceitação para homologação ANAC e LATAM Cargo regulatória é de 80% (4 acertos). Revise as diretrizes da Seção 2 (Variações das Cias) e Seção 9 (Regulamento de Manuseio e Alocação) e tente novamente.
               </div>
             )}
 
             {/* Controls */}
-            <div className="flex justify-center space-x-3.5 border-t border-gray-100 pt-6">
+            <div className="flex justify-center space-x-3.5 border-t border-gray-100 dark:border-slate-800 pt-6">
               <button
                 id="btn-quiz-retry"
                 onClick={handleRestart}
-                className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-lg text-xs font-bold transition-all flex items-center cursor-pointer"
+                className="bg-gray-100 dark:bg-slate-900 hover:bg-gray-200 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-300 px-6 py-3 rounded-lg text-xs font-bold transition-all flex items-center cursor-pointer"
               >
                 <RefreshCw className="w-3.5 h-3.5 mr-1.5" /> Refazer Simulado
               </button>

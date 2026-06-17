@@ -366,7 +366,7 @@ const HazardLabel: React.FC<HazardLabelProps> = ({ type }) => {
         break;
       default:
         content = (
-          <div className="w-full h-full bg-gray-100 border-2 border-dashed border-gray-400 flex items-center justify-center text-[10px] font-bold text-gray-500 text-center p-2">
+          <div className="w-full h-full bg-gray-100 dark:bg-[#0f0d22] border-2 border-dashed border-gray-400 dark:border-slate-850 flex items-center justify-center text-[10px] font-bold text-gray-500 dark:text-slate-400 text-center p-2">
             {type.replace('-', ' ').toUpperCase()}
           </div>
         );

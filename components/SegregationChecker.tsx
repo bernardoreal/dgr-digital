@@ -58,8 +58,8 @@ const SegregationChecker: React.FC<SegregationCheckerProps> = ({ matrix, classes
   }, [selectedClasses, matrix, labels]);
 
   return (
-    <div id="segregation-checker-card" className="bg-white rounded-2xl shadow-2xl border border-gray-100 p-8 my-10 font-sans animate-fade-in">
-      <h3 className="font-black text-xl text-gray-800 uppercase tracking-tight mb-6">Verificador de Segregação Interativo</h3>
+    <div id="segregation-checker-card" className="bg-white dark:bg-[#110e26] rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-800/80 p-8 my-10 font-sans animate-fade-in">
+      <h3 className="font-black text-xl text-gray-800 dark:text-white uppercase tracking-tight mb-6">Verificador de Segregação Interativo</h3>
       
       {/* Category selector grid */}
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4 mb-8">
@@ -70,11 +70,11 @@ const SegregationChecker: React.FC<SegregationCheckerProps> = ({ matrix, classes
             className={`p-4 rounded-lg text-center font-bold border-2 transition-all cursor-pointer ${
               selectedClasses.includes(cls) 
                 ? 'bg-latam-indigo text-white border-latam-indigo shadow' 
-                : 'bg-gray-50 hover:bg-gray-100 border-gray-200'
+                : 'bg-gray-50 dark:bg-slate-900/50 hover:bg-gray-100 dark:hover:bg-slate-800 border-gray-200 dark:border-slate-800/80'
             }`}
           >
             <div className="text-2xl font-black">{cls}</div>
-            <div className="text-xs opacity-70 mt-1 truncate">{labels[cls]}</div>
+            <div className="text-xs opacity-75 mt-1 truncate text-gray-500 dark:text-slate-400">{labels[cls]}</div>
           </button>
         ))}
       </div>
@@ -82,8 +82,8 @@ const SegregationChecker: React.FC<SegregationCheckerProps> = ({ matrix, classes
       {/* Dynamic results status bar */}
       <div className={`p-6 rounded-xl flex items-center text-lg font-black transition-all ${
         segregationStatus.compatible 
-          ? 'bg-green-100/80 text-green-800' 
-          : 'bg-red-100/80 text-red-800'
+          ? 'bg-green-100/80 dark:bg-green-950/20 text-green-800 dark:text-green-300' 
+          : 'bg-red-100/80 dark:bg-red-950/20 text-red-800 dark:text-red-350'
       }`}>
         {segregationStatus.compatible ? (
           <Check className="w-8 h-8 mr-4 flex-shrink-0 animate-pulse" />
@@ -94,11 +94,11 @@ const SegregationChecker: React.FC<SegregationCheckerProps> = ({ matrix, classes
       </div>
 
       {/* General DGR footnotes definitions */}
-      <div className="mt-6 bg-yellow-50 border-l-4 border-yellow-400 p-4 text-sm text-yellow-800 rounded-r-lg">
+      <div className="mt-6 bg-yellow-50 dark:bg-yellow-950/15 border-l-4 border-yellow-400 p-4 text-sm text-yellow-800 dark:text-yellow-305 rounded-r-lg">
         <h4 className="font-bold flex items-center mb-2"><AlertTriangle className="w-4 h-4 mr-2" />Notas Importantes</h4>
         <ul className="list-disc pl-5 space-y-1 font-medium">
           {Object.values(notes).map((note, i) => (
-            <li key={i} className="hover:text-yellow-900 transition-colors">{note}</li>
+            <li key={i} className="hover:text-yellow-900 dark:hover:text-yellow-250 transition-colors">{note}</li>
           ))}
         </ul>
       </div>

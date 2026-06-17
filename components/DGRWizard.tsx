@@ -53,7 +53,7 @@ const DGRWizard: React.FC<DGRWizardProps> = ({ wizard }) => {
   const result = wizard.results[currentNodeId];
 
   return (
-    <div id={`dgr-wizard-${wizard.id || 'guided'}`} className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden my-8 font-sans">
+    <div id={`dgr-wizard-${wizard.id || 'guided'}`} className="bg-white dark:bg-[#110e26] rounded-2xl shadow-xl border border-gray-100 dark:border-slate-800/80 overflow-hidden my-8 font-sans">
       {/* Header element bar */}
       <div className="bg-gradient-to-r from-latam-indigo to-[#2e1065] text-white p-6 border-b-4 border-latam-coral">
         <div className="flex items-center justify-between">
@@ -76,7 +76,7 @@ const DGRWizard: React.FC<DGRWizardProps> = ({ wizard }) => {
       <div className="p-8">
         {!isResult && node && (
           <div className="animate-fade-in">
-            <h4 className="text-2xl font-bold text-gray-900 mb-8 text-center max-w-xl mx-auto leading-snug">
+            <h4 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center max-w-xl mx-auto leading-snug">
               {node.question}
             </h4>
             <div className="space-y-4 max-w-2xl mx-auto">
@@ -84,12 +84,12 @@ const DGRWizard: React.FC<DGRWizardProps> = ({ wizard }) => {
                 <button
                   key={idx}
                   onClick={() => handleOptionClick(option.nextNodeId)}
-                  className="w-full text-left p-5 rounded-xl border-2 border-gray-100 hover:border-latam-indigo hover:bg-indigo-50/50 transition-all flex items-center justify-between group cursor-pointer"
+                  className="w-full text-left p-5 rounded-xl border-2 border-gray-100 dark:border-slate-800/80 hover:border-latam-indigo dark:hover:border-slate-500 bg-white dark:bg-[#0c0a1f] hover:bg-indigo-50/50 dark:hover:bg-indigo-950/20 transition-all flex items-center justify-between group cursor-pointer"
                 >
-                  <span className="text-lg font-semibold text-gray-800 group-hover:text-latam-indigo">
+                  <span className="text-lg font-semibold text-gray-800 dark:text-slate-300 group-hover:text-latam-indigo dark:group-hover:text-white">
                     {option.label}
                   </span>
-                  <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-latam-indigo transform group-hover:translate-x-1.5 transition-transform" />
+                  <ArrowRight className="w-5 h-5 text-gray-400 dark:text-slate-505 group-hover:text-latam-indigo dark:group-hover:text-white transform group-hover:translate-x-1.5 transition-transform" />
                 </button>
               ))}
             </div>
@@ -98,7 +98,7 @@ const DGRWizard: React.FC<DGRWizardProps> = ({ wizard }) => {
                 <button 
                   id="btn-wizard-go-back"
                   onClick={handleBack}
-                  className="text-sm font-bold text-gray-400 hover:text-gray-600 underline cursor-pointer"
+                  className="text-sm font-bold text-gray-400 dark:text-slate-500 hover:text-gray-600 dark:hover:text-slate-300 underline cursor-pointer"
                 >
                   Voltar para a pergunta anterior
                 </button>
@@ -115,18 +115,18 @@ const DGRWizard: React.FC<DGRWizardProps> = ({ wizard }) => {
               {result.type === 'danger' && <XCircle className="w-20 h-20 text-red-500" />}
             </div>
             <h4 className={`text-3xl font-black uppercase tracking-tight mb-4 ${
-              result.type === 'success' ? 'text-green-700' :
-              result.type === 'warning' ? 'text-yellow-700' : 'text-red-700'
+              result.type === 'success' ? 'text-green-700 dark:text-green-400' :
+              result.type === 'warning' ? 'text-yellow-700 dark:text-yellow-405' : 'text-red-700 dark:text-red-400'
             }`}>
               {result.title}
             </h4>
-            <p className="text-lg text-gray-600 leading-relaxed mb-8 font-medium">
+            <p className="text-lg text-gray-600 dark:text-slate-400 leading-relaxed mb-8 font-medium">
               {result.description}
             </p>
             {result.actionText && (
               <div className={`p-4 rounded-xl font-bold text-sm inline-block ${
-                result.type === 'success' ? 'bg-green-50 text-green-800 border border-green-200' :
-                result.type === 'warning' ? 'bg-yellow-50 text-yellow-800 border border-yellow-200' : 'bg-red-50 text-red-800 border border-red-200'
+                result.type === 'success' ? 'bg-green-50 dark:bg-green-955/15 text-green-800 dark:text-green-300 border border-green-200 dark:border-green-900/30' :
+                result.type === 'warning' ? 'bg-yellow-50 dark:bg-yellow-955/15 text-yellow-800 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-900/30' : 'bg-red-50 dark:bg-red-955/15 text-red-800 dark:text-red-300 border border-red-200 dark:border-red-900/30'
               }`}>
                 {result.actionText}
               </div>
@@ -135,7 +135,7 @@ const DGRWizard: React.FC<DGRWizardProps> = ({ wizard }) => {
               <button 
                 id="btn-wizard-restart-form"
                 onClick={handleReset}
-                className="bg-gray-900 hover:bg-gray-800 text-white px-8 py-4 rounded-xl font-bold transition-all shadow-lg hover:shadow-gray-200 cursor-pointer"
+                className="bg-gray-900 dark:bg-slate-800 hover:bg-gray-800 dark:hover:bg-slate-700 text-white px-8 py-4 rounded-xl font-bold transition-all shadow-lg hover:shadow-gray-200 cursor-pointer"
               >
                 Fazer Nova Classificação
               </button>

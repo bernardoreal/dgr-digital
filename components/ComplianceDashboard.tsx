@@ -1,4 +1,3 @@
-
 /**
  * @file ComplianceDashboard.tsx
  * @description Administrative control panel for dangerous goods regulatory compliance managers.
@@ -75,24 +74,24 @@ const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({ onClose, onSt
     }, [onStatusChange]);
 
     return (
-        <div id="compliance-dashboard-view" className="min-h-screen bg-gray-50 flex flex-col font-sans">
+        <div id="compliance-dashboard-view" className="min-h-screen bg-gray-50 dark:bg-[#06050e] flex flex-col font-sans text-slate-900 dark:text-slate-100">
             {/* Control Panel Sticky Header */}
-            <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between sticky top-0 z-10">
+            <div className="bg-white dark:bg-[#0c0a1f] border-b border-gray-200 dark:border-slate-850 px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm">
                 <div className="flex items-center space-x-3">
                     <button 
                         id="btn-governance-close"
                         onClick={onClose} 
-                        className="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-colors"
+                        className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full text-gray-500 dark:text-slate-400 transition-colors cursor-pointer"
                         aria-label="Voltar para a tela inicial"
                     >
                         <ArrowLeft className="w-5 h-5" />
                     </button>
                     <div>
-                        <h2 className="text-xl font-bold text-gray-800 flex items-center">
-                            <Shield className="w-5 h-5 mr-2 text-latam-indigo" />
+                        <h2 className="text-xl font-bold text-gray-800 dark:text-white flex items-center">
+                            <Shield className="w-5 h-5 mr-2 text-latam-indigo dark:text-indigo-400" />
                             Painel de Governança de Dados
                         </h2>
-                        <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold">Acesso Restrito: Especialista Regulatório</p>
+                        <p className="text-xs text-gray-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Acesso Restrito: Especialista Regulatório</p>
                     </div>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -100,8 +99,8 @@ const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({ onClose, onSt
                         id="label-validation-status"
                         className={`px-3 py-1 rounded-full text-xs font-bold border ${
                             config.validationStatus === 'VERIFIED_OPERATIONAL' 
-                                ? 'bg-green-100 text-green-700 border-green-200' 
-                                : 'bg-yellow-100 text-yellow-700 border-yellow-200'
+                                ? 'bg-green-100 dark:bg-green-955/20 text-green-700 dark:text-green-400 border-green-200 dark:border-green-900/30' 
+                                : 'bg-yellow-101 dark:bg-yellow-955/20 text-yellow-705 dark:text-yellow-405 border-yellow-200 dark:border-yellow-905/30'
                         }`}
                     >
                         {config.validationStatus === 'VERIFIED_OPERATIONAL' ? 'OPERACIONAL' : 'SIMULAÇÃO / TREINAMENTO'}
@@ -114,32 +113,32 @@ const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({ onClose, onSt
                     
                     {/* Left Column: Connection Setup & State Toggles */}
                     <div className="lg:col-span-1 space-y-6">
-                        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                            <h3 className="font-bold text-gray-700 mb-4 flex items-center uppercase text-xs tracking-wider">
+                        <div className="bg-white dark:bg-[#110e26] p-6 rounded-xl shadow-sm border border-gray-200 dark:border-slate-800/80">
+                            <h3 className="font-bold text-gray-700 dark:text-slate-350 mb-4 flex items-center uppercase text-xs tracking-wider">
                                 <Server className="w-4 h-4 mr-2 text-gray-500" />
                                 Fonte de Dados Ativa
                             </h3>
                             
                             <div className="space-y-4">
                                 {/* Static offline mode description */}
-                                <div className={`p-4 rounded-lg border-2 transition-all ${config.dataSource === 'SIMULATION' ? 'border-latam-indigo bg-indigo-50/50' : 'border-gray-200 bg-gray-50 opacity-60'}`}>
+                                <div className={`p-4 rounded-lg border-2 transition-all ${config.dataSource === 'SIMULATION' ? 'border-latam-indigo bg-indigo-50/50 dark:bg-indigo-950/20' : 'border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-900/40 opacity-60'}`}>
                                     <div className="flex justify-between items-center mb-2">
-                                        <span className="font-bold text-sm text-gray-800">Dados Estáticos (Offline)</span>
+                                        <span className="font-bold text-sm text-gray-800 dark:text-slate-200">Dados Estáticos (Offline)</span>
                                         {config.dataSource === 'SIMULATION' && <CheckCircle className="w-5 h-5 text-latam-indigo" />}
                                     </div>
-                                    <p className="text-xs text-gray-600 leading-relaxed">
+                                    <p className="text-xs text-gray-650 dark:text-slate-400 leading-relaxed">
                                         Modo de referência offline local. Informações baseadas em compilações de dados (2026). Recomendável apenas se não houver internet.
                                     </p>
                                 </div>
 
                                 {/* Active live web grounding description */}
-                                <div className={`p-4 rounded-lg border-2 transition-all ${config.dataSource === 'OFFICIAL_API' ? 'border-green-500 bg-green-50/50' : 'border-gray-200 bg-gray-50'}`}>
+                                <div className={`p-4 rounded-lg border-2 transition-all ${config.dataSource === 'OFFICIAL_API' ? 'border-green-500 bg-green-50/50 dark:bg-green-950/20' : 'border-gray-202 dark:border-slate-800 bg-gray-50 dark:bg-slate-900/40'}`}>
                                     <div className="flex justify-between items-center mb-2">
-                                        <span className="font-bold text-sm text-gray-800">Live Web Grounding</span>
+                                        <span className="font-bold text-sm text-gray-800 dark:text-slate-205">Live Web Grounding</span>
                                         {config.dataSource === 'OFFICIAL_API' && <CheckCircle className="w-5 h-5 text-green-600" />}
                                     </div>
-                                    <p className="text-xs text-gray-600 mb-3 leading-relaxed">
-                                        Conexão ativa com o Google Search para verificação em tempo real de circulares IATA e variações operacionais atualizadas.
+                                    <p className="text-xs text-gray-600 dark:text-slate-400 mb-3 leading-relaxed">
+                                        Conexão activa com o Google Search para verificação em tempo real de circulares IATA e variações operacionais atualizadas.
                                     </p>
                                     
                                     {config.dataSource !== 'OFFICIAL_API' ? (
@@ -158,7 +157,7 @@ const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({ onClose, onSt
                                             </button>
 
                                             {errorMessage && (
-                                                <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-lg mt-3 flex items-start leading-relaxed animate-fade-in">
+                                                <div className="p-3 bg-red-50 dark:bg-red-955/15 border border-red-200 dark:border-red-900/30 text-red-700 dark:text-red-400 text-xs rounded-lg mt-3 flex items-start leading-relaxed animate-fade-in">
                                                     <AlertTriangle className="w-4 h-4 mr-1.5 flex-shrink-0 mt-0.5" />
                                                     <div>
                                                         <span className="font-bold">Falha na conexão:</span> {errorMessage}
@@ -167,14 +166,14 @@ const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({ onClose, onSt
                                             )}
                                         </div>
                                     ) : (
-                                        <div className="text-xs text-green-700 font-semibold flex items-center bg-green-100/50 p-2 rounded">
+                                        <div className="text-xs text-green-700 dark:text-green-400 font-semibold flex items-center bg-green-100/50 dark:bg-green-950/20 p-2 rounded">
                                             <Globe className="w-3.5 h-3.5 mr-1.5 text-green-600" />
                                             Conexão Verificada & Segura
                                         </div>
                                     )}
                                     
                                     {uploadProgress > 0 && uploadProgress < 100 && (
-                                        <div className="w-full bg-gray-200 rounded-full h-1.5 mt-3">
+                                        <div className="w-full bg-gray-200 dark:bg-slate-800 rounded-full h-1.5 mt-3">
                                             <div className="bg-green-500 h-1.5 rounded-full transition-all duration-300" style={{ width: `${uploadProgress}%` }}></div>
                                         </div>
                                     )}
@@ -185,7 +184,7 @@ const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({ onClose, onSt
                                 <button 
                                     id="btn-disconnect-offline"
                                     onClick={handleReset} 
-                                    className="mt-5 text-xs text-red-500 font-bold hover:underline w-full text-center block transition-all"
+                                    className="mt-5 text-xs text-red-500 font-bold hover:underline w-full text-center block transition-all cursor-pointer"
                                 >
                                     Desconectar e Voltar para Offline
                                 </button>
@@ -195,48 +194,48 @@ const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({ onClose, onSt
 
                     {/* Right Column: Database Statistics and Sync Integrity monitors */}
                     <div className="lg:col-span-2 space-y-6">
-                        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                            <h3 className="font-bold text-gray-700 mb-6 flex items-center uppercase text-xs tracking-wider">
+                        <div className="bg-white dark:bg-[#110e26] p-6 rounded-xl shadow-sm border border-gray-200 dark:border-slate-800/80">
+                            <h3 className="font-bold text-gray-700 dark:text-slate-350 mb-6 flex items-center uppercase text-xs tracking-wider">
                                 <Activity className="w-4 h-4 mr-2 text-gray-500" />
                                 Monitor de Integridade da Regulação
                             </h3>
 
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div className="text-center p-4 bg-gray-50 rounded-lg border border-gray-100">
-                                    <div className="text-3xl font-bold text-gray-800 mb-1">{stats.bluePages}</div>
-                                    <div className="text-xs text-gray-400 uppercase font-black tracking-widest">Itens Indexados</div>
-                                    <div className="mt-2 text-[10px] text-green-600 bg-green-100 px-2 py-0.5 rounded-full inline-block font-semibold">Ref. Estrutural</div>
+                                <div className="text-center p-4 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-100 dark:border-slate-800/60">
+                                    <div className="text-3xl font-bold text-gray-800 dark:text-white mb-1">{stats.bluePages}</div>
+                                    <div className="text-xs text-gray-400 dark:text-slate-500 uppercase font-black tracking-widest">Itens Indexados</div>
+                                    <div className="mt-2 text-[10px] text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-955/20 border dark:border-green-800/20 px-2 py-0.5 rounded-full inline-block font-semibold">Ref. Estrutural</div>
                                 </div>
-                                <div className="text-center p-4 bg-gray-50 rounded-lg border border-gray-100">
-                                    <div className="text-3xl font-bold text-gray-800 mb-1">LIVE</div>
-                                    <div className="text-xs text-gray-400 uppercase font-black tracking-widest">Auditoria</div>
+                                <div className="text-center p-4 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-100 dark:border-slate-800/60">
+                                    <div className="text-3xl font-bold text-gray-800 dark:text-white mb-1">LIVE</div>
+                                    <div className="text-xs text-gray-400 dark:text-slate-505 uppercase font-black tracking-widest">Auditoria</div>
                                     {config.dataSource === 'SIMULATION' ? (
-                                        <div className="mt-2 text-[10px] text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full inline-block font-semibold">Desativado</div>
+                                        <div className="mt-2 text-[10px] text-gray-400 dark:text-slate-500 bg-gray-100 dark:bg-slate-800 px-2 py-0.5 rounded-full inline-block font-semibold">Desativado</div>
                                     ) : (
-                                        <div className="mt-2 text-[10px] text-green-600 bg-green-100 px-2 py-0.5 rounded-full inline-block font-semibold">Ativo (Web)</div>
+                                        <div className="mt-2 text-[10px] text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-955/20 border dark:border-green-800/20 px-2 py-0.5 rounded-full inline-block font-semibold">Ativo (Web)</div>
                                     )}
                                 </div>
-                                <div className="text-center p-4 bg-gray-50 rounded-lg border border-gray-100">
-                                    <div className="text-3xl font-bold text-gray-800 mb-1">{stats.variations}</div>
-                                    <div className="text-xs text-gray-400 uppercase font-black tracking-widest">Variações (Estado/Op)</div>
-                                    <div className="mt-2 text-[10px] text-gray-500 font-medium">Sync: {new Date(config.lastSync).toLocaleDateString()}</div>
+                                <div className="text-center p-4 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-100 dark:border-slate-800/60">
+                                    <div className="text-3xl font-bold text-gray-800 dark:text-white mb-1">{stats.variations}</div>
+                                    <div className="text-xs text-gray-400 dark:text-slate-505 uppercase font-black tracking-widest">Variações (Estado/Op)</div>
+                                    <div className="mt-2 text-[10px] text-gray-500 dark:text-slate-450 font-medium">Sync: {new Date(config.lastSync).toLocaleDateString()}</div>
                                 </div>
                             </div>
 
                             <div className="mt-8">
-                                <h4 className="text-sm font-bold text-gray-700 mb-3 uppercase tracking-wider text-xs">Status de Verificação de Componentes</h4>
+                                <h4 className="text-sm font-bold text-gray-700 dark:text-slate-350 mb-3 uppercase tracking-wider text-xs">Status de Verificação de Componentes</h4>
                                 <div className="space-y-3">
-                                    <div className="flex items-center justify-between p-3 bg-white border border-gray-100 rounded-lg shadow-sm">
+                                    <div className="flex items-center justify-between p-3 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-lg shadow-sm">
                                         <div className="flex items-center">
                                             <FileJson className="w-4 h-4 text-gray-400 mr-3" />
-                                            <span className="text-sm text-gray-600 font-medium">Estrutura de Dados (Schema JSON)</span>
+                                            <span className="text-sm text-gray-600 dark:text-slate-300 font-medium">Estrutura de Dados (Schema JSON)</span>
                                         </div>
                                         <CheckCircle className="w-4 h-4 text-green-500" />
                                     </div>
-                                    <div className="flex items-center justify-between p-3 bg-white border border-gray-100 rounded-lg shadow-sm">
+                                    <div className="flex items-center justify-between p-3 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-lg shadow-sm">
                                         <div className="flex items-center">
                                             <Globe className="w-4 h-4 text-gray-400 mr-3" />
-                                            <span className="text-sm text-gray-600 font-medium">Conectividade de Conhecimento (Live Grounding)</span>
+                                            <span className="text-sm text-gray-600 dark:text-slate-300 font-medium">Conectividade de Conhecimento (Live Grounding)</span>
                                         </div>
                                         {config.validationStatus === 'VERIFIED_OPERATIONAL' ? (
                                             <CheckCircle className="w-4 h-4 text-green-500" />
@@ -249,13 +248,13 @@ const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({ onClose, onSt
                         </div>
 
                         {/* Hybrid mode status banner */}
-                        <div className="bg-blue-50 border border-blue-200 p-6 rounded-xl flex items-start">
-                            <div className="bg-blue-100 p-2 rounded-full mr-4 shrink-0 shadow-sm">
-                                <Shield className="w-6 h-6 text-blue-700" />
+                        <div className="bg-blue-50 dark:bg-blue-955/10 border border-blue-200 dark:border-blue-900/30 p-6 rounded-xl flex items-start">
+                            <div className="bg-blue-100 dark:bg-blue-950/20 p-2 rounded-full mr-4 shrink-0 shadow-sm">
+                                <Shield className="w-6 h-6 text-blue-700 dark:text-blue-400" />
                             </div>
                             <div>
-                                <h4 className="font-bold text-blue-900 mb-1">Modo Híbrido Ativo</h4>
-                                <p className="text-sm text-blue-800 leading-relaxed font-medium">
+                                <h4 className="font-bold text-blue-909 dark:text-blue-400 mb-1">Modo Híbrido Ativo</h4>
+                                <p className="text-sm text-blue-800 dark:text-slate-300 leading-relaxed font-medium">
                                     O sistema opera de forma otimizada para fins regulatórios. A base de dados principal de carregamento fornece velocidades sub-milissegundo para pesquisa, enquanto auditorias mais severas de frotas e variações latentes são auxiliadas por modelos em tempo real.
                                 </p>
                             </div>

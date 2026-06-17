@@ -149,74 +149,73 @@ export const AnacLatamAudit: React.FC<AnacLatamAuditProps> = ({ onClose }) => {
   }, [unNumber, shipmentId]);
 
   return (
-    <div id="anac-latam-audit-view" className="min-h-screen bg-gray-50 flex flex-col font-sans pb-16">
+    <div id="anac-latam-audit-view" className="min-h-screen bg-gray-50 dark:bg-[#06050e] flex flex-col font-sans pb-16 text-slate-900 dark:text-slate-100">
       {/* Dynamic Navigation Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm">
+      <div className="bg-white dark:bg-[#0c0a1f] border-b border-gray-200 dark:border-slate-850 px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm">
         <div className="flex items-center space-x-3">
           <button 
             id="btn-audit-close"
             onClick={onClose} 
-            className="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-colors cursor-pointer"
+            className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full text-gray-500 dark:text-slate-400 transition-colors cursor-pointer"
             aria-label="Voltar para a tela inicial"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
-            <h2 className="text-xl font-bold text-gray-800 flex items-center">
-              <ShieldCheck className="w-5 h-5 mr-2 text-latam-indigo" />
+            <h2 className="text-xl font-bold text-gray-800 dark:text-white flex items-center">
+              <ShieldCheck className="w-5 h-5 mr-2 text-latam-indigo dark:text-indigo-305" />
               Auditoria de Segurança ANAC RBAC 175 & LATAM
             </h2>
-            <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Verificador de Operação de Solo & Despacho</p>
+            <p className="text-xs text-gray-400 dark:text-slate-400 font-bold uppercase tracking-wider">Verificador de Operação de Solo & Despacho</p>
           </div>
         </div>
         <div className="flex items-center space-x-2">
-          <span className="bg-latam-indigo/10 border border-latam-indigo/20 px-3 py-1 rounded-full text-xs font-bold text-latam-indigo">IATA 2026</span>
-          <span className="bg-black/5 border border-black/10 px-3 py-1 rounded-full text-xs font-bold text-gray-600">ANAC</span>
+          <span className="bg-latam-indigo/10 dark:bg-indigo-950/40 border border-latam-indigo/20 dark:border-indigo-900/40 px-3 py-1 rounded-full text-xs font-bold text-latam-indigo dark:text-indigo-300">IATA 2026</span>
+          <span className="bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 px-3 py-1 rounded-full text-xs font-bold text-gray-600 dark:text-slate-400">ANAC</span>
         </div>
       </div>
 
       <div className="container mx-auto px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
           {/* Metadata Card (1 Column left) */}
           <div className="lg:col-span-1 space-y-6">
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-              <h3 className="font-extrabold text-sm text-gray-700 uppercase tracking-wider mb-4 flex items-center">
-                <Layers className="w-4 h-4 mr-2 text-gray-400" />
+            <div className="bg-white dark:bg-[#110e26] p-6 rounded-xl shadow-sm border border-gray-200 dark:border-slate-800/80">
+              <h3 className="font-extrabold text-sm text-gray-700 dark:text-slate-300 uppercase tracking-wider mb-4 flex items-center">
+                <Layers className="w-4 h-4 mr-2 text-gray-400 dark:text-slate-500" />
                 Dados do Voo & Carga
               </h3>
               
               <div className="space-y-4 text-sm">
                 <div>
-                  <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Identificação da Guia (AWB / Minuta)</label>
+                  <label className="block text-xs font-bold text-gray-500 dark:text-slate-400 uppercase mb-1">Identificação da Guia (AWB / Minuta)</label>
                   <input 
                     type="text" 
                     value={shipmentId}
                     onChange={(e) => setShipmentId(e.target.value.toUpperCase())}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-800 font-mono tracking-wider focus:ring-2 focus:ring-latam-indigo/20 focus:border-latam-indigo outline-none"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-800 rounded-lg text-gray-800 dark:text-slate-100 bg-white dark:bg-[#0f0d22] font-mono tracking-wider focus:ring-2 focus:ring-latam-indigo/20 focus:border-latam-indigo outline-none"
                     placeholder="Ex: LA-590021"
                     disabled={isGenerated}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Número UN aplicável</label>
+                  <label className="block text-xs font-bold text-gray-500 dark:text-slate-400 uppercase mb-1">Número UN aplicável</label>
                   <input 
                     type="text" 
                     value={unNumber}
                     onChange={(e) => setUnNumber(e.target.value.toUpperCase())}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-800 font-bold focus:ring-2 focus:ring-latam-indigo/20 focus:border-latam-indigo outline-none"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-800 rounded-lg text-gray-800 dark:text-slate-100 bg-white dark:bg-[#0f0d22] font-bold focus:ring-2 focus:ring-latam-indigo/20 focus:border-latam-indigo outline-none"
                     placeholder="Ex: UN 3481"
                     disabled={isGenerated}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Prefixo do Voo / Operador</label>
+                  <label className="block text-xs font-bold text-gray-500 dark:text-slate-400 uppercase mb-1">Prefixo do Voo / Operador</label>
                   <select 
                     value={flightNumber} 
                     onChange={(e) => setFlightNumber(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-800 font-bold focus:ring-2 focus:ring-latam-indigo/20 focus:border-latam-indigo outline-none"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-800 rounded-lg text-gray-800 dark:text-slate-100 bg-white dark:bg-[#0f0d22] font-bold focus:ring-2 focus:ring-latam-indigo/20 focus:border-latam-indigo outline-none"
                     disabled={isGenerated}
                   >
                     <option value="LA">LA - LATAM Airlines</option>
@@ -227,40 +226,40 @@ export const AnacLatamAudit: React.FC<AnacLatamAuditProps> = ({ onClose }) => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Auditor Regulatório Responsável</label>
+                  <label className="block text-xs font-bold text-gray-500 dark:text-slate-400 uppercase mb-1">Auditor Regulatório Responsável</label>
                   <input 
                     type="text" 
                     value={inspectorName}
                     onChange={(e) => setInspectorName(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-800 font-medium focus:ring-2 focus:ring-latam-indigo/20 focus:border-latam-indigo outline-none"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-800 rounded-lg text-gray-800 dark:text-slate-100 bg-white dark:bg-[#0f0d22] font-medium focus:ring-2 focus:ring-latam-indigo/20 focus:border-latam-indigo outline-none"
                     disabled={isGenerated}
                   />
                 </div>
               </div>
 
               {!isGenerated ? (
-                <div className="mt-6 border-t border-gray-100 pt-4">
+                <div className="mt-6 border-t border-gray-100 dark:border-slate-800 pt-4">
                   <button
                     id="btn-audit-validate"
                     onClick={handleGenerateCertificate}
                     disabled={!allQuestionsAnswered}
-                    className="w-full bg-latam-indigo text-white py-3 rounded-lg text-sm font-bold hover:bg-latam-indigoLight disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-lg shadow-indigo-100 transition-all cursor-pointer"
+                    className="w-full bg-latam-indigo text-white py-3 rounded-lg text-sm font-bold hover:bg-latam-indigoLight disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-lg transition-all cursor-pointer"
                   >
                     <ShieldCheck className="w-4 h-4 mr-2" /> Validar & Emitir Selo
                   </button>
                   {!allQuestionsAnswered && (
-                    <p className="text-[11px] text-gray-400 mt-2 text-center font-medium">Respondas todos os itens da auditoria ao lado para liberar.</p>
+                    <p className="text-[11px] text-gray-400 dark:text-slate-500 mt-2 text-center font-medium">Respondas todos os itens da auditoria ao lado para liberar.</p>
                   )}
                   {errorMessage && (
                     <p className="text-xs text-red-600 mt-2 text-center font-bold">{errorMessage}</p>
                   )}
                 </div>
               ) : (
-                <div className="mt-6 border-t border-gray-100 pt-4 space-y-2">
+                <div className="mt-6 border-t border-gray-100 dark:border-slate-800 pt-4 space-y-2">
                   <button
                     id="btn-audit-recheck"
                     onClick={() => setIsGenerated(false)}
-                    className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-2.5 rounded-lg text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                    className="w-full bg-gray-100 dark:bg-slate-900 hover:bg-gray-200 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-300 py-2.5 rounded-lg text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
                   >
                     <RefreshCw className="w-3.5 h-3.5 mr-1.5" /> Reavaliar Itens
                   </button>
@@ -276,12 +275,12 @@ export const AnacLatamAudit: React.FC<AnacLatamAuditProps> = ({ onClose }) => {
             </div>
 
             {/* Regulatory Scope Info box */}
-            <div className="bg-blue-50 border border-blue-100 p-5 rounded-xl">
-              <h4 className="text-xs font-black text-blue-800 uppercase tracking-wider mb-2 flex items-center">
+            <div className="bg-blue-50 dark:bg-indigo-950/20 border border-blue-100 dark:border-indigo-900/30 p-5 rounded-xl">
+              <h4 className="text-xs font-black text-blue-800 dark:text-indigo-305 uppercase tracking-wider mb-2 flex items-center">
                 <HelpCircle className="w-3.5 h-3.5 mr-1.5" />
                 Vigilância Civil ANAC Brasil
               </h4>
-              <p className="text-xs text-blue-800 leading-relaxed font-medium">
+              <p className="text-xs text-blue-800 dark:text-indigo-400 leading-relaxed font-semibold">
                 O Regulamento Brasileiro da Aviação Civil nº 175 (RBAC 175) estabelece as regras de competência nacional e fiscaliza expedidores e aeroportos. Alinhado com as variações particulares da LATAM, este formulário garante o compliance de triplo check obrigatório antes do embarque comercial.
               </p>
             </div>
@@ -290,14 +289,14 @@ export const AnacLatamAudit: React.FC<AnacLatamAuditProps> = ({ onClose }) => {
           {/* Interactive Questionnaire (2 Columns Right) */}
           <div className="lg:col-span-2">
             {!isGenerated ? (
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <div className="bg-gray-100 px-5 py-4 border-b border-gray-200">
-                  <h3 className="font-extrabold text-sm text-gray-800 uppercase tracking-wider">
+              <div className="bg-white dark:bg-[#110e26] rounded-xl shadow-sm border border-gray-200 dark:border-slate-800/80 overflow-hidden">
+                <div className="bg-gray-100 dark:bg-[#0c0a1f] px-5 py-4 border-b border-gray-200 dark:border-slate-800">
+                  <h3 className="font-extrabold text-sm text-gray-800 dark:text-white uppercase tracking-wider">
                     Filtros de Segurança & Variações Operacionais
                   </h3>
                 </div>
                 
-                <div className="divide-y divide-gray-100">
+                <div className="divide-y divide-gray-100 dark:divide-slate-850">
                   {AUDIT_QUESTIONS.map((q, idx) => {
                     const currentAns = answers[q.id];
                     return (
@@ -305,33 +304,33 @@ export const AnacLatamAudit: React.FC<AnacLatamAuditProps> = ({ onClose }) => {
                         key={q.id} 
                         className={`p-5 flex flex-col md:flex-row md:items-start justify-between transition-colors ${
                           currentAns === 'FAILED' 
-                            ? 'bg-red-50' 
+                            ? 'bg-red-50 dark:bg-red-950/20' 
                             : currentAns === 'PASSED' 
-                              ? 'bg-green-50/20' 
-                              : 'hover:bg-gray-50/50'
+                              ? 'bg-green-50/20 dark:bg-green-950/10' 
+                              : 'bg-white dark:bg-[#110e26] hover:bg-gray-50/50 dark:hover:bg-slate-905/40'
                         }`}
                       >
                         <div className="flex-1 pr-6 pb-3 md:pb-0">
                           <div className="flex items-start">
-                            <span className="font-bold text-gray-400 mr-2 w-5 text-right">{idx + 1}.</span>
+                            <span className="font-bold text-gray-400 dark:text-slate-500 mr-2 w-5 text-right">{idx + 1}.</span>
                             <div>
-                              <h4 className="text-sm font-bold text-gray-900 flex items-center">
+                              <h4 className="text-sm font-bold text-gray-900 dark:text-white flex items-center">
                                 {q.title}
                                 {q.category === 'LATAM_VARS' ? (
-                                  <span className="ml-2 bg-red-100 text-red-700 text-[9px] px-1.5 py-0.5 rounded font-black tracking-wider uppercase">Var LATAM</span>
+                                  <span className="ml-2 bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-300 text-[9px] px-1.5 py-0.5 rounded font-black tracking-wider uppercase border dark:border-red-900/30">Var LATAM</span>
                                 ) : (
-                                  <span className="ml-2 bg-blue-100 text-blue-700 text-[9px] px-1.5 py-0.5 rounded font-black tracking-wider uppercase">ANAC Rule</span>
+                                  <span className="ml-2 bg-blue-105 dark:bg-indigo-950/40 text-blue-700 dark:text-indigo-300 text-[9px] px-1.5 py-0.5 rounded font-black tracking-wider uppercase border dark:border-indigo-900/30">ANAC Rule</span>
                                 )}
                               </h4>
-                              <p className="text-xs text-gray-500 mt-1 leading-relaxed font-medium">{q.description}</p>
+                              <p className="text-xs text-gray-500 dark:text-slate-400 mt-1 leading-relaxed font-semibold">{q.description}</p>
                               <div className="flex space-x-4 mt-2">
                                 {q.variationRef && (
-                                  <span className="text-[10px] font-semibold font-mono text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded">
+                                  <span className="text-[10px] font-semibold font-mono text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30 px-1.5 py-0.5 rounded">
                                     Variação: {q.variationRef}
                                   </span>
                                 )}
                                 {q.ruleRef && (
-                                  <span className="text-[10px] font-semibold font-mono text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">
+                                  <span className="text-[10px] font-semibold font-mono text-blue-600 dark:text-indigo-400 bg-blue-50 dark:bg-indigo-950/30 px-1.5 py-0.5 rounded">
                                     Regra: {q.ruleRef}
                                   </span>
                                 )}
@@ -348,7 +347,7 @@ export const AnacLatamAudit: React.FC<AnacLatamAuditProps> = ({ onClose }) => {
                             className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-colors cursor-pointer ${
                               currentAns === 'PASSED'
                                 ? 'bg-green-600 border-green-600 text-white'
-                                : 'bg-white border-gray-300 text-gray-600 hover:bg-gray-50'
+                                : 'bg-white dark:bg-[#0f0d22] border-gray-300 dark:border-slate-800 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-900'
                             }`}
                           >
                             Passa
@@ -359,7 +358,7 @@ export const AnacLatamAudit: React.FC<AnacLatamAuditProps> = ({ onClose }) => {
                             className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-colors cursor-pointer ${
                               currentAns === 'FAILED'
                                 ? 'bg-red-600 border-red-600 text-white'
-                                : 'bg-white border-gray-300 text-gray-600 hover:bg-gray-50'
+                                : 'bg-white dark:bg-[#0f0d22] border-gray-300 dark:border-slate-800 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-900'
                             }`}
                           >
                             Falha
@@ -369,8 +368,8 @@ export const AnacLatamAudit: React.FC<AnacLatamAuditProps> = ({ onClose }) => {
                             onClick={() => handleAnswerChange(q.id, 'NA')}
                             className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-colors cursor-pointer ${
                               currentAns === 'NA'
-                                ? 'bg-gray-200 border-gray-300 text-gray-700'
-                                : 'bg-white border-gray-300 text-gray-400 hover:bg-gray-50'
+                                ? 'bg-gray-200 dark:bg-slate-800 border-gray-300 dark:border-slate-700 text-gray-700 dark:text-slate-200'
+                                : 'bg-white dark:bg-[#0f0d22] border-gray-300 dark:border-slate-800 text-gray-400 dark:text-slate-500 hover:bg-gray-50 dark:hover:bg-slate-900'
                             }`}
                           >
                             N/A
@@ -382,7 +381,7 @@ export const AnacLatamAudit: React.FC<AnacLatamAuditProps> = ({ onClose }) => {
                 </div>
 
                 {/* Mobile-only Validation Button */}
-                <div className="p-5 border-t border-gray-100 bg-gray-50/50 block lg:hidden">
+                <div className="p-5 border-t border-gray-100 dark:border-slate-800 bg-gray-50/50 dark:bg-[#0c0a1f] block lg:hidden">
                   <button
                     id="btn-audit-validate-mobile"
                     onClick={handleGenerateCertificate}
@@ -392,7 +391,7 @@ export const AnacLatamAudit: React.FC<AnacLatamAuditProps> = ({ onClose }) => {
                     <ShieldCheck className="w-5 h-5 mr-2" /> Validar & Emitir Selo
                   </button>
                   {!allQuestionsAnswered && (
-                    <p className="text-[10px] text-gray-400 mt-2 text-center font-medium">Responda todas as perguntas da auditoria acima para liberar o selo.</p>
+                    <p className="text-[10px] text-gray-400 dark:text-slate-500 mt-2 text-center font-medium">Responda todas as perguntas da auditoria acima para liberar o selo.</p>
                   )}
                   {errorMessage && (
                     <p className="text-xs text-red-600 mt-2 text-center font-bold">{errorMessage}</p>
@@ -401,7 +400,7 @@ export const AnacLatamAudit: React.FC<AnacLatamAuditProps> = ({ onClose }) => {
               </div>
             ) : (
               /* Clearance Certificate Display panel */
-              <div className="bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden animate-fade-in relative">
+              <div className="bg-white dark:bg-[#110e26] rounded-xl shadow-xl border border-gray-200 dark:border-slate-850 overflow-hidden animate-fade-in relative">
                 
                 {/* Header ribbon */}
                 <div className={`p-6 text-white ${auditPassed ? 'bg-gradient-to-r from-green-600 to-green-700' : 'bg-gradient-to-r from-red-600 to-red-700'}`}>
@@ -427,8 +426,8 @@ export const AnacLatamAudit: React.FC<AnacLatamAuditProps> = ({ onClose }) => {
                 {auditPassed ? (
                   /* Approved Visual Template */
                   <div className="p-8">
-                    <div className="text-center mb-8 border-b border-gray-100 pb-6">
-                      <div className="inline-flex items-center space-x-1.5 text-xs font-black text-green-700 bg-green-50 border border-green-200 px-3 py-1.5 rounded-full mb-3 uppercase tracking-wider">
+                    <div className="text-center mb-8 border-b border-gray-100 dark:border-slate-800 pb-6">
+                      <div className="inline-flex items-center space-x-1.5 text-xs font-black text-green-700 dark:text-green-400 bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-900/30 px-3 py-1.5 rounded-full mb-3 uppercase tracking-wider font-extrabold pb-0.5">
                         <Sparkles className="w-3.5 h-3.5 text-green-600 animate-spin" />
                         <span>Selo de Integridade Gerado com Sucesso</span>
                       </div>
@@ -438,43 +437,43 @@ export const AnacLatamAudit: React.FC<AnacLatamAuditProps> = ({ onClose }) => {
                     </div>
 
                     {/* Certificate Details Grid */}
-                    <div className="grid grid-cols-2 gap-6 bg-gray-50 border border-dash border-gray-200 p-6 rounded-xl text-xs font-medium text-gray-700 font-mono">
+                    <div className="grid grid-cols-2 gap-6 bg-gray-50 dark:bg-[#0c0a1f] border border-dashed border-gray-200 dark:border-slate-800 p-6 rounded-xl text-xs font-medium text-gray-700 dark:text-slate-350 font-mono">
                       <div>
-                        <span className="block text-[10px] text-gray-400 uppercase font-bold mb-1">ID DA MINUTA:</span>
-                        <span className="text-sm font-black text-gray-900">{shipmentId}</span>
+                        <span className="block text-[10px] text-gray-400 dark:text-slate-500 uppercase font-bold mb-1">ID DA MINUTA:</span>
+                        <span className="text-sm font-black text-gray-900 dark:text-white">{shipmentId}</span>
                       </div>
                       <div>
-                        <span className="block text-[10px] text-gray-400 uppercase font-bold mb-1">NÚMERO UN:</span>
-                        <span className="text-sm font-black text-gray-900">{unNumber}</span>
+                        <span className="block text-[10px] text-gray-400 dark:text-slate-500 uppercase font-bold mb-1">NÚMERO UN:</span>
+                        <span className="text-sm font-black text-gray-900 dark:text-white">{unNumber}</span>
                       </div>
                       <div>
-                        <span className="block text-[10px] text-gray-400 uppercase font-bold mb-1">OPERADOR & VOO:</span>
-                        <span className="text-sm font-black text-gray-900">{flightNumber} CARGO NETWORK</span>
+                        <span className="block text-[10px] text-gray-400 dark:text-slate-500 uppercase font-bold mb-1">OPERADOR & VOO:</span>
+                        <span className="text-sm font-black text-gray-900 dark:text-white">{flightNumber} CARGO NETWORK</span>
                       </div>
                       <div>
-                        <span className="block text-[10px] text-gray-400 uppercase font-bold mb-1">DATA E HORA:</span>
-                        <span className="text-sm font-black text-gray-900">{new Date().toLocaleString('pt-BR')}</span>
+                        <span className="block text-[10px] text-gray-400 dark:text-slate-500 uppercase font-bold mb-1">DATA E HORA:</span>
+                        <span className="text-sm font-black text-gray-900 dark:text-white">{new Date().toLocaleString('pt-BR')}</span>
                       </div>
-                      <div className="col-span-2 border-t border-gray-200 pt-4">
-                        <span className="block text-[10px] text-gray-400 uppercase font-bold mb-1">CHAVE DIGITAL DE SEGURANÇA (SHA-256):</span>
-                        <span className="text-xs font-black text-blue-700 tracking-wider block break-all">{cryptographicHash}</span>
+                      <div className="col-span-2 border-t border-gray-200 dark:border-slate-800 pt-4">
+                        <span className="block text-[10px] text-gray-400 dark:text-slate-500 uppercase font-bold mb-1">CHAVE DIGITAL DE SEGURANÇA (SHA-256):</span>
+                        <span className="text-xs font-black text-blue-700 dark:text-indigo-400 tracking-wider block break-all">{cryptographicHash}</span>
                       </div>
                     </div>
 
                     {/* Visual Stamp Seal simulation */}
-                    <div className="mt-8 flex flex-col items-center justify-center border-t border-gray-100 pt-8">
-                      <div className="border-4 border-double border-green-600 p-4 rounded-xl flex items-center space-x-4 bg-green-50/20 max-w-sm rotate-1 text-green-700">
-                        <div className="p-2 border-2 border-green-600 rounded bg-white shrink-0">
+                    <div className="mt-8 flex flex-col items-center justify-center border-t border-gray-100 dark:border-slate-800 pt-8">
+                      <div className="border-4 border-double border-green-600 p-4 rounded-xl flex items-center space-x-4 bg-green-50/20 dark:bg-green-950/15 max-w-sm rotate-1 text-green-700 dark:text-green-400">
+                        <div className="p-2 border-2 border-green-600 rounded bg-white dark:bg-slate-900 shrink-0">
                           {/* QR Code Graphic Mock matching operational standards */}
-                          <div className="w-12 h-12 bg-gray-100 flex flex-col justify-between p-0.5 border border-gray-300">
-                            <div className="flex justify-between"><span className="w-3.5 h-3.5 bg-gray-800"></span><span className="w-3.5 h-3.5 bg-gray-800"></span></div>
-                            <div className="flex justify-center"><span className="w-2.5 h-2.5 bg-gray-800"></span></div>
-                            <div className="flex justify-between"><span className="w-3.5 h-3.5 bg-gray-800"></span><span className="w-2 h-2 bg-gray-500"></span></div>
+                          <div className="w-12 h-12 bg-gray-100 dark:bg-slate-800 flex flex-col justify-between p-0.5 border border-gray-300 dark:border-slate-700">
+                            <div className="flex justify-between"><span className="w-3.5 h-3.5 bg-gray-800 dark:bg-slate-200"></span><span className="w-3.5 h-3.5 bg-gray-800 dark:bg-slate-200"></span></div>
+                            <div className="flex justify-center"><span className="w-2.5 h-2.5 bg-gray-800 dark:bg-slate-200"></span></div>
+                            <div className="flex justify-between"><span className="w-3.5 h-3.5 bg-gray-800 dark:bg-slate-200"></span><span className="w-2 h-2 bg-gray-500 dark:bg-slate-400"></span></div>
                           </div>
                         </div>
                         <div>
-                          <span className="block text-[10px] font-black uppercase tracking-widest text-green-600 leading-none mb-1">Selo Digital LATAM</span>
-                          <span className="block text-lg font-black tracking-tight leading-none text-green-700">LIBERADO PARA VOO</span>
+                          <span className="block text-[10px] font-black uppercase tracking-widest text-green-600 dark:text-green-550 leading-none mb-1">Selo Digital LATAM</span>
+                          <span className="block text-lg font-black tracking-tight leading-none text-green-700 dark:text-green-400">LIBERADO PARA VOO</span>
                           <span className="block text-[9px] font-mono mt-1 opacity-80 uppercase">Doc Verificado - Inspector {inspectorName}</span>
                         </div>
                       </div>
@@ -483,32 +482,32 @@ export const AnacLatamAudit: React.FC<AnacLatamAuditProps> = ({ onClose }) => {
                 ) : (
                   /* Denied and Blocked Visual template */
                   <div className="p-8">
-                    <div className="mb-6 bg-red-50 border border-red-200 p-5 rounded-xl flex items-start">
-                      <AlertOctagon className="w-6 h-6 text-red-600 mr-3 shrink-0 mt-0.5" />
+                    <div className="mb-6 bg-red-50 dark:bg-red-955/15 border border-red-200 dark:border-red-900/40 p-5 rounded-xl flex items-start">
+                      <AlertOctagon className="w-6 h-6 text-red-600 dark:text-red-400 mr-3 shrink-0 mt-0.5" />
                       <div>
-                        <h4 className="text-sm font-bold text-red-900 uppercase">Embarque bloqueado automaticamente</h4>
-                        <p className="text-xs text-red-700 leading-relaxed mt-1 font-medium">
+                        <h4 className="text-sm font-bold text-red-900 dark:text-red-300 uppercase">Embarque bloqueado automaticamente</h4>
+                        <p className="text-xs text-red-700 dark:text-red-400 leading-relaxed mt-1 font-semibold">
                           O sistema identificou de forma categórica que a remessa viola os regulamentos e variações de segurança. Corrija os itens listados abaixo para submeter a carga a uma nova avaliação.
                         </p>
                       </div>
                     </div>
 
-                    <h4 className="font-bold text-xs text-gray-500 uppercase tracking-wider mb-3">CONFORMIDADES REJEITADAS NA AUDITORIA</h4>
+                    <h4 className="font-bold text-xs text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-3">CONFORMIDADES REJEITADAS NA AUDITORIA</h4>
                     <div className="space-y-3">
                       {failedItems.map(item => (
-                        <div key={item.id} className="border border-red-100 p-4 rounded-lg bg-red-50/30 text-xs">
-                          <h5 className="font-bold text-red-900 flex items-center mb-1">
+                        <div key={item.id} className="border border-red-100 dark:border-red-900/30 p-4 rounded-lg bg-red-50/30 dark:bg-red-955/10 text-xs">
+                          <h5 className="font-bold text-red-900 dark:text-red-300 flex items-center mb-1">
                             {item.title}
                           </h5>
-                          <p className="text-red-700 font-medium leading-relaxed mb-2">{item.description}</p>
-                          <div className="flex">
+                          <p className="text-red-700 dark:text-red-400 font-semibold leading-relaxed mb-2">{item.description}</p>
+                          <div className="flex font-semibold">
                             {item.variationRef && (
-                              <span className="bg-red-100/60 text-red-800 px-2 py-0.5 rounded font-bold font-mono">
+                              <span className="bg-red-100/60 dark:bg-red-955/40 text-red-800 dark:text-red-300 px-2 py-0.5 rounded font-bold font-mono">
                                 Variação Violada: {item.variationRef}
                               </span>
                             )}
                             {item.ruleRef && (
-                              <span className="bg-red-100/60 text-red-800 px-2 py-0.5 rounded font-bold font-mono">
+                              <span className="bg-red-100/60 dark:bg-red-955/40 text-red-800 dark:text-red-300 px-2 py-0.5 rounded font-bold font-mono ml-2">
                                 Norma Violada: {item.ruleRef}
                               </span>
                             )}
@@ -520,18 +519,18 @@ export const AnacLatamAudit: React.FC<AnacLatamAuditProps> = ({ onClose }) => {
                 )}
 
                 {/* Mobile-only Action Buttons at bottom of certificate card */}
-                <div className="p-5 border-t border-gray-100 bg-gray-50 block lg:hidden space-y-2">
+                <div className="p-5 border-t border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-[#0c0a1f] block lg:hidden space-y-2">
                   <button
                     id="btn-audit-recheck-mobile"
                     onClick={() => setIsGenerated(false)}
-                    className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                    className="w-full bg-gray-100 dark:bg-slate-900 hover:bg-gray-200 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-300 py-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
                   >
-                    <RefreshCw className="w-4 h-4 mr-1.5 text-gray-500" /> Reavaliar Outro Lote
+                    <RefreshCw className="w-4 h-4 mr-1.5 text-gray-500 dark:text-slate-400" /> Reavaliar Outro Lote
                   </button>
                   <button
                     id="btn-audit-print-mobile"
                     onClick={() => window.print()}
-                    className="w-full bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                    className="w-full bg-slate-900 dark:bg-slate-800 hover:bg-slate-805 dark:hover:bg-slate-700 text-white py-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
                   >
                     <Printer className="w-4 h-4 mr-1.5" /> Imprimir Laudo de Conformidade
                   </button>
